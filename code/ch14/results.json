@@ -1,0 +1,67 @@
+{
+  "E1": {
+    "base_initiale_pct": 1.0,
+    "gain_final_moyen": 1.01,
+    "gain_final_ecart_type": 0.0,
+    "gain_final_theorique": 1.01,
+    "pire_perte_latente_mediane": -0.133,
+    "pire_perte_latente_q01": -0.823,
+    "appel_de_marge_max_median": 4.98,
+    "appel_de_marge_max_q99": 26.32
+  },
+  "E2": {
+    "funding_moyen_annuel_pct": 9.96,
+    "part_jours_funding_negatif": 0.327,
+    "tableau": [
+      {
+        "levier_perp": 1,
+        "seuil_hausse_quotidienne_pct": 99.5,
+        "proba_liquidation_annuelle": 0.0,
+        "rendement_annuel_moyen_sur_capital_pct": 4.98,
+        "rendement_q05_pct": -2.37
+      },
+      {
+        "levier_perp": 2,
+        "seuil_hausse_quotidienne_pct": 49.5,
+        "proba_liquidation_annuelle": 0.0,
+        "rendement_annuel_moyen_sur_capital_pct": 6.64,
+        "rendement_q05_pct": -3.16
+      },
+      {
+        "levier_perp": 3,
+        "seuil_hausse_quotidienne_pct": 32.8,
+        "proba_liquidation_annuelle": 0.002,
+        "rendement_annuel_moyen_sur_capital_pct": 7.46,
+        "rendement_q05_pct": -3.55
+      },
+      {
+        "levier_perp": 5,
+        "seuil_hausse_quotidienne_pct": 19.5,
+        "proba_liquidation_annuelle": 0.074,
+        "rendement_annuel_moyen_sur_capital_pct": 7.9,
+        "rendement_q05_pct": -4.04
+      },
+      {
+        "levier_perp": 10,
+        "seuil_hausse_quotidienne_pct": 9.5,
+        "proba_liquidation_annuelle": 0.717,
+        "rendement_annuel_moyen_sur_capital_pct": 4.45,
+        "rendement_q05_pct": -3.92
+      }
+    ]
+  },
+  "E3": {
+    "centre_fixe": {
+      "gain_moyen_pb_par_an": 11.3,
+      "ecart_type": 14.4
+    },
+    "bollinger_20j": {
+      "gain_moyen_pb_par_an": 73.3,
+      "ecart_type": 26.3
+    },
+    "base_theorique": {
+      "gain_moyen_pb_par_an": 217.0,
+      "ecart_type": 34.1
+    }
+  }
+}

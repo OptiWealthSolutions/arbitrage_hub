@@ -1,1 +1,176 @@
-\chapter{À rédiger}
+% =====================================================================
+\chapter{Microstructure et coûts de transaction}
+\label{ch:12}
+% =====================================================================
+
+\section{Objectifs et organisation du chapitre}
+
+\paragraph{Objectifs.} Les parties I et II ont montré qu'un avantage d'arbitrage statistique se mesure en points de base. Cette partie descend au niveau où ces points de base se gagnent ou se perdent : le carnet d'ordres. À la fin du chapitre, vous saurez : (1) décrire un carnet d'ordres et la différence entre ordres \emph{maker} et \emph{taker} ; (2) estimer une fourchette à partir des prix (estimateur de Roll) et connaître ses limites ; (3) construire un modèle de coût complet pour un aller-retour de paire ; (4) en déduire l'amplitude minimale d'un écart tradable ; (5) mesurer l'effet des hypothèses d'exécution sur un \emph{backtest} ; (6) estimer l'ordre de grandeur de l'impact de marché \citep{harris2003}.
+
+\paragraph{Code.} \texttt{code/ch12/ch12\_microstructure.py}.
+
+% =====================================================================
+\section{Le carnet d'ordres}
+% =====================================================================
+
+\subsection{Vocabulaire}
+
+Un marché électronique centralise des \emph{ordres limites} : des intentions d'acheter (\emph{bid}) ou de vendre (\emph{ask}) une quantité à un prix maximal ou minimal. Le meilleur prix acheteur et le meilleur prix vendeur forment le \og haut du carnet\fg ; leur différence est la \emph{fourchette} (\emph{spread}), leur moyenne le \emph{prix milieu} (\emph{mid}). La quantité disponible à chaque prix est la \emph{profondeur}.
+
+\begin{itemize}
+\item Un ordre \textbf{taker} (ordre au marché, ou ordre limite qui croise le carnet) s'exécute immédiatement contre les ordres en attente : il \og prend\fg{} la liquidité et paie la demi-fourchette.
+\item Un ordre \textbf{maker} (ordre limite qui ne croise pas) attend dans le carnet : il \og fournit\fg{} la liquidité, n'est exécuté que si quelqu'un vient le chercher, et reçoit souvent une remise ou paie des frais plus faibles. Un ordre \emph{post-only} est rejeté s'il devait s'exécuter immédiatement, ce qui garantit le statut de maker.
+\end{itemize}
+
+\begin{intuition}
+Le carnet est un marché aux puces. Le taker est pressé : il achète au prix affiché par le vendeur. Le maker affiche son prix et attend ; il obtient un meilleur prix, mais il n'est pas sûr d'être servi, et il l'est le plus souvent quand le marché bouge contre lui (le passant qui accepte votre prix d'achat sait peut-être que le prix va baisser). C'est la \emph{sélection adverse}, au cœur du chapitre~15.
+\end{intuition}
+
+\subsection{Les composantes du coût}
+
+Pour une transaction de notionnel $N$, le coût total se décompose en :
+\begin{enumerate}
+\item \textbf{commissions et frais} de la plateforme ou du courtier (fixes, par action, ou en points de base ; maker et taker différenciés) ;
+\item \textbf{demi-fourchette} payée par un ordre taker ;
+\item \textbf{impact de marché} : un ordre important consomme plusieurs niveaux du carnet et déplace le prix ;
+\item \textbf{glissement} (\emph{slippage}) : écart entre le prix observé au moment de la décision et le prix d'exécution, dû à la latence ;
+\item \textbf{coûts de portage} : emprunt des titres vendus à découvert, financement de la marge, \emph{funding} des contrats perpétuels (chapitre~14).
+\end{enumerate}
+
+% =====================================================================
+\section{Estimer la fourchette : l'estimateur de Roll}
+% =====================================================================
+
+Supposons que le prix milieu $m_t$ suive une marche aléatoire et que chaque transaction ait lieu au prix acheteur ou vendeur avec la même probabilité : $p_t = m_t + \frac s2 q_t$, où $q_t = \pm1$ est indépendant de tout le reste et $s$ la fourchette.
+
+\begin{proposition}[Roll]\label{c12:prop:roll}
+Sous ces hypothèses, $\Cov(\Delta p_t,\Delta p_{t-1}) = -s^2/4$, donc $s = 2\sqrt{-\Cov(\Delta p_t,\Delta p_{t-1})}$.
+\end{proposition}
+\begin{proof}
+$\Delta p_t = \Delta m_t + \frac s2(q_t - q_{t-1})$. Les variations du prix milieu sont indépendantes entre elles et des $q$, donc
+\[
+\Cov(\Delta p_t,\Delta p_{t-1}) = \frac{s^2}4\Cov(q_t - q_{t-1},\, q_{t-1} - q_{t-2}) = \frac{s^2}4\big(0 - 0 - \Var(q_{t-1}) + 0\big) = -\frac{s^2}4,
+\]
+car seuls les termes en $q_{t-1}$ sont corrélés et $\Var(q_{t-1}) = 1$.
+\end{proof}
+
+L'intuition : le prix \og rebondit\fg{} entre acheteur et vendeur, ce qui crée une autocorrélation négative des variations successives.
+
+\begin{codebox}[ — E1, estimateur de Roll]
+\textbf{Simulation} (200\,000 transactions) : fourchettes vraies de 2, 10 et 50 pb, estimées à $2{,}1$ ; $10{,}1$ et $47{,}4$ pb. \textbf{Clôtures quotidiennes réelles} : l'estimateur donne $66$ pb pour GLD, $62$ pour GLDM, $41$ pour KO et $50$ pour PEP, alors que les fourchettes réelles de ces titres très liquides se mesurent en points de base unitaires.
+\end{codebox}
+
+\begin{pitfall}
+Sur des données quotidiennes, l'autocorrélation négative des rendements a d'autres causes que le rebond acheteur-vendeur (corrections, nouvelles absorbées sur plusieurs jours) et l'estimateur de Roll n'a plus de sens. Les coûts doivent être mesurés sur données de transaction, ou mieux, sur vos propres exécutions : le prix obtenu comparé au prix milieu au moment de la décision.
+\end{pitfall}
+
+% =====================================================================
+\section{Le coût d'un aller-retour de paire}
+% =====================================================================
+
+Un trade de paire comprend quatre transactions : achat et vente de chaque jambe, à l'entrée puis à la sortie. Si chaque transaction coûte $c$ points de base (commission, demi-fourchette, impact), l'aller-retour coûte $4c$ en points de base du notionnel d'une jambe, plus le coût d'emprunt sur la durée de détention.
+
+Le chapitre~1 a établi qu'un aller-retour entre $\pm2\sigma_{eq}$ et 0 capture environ $2\sigma_{eq}$. Exiger que ce gain couvre au moins deux fois les coûts donne une règle simple : \textbf{l'écart-type stationnaire de l'écart doit être au moins égal au coût total d'un aller-retour}.
+
+\begin{codebox}[ — E2, coûts d'aller-retour (hypothèses illustratives à remplacer par vos tarifs)]
+\begin{center}\small
+\begin{tabular}{lcccc}
+\toprule
+Scénario & coût par transaction & aller-retour & emprunt 10 j & $\sigma_{eq}$ minimal\\
+\midrule
+Actions US, courtier à bas coût & 2,0 pb & 8,0 pb & 0,8 pb & 8,8 pb\\
+Actions moyennes capitalisations & 9,0 pb & 36,0 pb & 2,8 pb & 38,8 pb\\
+Crypto, taker sur les deux jambes & 7,0 pb & 28,0 pb & — & 28,0 pb\\
+Crypto maker et CFD taker & 3,5 pb & 14,0 pb & — & 14,0 pb\\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{codebox}
+
+\paragraph{Lecture.} L'écart GLD/GLDM du chapitre~3 a un écart-type de 4,5 pb : même avec les coûts les plus bas, il n'est pas tradable à l'échelle quotidienne. Un écart d'actions de même secteur a typiquement un écart-type stationnaire de 1 à 5\,\% : les coûts y sont secondaires si la relation existe. Le choix maker/taker change le seuil d'un facteur deux en crypto, d'où l'architecture d'\texttt{atjte} (maker sur la plateforme crypto, taker sur le CFD).
+
+% =====================================================================
+\section{Les hypothèses d'exécution d'un \emph{backtest}}
+% =====================================================================
+
+La plupart des \emph{backtests} supposent qu'on exécute au prix de clôture qui a déclenché le signal. Dans la réalité, on ne connaît ce prix qu'à la clôture, et l'on exécute au mieux juste après, au pire le lendemain, en payant la demi-fourchette.
+
+\begin{codebox}[ — E3, effet des hypothèses d'exécution]
+\textbf{Protocole :} écart OU de demi-vie 5 jours et d'écart-type stationnaire 30 pb, 50 ans simulés, règle $\pm2\sigma$ / 0. \textbf{Résultats} (gain annuel ; Sharpe) : exécution à la clôture du signal sans frais : 259 pb ; $2{,}34$. Même clôture avec demi-fourchette de 2 pb par jambe : 232 pb ; $2{,}14$. Clôture suivante sans frais : 227 pb ; $2{,}08$. Clôture suivante avec demi-fourchette : 199 pb ; $1{,}81$.
+\end{codebox}
+
+Un jour de retard et une demi-fourchette réaliste coûtent ensemble près d'un quart du gain, sur un écart pourtant ample et rapide. Plus la demi-vie est courte, plus le retard coûte cher. Règle : tout \emph{backtest} doit exécuter au plus tôt à la date suivant le signal, ou modéliser explicitement l'exécution intrajournalière.
+
+% =====================================================================
+\section{L'impact de marché}
+% =====================================================================
+
+Les études empiriques sur les gros ordres d'actions trouvent un impact qui croît comme la racine carrée de la taille de l'ordre rapportée au volume :
+\[
+\text{impact} \approx Y\,\sigma_{\text{jour}}\sqrt{\frac{Q}{V_{\text{jour}}}},
+\]
+où $\sigma_{\text{jour}}$ est la volatilité quotidienne, $Q$ la taille de l'ordre, $V_{\text{jour}}$ le volume quotidien et $Y$ une constante de l'ordre de 1.
+
+\begin{codebox}[ — E4, ordres de grandeur ($\sigma_{\text{jour}} = 1{,}5\,\%$, $Y = 1$)]
+Ordre représentant $0{,}01\,\%$ du volume quotidien : $1{,}5$ pb ; $0{,}1\,\%$ : $4{,}7$ pb ; $1\,\%$ : 15 pb ; $5\,\%$ : $33{,}5$ pb.
+\end{codebox}
+
+Pour un particulier sur des titres liquides, l'impact est négligeable devant la fourchette et les commissions ; il devient dominant dès qu'on trade des titres peu liquides ou des tailles importantes. C'est l'une des raisons pour lesquelles la capacité d'une stratégie d'arbitrage est limitée.
+
+% =====================================================================
+\section{Ce que la théorie apporte, et ses limites}
+% =====================================================================
+
+\paragraph{Apports.} Un vocabulaire précis, une décomposition des coûts, une règle simple reliant l'amplitude de l'écart aux coûts, et une discipline pour les hypothèses d'exécution.
+
+\paragraph{Limites.} Les coûts réels dépendent de l'heure, de la volatilité, de la taille et de la façon d'exécuter ; ils varient d'une plateforme à l'autre et dans le temps. Les modèles simples (Roll, racine carrée) donnent des ordres de grandeur, pas des chiffres utilisables tels quels. Seule la mesure de vos propres exécutions fait foi.
+
+% =====================================================================
+\section{Fiche à recopier au tableau blanc}
+% =====================================================================
+
+\begin{whiteboard}
+\begin{itemize}[leftmargin=1.2em]
+\item \textbf{Fourchette :} ask $-$ bid ; mid $=$ (bid+ask)/2 ; taker paie la demi-fourchette, maker la reçoit mais subit la sélection adverse.
+\item \textbf{Roll :} $\Cov(\Delta p_t,\Delta p_{t-1}) = -s^2/4$ $\Rightarrow$ $s = 2\sqrt{-\Cov}$ (données de transaction seulement).
+\item \textbf{Aller-retour de paire :} $4c$ + emprunt.
+\item \textbf{Règle :} $\sigma_{eq}\ge$ coût d'un aller-retour.
+\item \textbf{Impact :} $Y\sigma_{\text{jour}}\sqrt{Q/V}$.
+\item \textbf{Backtest :} exécuter au plus tôt en $t+1$ ; payer la demi-fourchette.
+\end{itemize}
+\end{whiteboard}
+
+% =====================================================================
+\section{Exercices}
+% =====================================================================
+
+\begin{exercise}
+Vous tradez une paire d'actions avec 0,5 pb de commission, 1 pb de demi-fourchette et un coût d'emprunt de 2\,\% par an sur la jambe courte, pour des détentions de 20 jours. Calculez le coût total d'un aller-retour et l'écart-type stationnaire minimal de l'écart.
+\end{exercise}
+
+\begin{exercise}
+Refaites la démonstration de la proposition~\ref{c12:prop:roll} en supposant que $q_t$ a une probabilité $\pi\ne\frac12$ d'être $+1$. Que devient la formule ?
+\end{exercise}
+
+\begin{exercise}[à coder]
+Dans E3, remplacez le décalage d'un jour par une exécution à un prix intermédiaire (moyenne de la clôture du signal et de celle du lendemain) et comparez.
+\end{exercise}
+
+\begin{exercise}[données réelles]
+Pendant un mois de \emph{paper trading}, enregistrez pour chaque ordre le prix milieu au moment de la décision et le prix d'exécution. Calculez votre coût moyen réel par transaction et comparez-le au tableau de E2.
+\end{exercise}
+
+% =====================================================================
+\section{Pour aller plus loin}
+% =====================================================================
+
+\begin{toread}
+\begin{itemize}[leftmargin=1.2em]
+\item \citet{harris2003} : les chapitres sur les ordres, la liquidité et les coûts de transaction ; la référence pour comprendre qui gagne et qui perd dans un carnet.
+\item \citet{dofaff2012} : l'effet des coûts réalistes sur le \emph{pairs trading}.
+\item \citet{gatev2006} : la section sur le décalage d'exécution d'un jour.
+\end{itemize}
+\end{toread}
+
+\section{Scripts du chapitre}
+\noindent\texttt{code/ch12/ch12\_microstructure.py} : E1 (Roll), E2 (coûts), E3 (hypothèses d'exécution), E4 (impact).

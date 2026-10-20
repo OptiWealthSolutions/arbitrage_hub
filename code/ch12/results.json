@@ -1,0 +1,126 @@
+{
+  "E1": {
+    "simulation_estimation_pb": {
+      "vraie_fourchette_2pb": 2.1,
+      "vraie_fourchette_10pb": 10.12,
+      "vraie_fourchette_50pb": 47.42
+    },
+    "clotures_quotidiennes_reelles": {
+      "GLD": {
+        "autocovariance": -1.3251,
+        "fourchette_estimee_pb": 65.9
+      },
+      "GLDM": {
+        "autocovariance": -0.0539,
+        "fourchette_estimee_pb": 61.7
+      },
+      "KO": {
+        "autocovariance": -0.0222,
+        "fourchette_estimee_pb": 40.6
+      },
+      "PEP": {
+        "autocovariance": -0.1335,
+        "fourchette_estimee_pb": 50.0
+      }
+    }
+  },
+  "E2": {
+    "hypotheses": {
+      "actions_US_courtier_bas_cout": {
+        "commission_pb": 0.5,
+        "demi_fourchette_pb": 1.0,
+        "impact_pb": 0.5,
+        "emprunt_annuel_pct": 0.3
+      },
+      "actions_moyennes_capitalisations": {
+        "commission_pb": 1.0,
+        "demi_fourchette_pb": 5.0,
+        "impact_pb": 3.0,
+        "emprunt_annuel_pct": 1.0
+      },
+      "crypto_taker_taker": {
+        "commission_pb": 5.0,
+        "demi_fourchette_pb": 1.0,
+        "impact_pb": 1.0,
+        "emprunt_annuel_pct": 0.0
+      },
+      "crypto_maker_CFD_taker": {
+        "commission_pb": 1.5,
+        "demi_fourchette_pb": 1.5,
+        "impact_pb": 0.5,
+        "emprunt_annuel_pct": 0.0
+      }
+    },
+    "resultats": {
+      "actions_US_courtier_bas_cout": {
+        "cout_trading_aller_retour_pb": 8.0,
+        "cout_emprunt_10j_pb": 0.83,
+        "total_pb": 8.8,
+        "sigma_eq_minimal_pour_couvrir_2x_les_couts_pb": 8.8
+      },
+      "actions_moyennes_capitalisations": {
+        "cout_trading_aller_retour_pb": 36.0,
+        "cout_emprunt_10j_pb": 2.78,
+        "total_pb": 38.8,
+        "sigma_eq_minimal_pour_couvrir_2x_les_couts_pb": 38.8
+      },
+      "crypto_taker_taker": {
+        "cout_trading_aller_retour_pb": 28.0,
+        "cout_emprunt_10j_pb": 0.0,
+        "total_pb": 28.0,
+        "sigma_eq_minimal_pour_couvrir_2x_les_couts_pb": 28.0
+      },
+      "crypto_maker_CFD_taker": {
+        "cout_trading_aller_retour_pb": 14.0,
+        "cout_emprunt_10j_pb": 0.0,
+        "total_pb": 14.0,
+        "sigma_eq_minimal_pour_couvrir_2x_les_couts_pb": 14.0
+      }
+    },
+    "note": "un aller-retour à seuils +-2 sigma -> 0 capture ~2 sigma_eq ; exiger gain >= 2 x coûts => sigma_eq >= coûts"
+  },
+  "E3": {
+    "demi_vie_jours": 5,
+    "sigma_eq_pb": 30.0,
+    "resultats": {
+      "meme_cloture_sans_frais": {
+        "gain_annuel_pb": 259.0,
+        "sharpe": 2.34
+      },
+      "meme_cloture_demi_fourchette_2pb": {
+        "gain_annuel_pb": 231.5,
+        "sharpe": 2.14
+      },
+      "cloture_suivante_sans_frais": {
+        "gain_annuel_pb": 226.7,
+        "sharpe": 2.08
+      },
+      "cloture_suivante_demi_fourchette_2pb": {
+        "gain_annuel_pb": 199.2,
+        "sharpe": 1.81
+      }
+    }
+  },
+  "E4": {
+    "volatilite_quotidienne": 0.015,
+    "Y": 1.0,
+    "tableau": [
+      {
+        "part_du_volume_quotidien": 0.0001,
+        "impact_pb": 1.5
+      },
+      {
+        "part_du_volume_quotidien": 0.001,
+        "impact_pb": 4.74
+      },
+      {
+        "part_du_volume_quotidien": 0.01,
+        "impact_pb": 15.0
+      },
+      {
+        "part_du_volume_quotidien": 0.05,
+        "impact_pb": 33.54
+      }
+    ]
+  }
+}
