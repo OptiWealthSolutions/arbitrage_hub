@@ -17,6 +17,10 @@
 \usepackage{titlesec}
 \usepackage[font=small,labelfont=bf]{caption}
 \usepackage[numbers,sort&compress]{natbib}
+\usepackage{needspace}
+\usepackage{tikz}
+\usetikzlibrary{positioning,arrows.meta,fit,calc}
+\usepackage{chngcntr}
 \usepackage{listings}
 \usepackage[most]{tcolorbox}
 \usepackage{needspace}
@@ -34,6 +38,10 @@
 % ---- Libellés en français (pas de babel-french sur la machine de build)
 \renewcommand{\contentsname}{Table des matières}
 \renewcommand{\refname}{Références}
+\renewcommand{\bibname}{Bibliographie}
+\renewcommand{\chaptername}{Chapitre}
+\renewcommand{\partname}{Partie}
+\renewcommand{\appendixname}{Annexe}
 \renewcommand{\abstractname}{Résumé}
 \renewcommand{\figurename}{Figure}
 \renewcommand{\tablename}{Tableau}
@@ -42,8 +50,11 @@
 \newcommand{\fg}{\,\guillemotright}
 
 % ---- Titres de sections
-\titleformat{\section}{\normalfont\large\bfseries}{\thesection.}{0.6em}{}
-\titleformat{\subsection}{\normalfont\normalsize\bfseries}{\thesubsection.}{0.5em}{}
+\titleformat{\chapter}[display]{\normalfont\bfseries}{\large\scshape Chapitre \thechapter}{0.4em}{\LARGE}[\vspace{0.3em}\titlerule]
+\titlespacing*{\chapter}{0pt}{-10pt}{18pt}
+\titleformat{\part}[display]{\normalfont\centering\bfseries}{\Large\scshape Partie \thepart}{1em}{\Huge}
+\titleformat{\section}{\normalfont\large\bfseries}{\thesection}{0.6em}{}
+\titleformat{\subsection}{\normalfont\normalsize\bfseries}{\thesubsection}{0.5em}{}
 \titleformat{\subsubsection}{\normalfont\normalsize\itshape}{\thesubsubsection.}{0.5em}{}
 
 % ---- En-têtes
@@ -51,18 +62,22 @@
 \fancyhf{}
 \renewcommand{\headrulewidth}{0.4pt}
 \fancyfoot[C]{\small\thepage}
+\fancyhead[L]{\small\itshape Arbitrage Hub — cours complet}
+\fancyhead[R]{\small\itshape\nouppercase{\leftmark}}
+\renewcommand{\chaptermark}[1]{\markboth{Chapitre \thechapter{} — #1}{}}
+\fancypagestyle{plain}{\fancyhf{}\renewcommand{\headrulewidth}{0pt}\fancyfoot[C]{\small\thepage}}
 
 % ---- Théorèmes
 \theoremstyle{definition}
-\newtheorem{definition}{Définition}[section]
-\newtheorem{example}{Exemple}[section]
-\newtheorem{exercise}{Exercice}[section]
+\newtheorem{definition}{Définition}[chapter]
+\newtheorem{example}{Exemple}[chapter]
+\newtheorem{exercise}{Exercice}[chapter]
 \theoremstyle{plain}
-\newtheorem{proposition}{Proposition}[section]
-\newtheorem{theorem}{Théorème}[section]
-\newtheorem{lemma}{Lemme}[section]
+\newtheorem{proposition}{Proposition}[chapter]
+\newtheorem{theorem}{Théorème}[chapter]
+\newtheorem{lemma}{Lemme}[chapter]
 \theoremstyle{remark}
-\newtheorem{remark}{Remarque}[section]
+\newtheorem{remark}{Remarque}[chapter]
 \renewcommand{\proofname}{Démonstration}
 
 % ---- Encadrés pédagogiques

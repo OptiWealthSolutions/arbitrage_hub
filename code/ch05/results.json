@@ -1,0 +1,178 @@
+{
+  "E1": {
+    "theta": 2.0,
+    "sigma": 1.0,
+    "resultats": {
+      "dt=0.0040": {
+        "var_exacte": 0.2622,
+        "var_euler": 0.2522,
+        "var_theorique": 0.25,
+        "acf1_exacte": 0.9925,
+        "acf1_euler": 0.9921,
+        "acf1_theorique": 0.9921,
+        "euler_phi": 0.9921
+      },
+      "dt=0.0833": {
+        "var_exacte": 0.2516,
+        "var_euler": 0.2731,
+        "var_theorique": 0.25,
+        "acf1_exacte": 0.8462,
+        "acf1_euler": 0.8302,
+        "acf1_theorique": 0.8465,
+        "euler_phi": 0.8333
+      },
+      "dt=0.2500": {
+        "var_exacte": 0.2514,
+        "var_euler": 0.3243,
+        "var_theorique": 0.25,
+        "acf1_exacte": 0.6099,
+        "acf1_euler": 0.5048,
+        "acf1_theorique": 0.6065,
+        "euler_phi": 0.5
+      }
+    }
+  },
+  "E2": {
+    "vrai": {
+      "theta": 5.0,
+      "mu": 1.0,
+      "sigma": 0.5,
+      "demi_vie_jours": 34.9
+    },
+    "par_duree": {
+      "1_an(s)": {
+        "theta_mediane": 8.65,
+        "theta_q05": 2.77,
+        "theta_q95": 20.58,
+        "mu_ecart_type": 0.1218,
+        "sigma_mediane": 0.5044
+      },
+      "4_an(s)": {
+        "theta_mediane": 5.81,
+        "theta_q05": 3.39,
+        "theta_q95": 9.84,
+        "mu_ecart_type": 0.0481,
+        "sigma_mediane": 0.5017
+      },
+      "16_an(s)": {
+        "theta_mediane": 5.22,
+        "theta_q05": 3.96,
+        "theta_q95": 6.78,
+        "mu_ecart_type": 0.0258,
+        "sigma_mediane": 0.5003
+      }
+    }
+  },
+  "E3": {
+    "theta": 1.0,
+    "sigma": 1.0,
+    "pas_simulation": 0.001,
+    "tableau": [
+      {
+        "a_en_ecarts_types": 0.5,
+        "T_vers_moyenne_formule": 0.523,
+        "T_vers_moyenne_simulation": 0.546,
+        "T_depuis_moyenne_formule": 0.13,
+        "T_depuis_moyenne_simulation": 0.146
+      },
+      {
+        "a_en_ecarts_types": 1.0,
+        "T_vers_moyenne_formule": 0.902,
+        "T_vers_moyenne_simulation": 0.951,
+        "T_depuis_moyenne_formule": 0.596,
+        "T_depuis_moyenne_simulation": 0.637
+      },
+      {
+        "a_en_ecarts_types": 1.5,
+        "T_vers_moyenne_formule": 1.192,
+        "T_vers_moyenne_simulation": 1.233,
+        "T_depuis_moyenne_formule": 1.711,
+        "T_depuis_moyenne_simulation": 1.789
+      },
+      {
+        "a_en_ecarts_types": 2.0,
+        "T_vers_moyenne_formule": 1.425,
+        "T_vers_moyenne_simulation": 1.468,
+        "T_depuis_moyenne_formule": 4.502,
+        "T_depuis_moyenne_simulation": 4.726
+      }
+    ]
+  },
+  "E4": {
+    "optimum_theta1_sigma1": {
+      "cout=0.0": {
+        "a_optimal_en_ecarts_types": 0.05,
+        "rendement_par_unite_de_temps": 0.798
+      },
+      "cout=0.1": {
+        "a_optimal_en_ecarts_types": 0.69,
+        "rendement_par_unite_de_temps": 0.629
+      },
+      "cout=0.25": {
+        "a_optimal_en_ecarts_types": 0.97,
+        "rendement_par_unite_de_temps": 0.501
+      },
+      "cout=0.5": {
+        "a_optimal_en_ecarts_types": 1.26,
+        "rendement_par_unite_de_temps": 0.359
+      }
+    },
+    "verification_quotidienne_theta12.6": {
+      "a=0.25,c=0.0": {
+        "gain_par_an_en_ecarts_types": 9.72,
+        "trades_par_an": 15.1,
+        "formule": 9.95
+      },
+      "a=0.25,c=0.25": {
+        "gain_par_an_en_ecarts_types": 5.94,
+        "trades_par_an": 15.1,
+        "formule": 0.0
+      },
+      "a=0.5,c=0.0": {
+        "gain_par_an_en_ecarts_types": 9.32,
+        "trades_par_an": 10.9,
+        "formule": 9.64
+      },
+      "a=0.5,c=0.25": {
+        "gain_par_an_en_ecarts_types": 6.6,
+        "trades_par_an": 10.9,
+        "formule": 4.82
+      },
+      "a=1.0,c=0.0": {
+        "gain_par_an_en_ecarts_types": 7.98,
+        "trades_par_an": 5.9,
+        "formule": 8.41
+      },
+      "a=1.0,c=0.25": {
+        "gain_par_an_en_ecarts_types": 6.5,
+        "trades_par_an": 5.9,
+        "formule": 6.31
+      },
+      "a=1.5,c=0.0": {
+        "gain_par_an_en_ecarts_types": 5.8,
+        "trades_par_an": 3.2,
+        "formule": 6.51
+      },
+      "a=1.5,c=0.25": {
+        "gain_par_an_en_ecarts_types": 5.01,
+        "trades_par_an": 3.2,
+        "formule": 5.42
+      },
+      "a=2.0,c=0.0": {
+        "gain_par_an_en_ecarts_types": 3.61,
+        "trades_par_an": 1.6,
+        "formule": 4.25
+      },
+      "a=2.0,c=0.25": {
+        "gain_par_an_en_ecarts_types": 3.22,
+        "trades_par_an": 1.6,
+        "formule": 3.72
+      }
+    }
+  },
+  "E5": {
+    "phi_quotidien": 0.0111,
+    "note": "phi proche de 0 : theta = -ln(phi)*252 n'a pas de sens ; l'écart est un bruit blanc à l'échelle quotidienne",
+    "ecart_type_pb": 4.48
+  }
+}

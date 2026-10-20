@@ -1,0 +1,159 @@
+{
+  "E1": {
+    "n": 500,
+    "repetitions": 10000,
+    "quantiles_EG": [
+      -3.91,
+      -3.36,
+      -3.07
+    ],
+    "MacKinnon_2_variables": [
+      -3.9,
+      -3.34,
+      -3.04
+    ],
+    "faux_positifs_si_seuil_DF_-2.86": 0.149,
+    "faux_positifs_si_seuil_EG_-3.34": 0.053
+  },
+  "E2": {
+    "paire_cointegree": {
+      "250": {
+        "moyenne": 1.496,
+        "ecart_type": 0.11055
+      },
+      "1000": {
+        "moyenne": 1.5011,
+        "ecart_type": 0.02991
+      },
+      "4000": {
+        "moyenne": 1.5001,
+        "ecart_type": 0.00811
+      }
+    },
+    "variables_stationnaires_ecart_type": {
+      "250": 0.06679,
+      "1000": 0.0303,
+      "4000": 0.01616
+    }
+  },
+  "E3": {
+    "vrai": {
+      "alpha_y": -0.1,
+      "alpha_x": 0.05,
+      "beta": 1.0,
+      "phi_ecart_theorique": 0.85,
+      "demi_vie_theorique": 4.27
+    },
+    "estime": {
+      "beta": 0.8789,
+      "alpha_y": -0.127,
+      "t_alpha_y": -13.3,
+      "alpha_x": 0.0549,
+      "t_alpha_x": 6.0,
+      "phi_ecart": 0.8247,
+      "demi_vie": 3.6
+    }
+  },
+  "E4": {
+    "trace": [
+      48.14,
+      6.05,
+      2.09
+    ],
+    "trace_crit_95": [
+      29.8,
+      15.49,
+      3.84
+    ],
+    "maxeig": [
+      42.09,
+      3.96,
+      2.09
+    ],
+    "maxeig_crit_95": [
+      21.13,
+      14.26,
+      3.84
+    ],
+    "vecteur_normalise_sur_x2": [
+      -0.535,
+      1.0,
+      -0.042
+    ],
+    "vrai_vecteur": "x2 - 0.5 x1 (soit -0.5, 1, 0)"
+  },
+  "E5": {
+    "rho": 0.9,
+    "sigma_M": 1.0,
+    "n": 1000,
+    "tableau": [
+      {
+        "sigma_R": 0.0,
+        "R2_MR": 1.0,
+        "ADF_rejette": 1.0
+      },
+      {
+        "sigma_R": 0.1,
+        "R2_MR": 0.991,
+        "ADF_rejette": 0.987
+      },
+      {
+        "sigma_R": 0.2,
+        "R2_MR": 0.963,
+        "ADF_rejette": 0.867
+      },
+      {
+        "sigma_R": 0.4,
+        "R2_MR": 0.868,
+        "ADF_rejette": 0.533
+      },
+      {
+        "sigma_R": 0.8,
+        "R2_MR": 0.622,
+        "ADF_rejette": 0.177
+      }
+    ]
+  },
+  "E6": {
+    "GLD_GLDM_constante": {
+      "tau": -0.53,
+      "p": 0.962,
+      "crit_5": -3.35
+    },
+    "GLD_GLDM_tendance": {
+      "tau": -22.17,
+      "p": 0.0,
+      "crit_5": -3.8
+    },
+    "KO_PEP": {
+      "tau": -1.18,
+      "p": 0.864,
+      "crit_5": -3.35
+    },
+    "PEP_KO": {
+      "tau": -3.17,
+      "p": 0.075,
+      "crit_5": -3.35
+    },
+    "Johansen_GLD_GLDM": {
+      "trace": [
+        214.4,
+        1.11
+      ],
+      "crit_95": [
+        18.4,
+        3.84
+      ]
+    },
+    "Johansen_KO_PEP": {
+      "trace": [
+        9.99,
+        0.12
+      ],
+      "crit_95": [
+        15.49,
+        3.84
+      ]
+    }
+  }
+}

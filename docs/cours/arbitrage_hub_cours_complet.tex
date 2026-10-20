@@ -1,0 +1,77 @@
+\documentclass[11pt,a4paper,openany]{report}
+\input{preamble.tex}
+\graphicspath{{figures/}}
+\setcounter{tocdepth}{1}
+
+\begin{document}
+
+% =====================================================================
+%  Page de titre
+% =====================================================================
+\begin{titlepage}
+\centering
+\vspace*{3cm}
+{\Large\scshape Arbitrage Hub — Horacle Capital\par}
+\vspace{1.2cm}
+{\huge\bfseries Arbitrage statistique,\\[0.3em] pairs trading et arbitrage inter-plateformes\par}
+\vspace{0.8cm}
+{\Large Cours complet : de la théorie aux stratégies codées et auditées\par}
+\vspace{2cm}
+{\large Claude Opus 5.5 (Anthropic)\par}
+\vspace{0.3cm}
+{\normalsize Rédigé pour Léo Lombardini — Horacle Capital\par}
+\vspace{0.2cm}
+{\small\url{https://github.com/OptiWealthSolutions/arbitrage_hub}\par}
+\vfill
+{\large 20 octobre 2026\par}
+\end{titlepage}
+
+% =====================================================================
+\pagenumbering{roman}
+\chapter*{Résumé}
+\addcontentsline{toc}{chapter}{Résumé}
+\markboth{Résumé}{}
+\input{chapitres/resume.tex}
+
+\tableofcontents
+
+\cleardoublepage
+\pagenumbering{arabic}
+
+% =====================================================================
+\setcounter{chapter}{-1}
+\input{chapitres/ch00.tex}
+
+\part{Fondations statistiques}
+\input{chapitres/ch01.tex}
+\input{chapitres/ch02.tex}
+\input{chapitres/ch03.tex}
+\input{chapitres/ch04.tex}
+\input{chapitres/ch05.tex}
+
+\part{Les méthodes de pairs trading}
+\input{chapitres/ch06.tex}
+\input{chapitres/ch07.tex}
+\input{chapitres/ch08.tex}
+\input{chapitres/ch09.tex}
+\input{chapitres/ch10.tex}
+\input{chapitres/ch11.tex}
+
+\part{Arbitrage inter-plateformes}
+\input{chapitres/ch12.tex}
+\input{chapitres/ch13.tex}
+\input{chapitres/ch14.tex}
+\input{chapitres/ch15.tex}
+
+\part{Validation, risque et mise en production}
+\input{chapitres/ch16.tex}
+\input{chapitres/ch17.tex}
+\input{chapitres/ch18.tex}
+
+\appendix
+\input{chapitres/annexes.tex}
+
+\bibliographystyle{plainnat}
+\bibliography{references}
+
+\end{document}

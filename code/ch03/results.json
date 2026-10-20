@@ -1,0 +1,227 @@
+{
+  "E1": {
+    "n": 500,
+    "repetitions": 20000,
+    "quantiles_1_5_10": [
+      -3.439,
+      -2.866,
+      -2.57
+    ],
+    "valeurs_tabulees_MacKinnon": [
+      -3.43,
+      -2.86,
+      -2.57
+    ],
+    "rejet_si_on_utilise_-1.645": 0.464,
+    "moyenne_tau": -1.541
+  },
+  "E2": {
+    "n": [
+      100,
+      250,
+      500,
+      1000,
+      2500
+    ],
+    "puissance_par_phi": {
+      "0.9": [
+        0.292,
+        0.958,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "0.95": [
+        0.113,
+        0.443,
+        0.963,
+        1.0,
+        1.0
+      ],
+      "0.98": [
+        0.092,
+        0.13,
+        0.328,
+        0.85,
+        1.0
+      ],
+      "0.99": [
+        0.065,
+        0.062,
+        0.1,
+        0.315,
+        0.965
+      ]
+    }
+  },
+  "E3": {
+    "n": 500,
+    "repetitions": 400,
+    "frequences": {
+      "marche_aleatoire": {
+        "ADF_rejette_et_KPSS_accepte": 0.025,
+        "ADF_accepte_et_KPSS_rejette": 0.89,
+        "les_deux_rejettent": 0.045,
+        "aucun_ne_rejette": 0.04
+      },
+      "AR_0.95": {
+        "ADF_rejette_et_KPSS_accepte": 0.537,
+        "ADF_accepte_et_KPSS_rejette": 0.05,
+        "les_deux_rejettent": 0.403,
+        "aucun_ne_rejette": 0.01
+      },
+      "AR_0.5": {
+        "ADF_rejette_et_KPSS_accepte": 0.94,
+        "ADF_accepte_et_KPSS_rejette": 0.0,
+        "les_deux_rejettent": 0.06,
+        "aucun_ne_rejette": 0.0
+      }
+    }
+  },
+  "E4": {
+    "q": [
+      2,
+      5,
+      10,
+      20,
+      40,
+      60
+    ],
+    "VR_marche_aleatoire": [
+      0.985,
+      0.985,
+      0.94,
+      0.923,
+      0.834,
+      0.734
+    ],
+    "VR_AR0.9_simule": [
+      0.954,
+      0.823,
+      0.655,
+      0.417,
+      0.224,
+      0.15
+    ],
+    "VR_AR0.9_theorie": [
+      0.95,
+      0.819,
+      0.651,
+      0.439,
+      0.246,
+      0.166
+    ],
+    "VR_rendements_autocorreles": [
+      1.311,
+      1.621,
+      1.765,
+      1.85,
+      1.882,
+      1.953
+    ],
+    "z_LoMacKinlay_q10": {
+      "RW": -1.25,
+      "AR0.9": -7.21,
+      "momentum": 16.02
+    }
+  },
+  "E5": {
+    "marche_aleatoire": {
+      "moyenne": 0.494,
+      "q05": 0.438,
+      "q95": 0.548
+    },
+    "AR_0.9": {
+      "moyenne": 0.218,
+      "q05": 0.185,
+      "q95": 0.256
+    },
+    "AR_0.99": {
+      "moyenne": 0.457,
+      "q05": 0.402,
+      "q95": 0.508
+    },
+    "rendements_autocorreles_0.3": {
+      "moyenne": 0.525,
+      "q05": 0.467,
+      "q95": 0.575
+    }
+  },
+  "E6": {
+    "tableau": [
+      {
+        "serie": "log GLD (un prix seul)",
+        "ADF_stat": -1.47,
+        "ADF_p": 0.547,
+        "KPSS_stat": 3.313,
+        "KPSS_p": 0.01,
+        "phi": 0.9949,
+        "demi_vie_jours": 136.6,
+        "VR_10": 0.786,
+        "Hurst": 0.461
+      },
+      {
+        "serie": "log GLD - log GLDM",
+        "ADF_stat": -0.3,
+        "ADF_p": 0.925,
+        "KPSS_stat": 3.922,
+        "KPSS_p": 0.01,
+        "phi": 0.9338,
+        "demi_vie_jours": 10.1,
+        "VR_10": 0.1,
+        "Hurst": 0.009
+      },
+      {
+        "serie": "log GLD - log GLDM, tests avec tendance",
+        "ADF_stat": -22.02,
+        "ADF_p": 0.0,
+        "KPSS_stat": 0.112,
+        "KPSS_p": 0.1,
+        "phi": 0.9338,
+        "demi_vie_jours": 10.1,
+        "VR_10": 0.1,
+        "Hurst": 0.009
+      },
+      {
+        "serie": "log GLD - log GLDM sans tendance",
+        "ADF_stat": -22.05,
+        "ADF_p": 0.0,
+        "KPSS_stat": 0.112,
+        "KPSS_p": 0.1,
+        "phi": 0.0111,
+        "demi_vie_jours": 0.2,
+        "VR_10": 0.1,
+        "Hurst": 0.009
+      },
+      {
+        "serie": "log KO - log PEP (beta = 1)",
+        "ADF_stat": -0.1,
+        "ADF_p": 0.949,
+        "KPSS_stat": 2.37,
+        "KPSS_p": 0.01,
+        "phi": 0.9996,
+        "demi_vie_jours": 1803.0,
+        "VR_10": 0.961,
+        "Hurst": 0.499
+      },
+      {
+        "serie": "log KO - -0.432 log PEP (beta MCO)",
+        "ADF_stat": -1.17,
+        "ADF_p": 0.684,
+        "KPSS_stat": 3.053,
+        "KPSS_p": 0.01,
+        "phi": 0.9915,
+        "demi_vie_jours": 81.4,
+        "VR_10": 0.82,
+        "Hurst": 0.436
+      }
+    ],
+    "pente_annuelle_log_ratio_GLD_GLDM": -0.00293,
+    "ecart_GLD_GLDM_sans_tendance_pb": {
+      "ecart_type": 4.48,
+      "max_abs": 77.1,
+      "q99_abs": 8.32,
+      "part_sup_5pb": 0.054
+    }
+  }
+}

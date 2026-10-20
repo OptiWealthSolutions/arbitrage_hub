@@ -1,0 +1,15 @@
+\noindent Ce document réunit en un seul volume un cours complet sur l'arbitrage statistique, le \emph{pairs trading} et l'arbitrage inter-plateformes accessible à un trader particulier. Il est organisé en un chapitre introductif et quatre parties.
+
+\medskip\noindent\textbf{Chapitre 0} définit ce que recouvre le mot \og arbitrage\fg, fixe la méthode de travail, dresse la revue de littérature et analyse le moteur open source \texttt{atjte} d'arbitrage multi-plateformes.
+
+\medskip\noindent\textbf{Partie I — Fondations statistiques (chapitres 1 à 5).} Arbitrage pur et statistique, stationnarité, marche aléatoire et AR(1) ; régression, maximum de vraisemblance et leurs biais ; tests de racine unitaire et de stationnarité ; cointégration d'Engle-Granger et de Johansen ; processus d'Ornstein-Uhlenbeck, temps de premier passage et seuils de trading optimaux.
+
+\medskip\noindent\textbf{Partie II — Les méthodes de pairs trading (chapitres 6 à 11).} Méthode des distances de Gatev, Goetzmann et Rouwenhorst ; sélection de paires par cointégration et contrôle des faux positifs ; ratio de couverture dynamique par filtre de Kalman ; copules ; arbitrage statistique multi-actifs par analyse en composantes principales (Avellaneda et Lee) ; apprentissage automatique et validation sans fuite d'information.
+
+\medskip\noindent\textbf{Partie III — Arbitrage inter-plateformes (chapitres 12 à 15).} Microstructure et modèle de coûts ; arbitrage spatial et triangulaire et course à la latence ; arbitrage de base, \emph{cash-and-carry} et \emph{funding} des contrats perpétuels, avec l'étude du cas \texttt{atjte} ; exécution, risque de jambe, sélection adverse et architecture logicielle.
+
+\medskip\noindent\textbf{Partie IV — Validation, risque et mise en production (chapitres 16 à 18).} \emph{Backtest} sans biais, tests multiples, ratio de Sharpe déflaté et probabilité de surapprentissage ; dimensionnement, détection de rupture, limites de l'arbitrage ; passage du papier au code avec Claude Code, du cahier des charges au \emph{paper trading}.
+
+\medskip\noindent Chaque affirmation quantitative importante est vérifiée par un script Python du dépôt \texttt{arbitrage\_hub}, sur données simulées (où la vérité est connue) ou sur des données réelles (GLD, GLDM, KO, PEP, 500 séances téléchargées via Interactive Brokers). Les résultats chiffrés reportés dans le texte sont ceux que produisent ces scripts. Le cours est honnête sur un point central : la littérature montre que les profits du \emph{pairs trading} classique ont fortement diminué depuis les années 2000 et que l'arbitrage \og pur\fg{} entre plateformes est une course de vitesse perdue d'avance pour un particulier. L'objectif est de construire un avantage réel, mesuré et robuste, pas de promettre un profit.
+
+\medskip\noindent\textbf{Mots-clés :} arbitrage statistique, pairs trading, cointégration, Ornstein-Uhlenbeck, filtre de Kalman, copules, analyse en composantes principales, microstructure, arbitrage de base, \emph{funding}, surapprentissage, ratio de Sharpe déflaté.

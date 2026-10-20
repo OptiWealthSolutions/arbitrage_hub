@@ -16,7 +16,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 ROOT = Path(__file__).resolve().parents[2]
-FIG_DIR = ROOT / "docs" / "01_fondations" / "figures"
+FIG_DIR = ROOT / "docs" / "cours" / "figures" / "ch01"
 RES_DIR = Path(__file__).resolve().parent / "results"
 FIG_DIR.mkdir(parents=True, exist_ok=True)
 RES_DIR.mkdir(parents=True, exist_ok=True)

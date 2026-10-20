@@ -1,29 +1,8 @@
-\documentclass[11pt,a4paper]{article}
-\input{../shared/preamble.tex}
-\usepackage{tikz}
-\usetikzlibrary{positioning,arrows.meta,fit}
-\fancyhead[L]{\small\itshape Arbitrage Hub — Document 00}
-\fancyhead[R]{\small\itshape Plan d'étude et revue de littérature}
+% =====================================================================
+\chapter{Cartographie de l'arbitrage, méthode et revue de littérature}
+\label{ch:0}
+% =====================================================================
 
-\title{\textbf{Arbitrage statistique et arbitrage inter-plateformes :\\ plan d'étude, revue de littérature et feuille de route vers la production}\\[0.4em]
-\large Document 00 du cours \og Arbitrage Hub\fg}
-\author{Claude Opus 5.5 (Anthropic)\\[0.2em]
-\small Rédigé pour Léo Lombardini — Horacle Capital\\
-\small\url{https://github.com/OptiWealthSolutions/arbitrage_hub}}
-\date{20 octobre 2026}
-
-\begin{document}
-\maketitle
-\thispagestyle{empty}
-
-\begin{abstract}
-\noindent Ce document ouvre un cours complet sur l'arbitrage statistique (\emph{statistical arbitrage}), le \emph{pairs trading} et l'arbitrage inter-plateformes accessible à un trader particulier (\og retail\fg). Il remplit quatre fonctions. (i) Il définit précisément ce que recouvre le mot \og arbitrage\fg{} et sépare l'arbitrage pur, sans risque, de l'arbitrage statistique, qui n'est qu'un pari à espérance positive. (ii) Il liste, dans l'ordre où elles doivent être apprises, toutes les notions mathématiques, statistiques et de microstructure nécessaires, et les organise en dix-huit chapitres répartis en cinq parties. (iii) Il propose une revue de littérature annotée des articles fondateurs (Gatev, Goetzmann et Rouwenhorst ; Engle et Granger ; Avellaneda et Lee ; Krauss ; Makarov et Schoar ; Bailey et López de Prado, entre autres) et des dépôts logiciels ouverts, dont le moteur \texttt{atjte} d'arbitrage multi-plateformes. (iv) Il fixe l'architecture du dépôt \texttt{arbitrage\_hub} et une méthode de travail qui mène du tableau blanc à des stratégies codées, testées et auditables avec Claude Code. Le document se veut honnête sur un point central : la littérature montre que les profits du \emph{pairs trading} classique ont fortement diminué depuis les années 2000, et que les opportunités d'arbitrage \og pur\fg{} entre plateformes sont soit capturées par des acteurs plus rapides, soit interdites par les règles des courtiers et des \emph{prop firms}. L'objectif du cours est donc de construire un avantage réel, mesuré et robuste, pas de promettre un profit.
-
-\medskip\noindent\textbf{Mots-clés :} arbitrage statistique, pairs trading, cointégration, Ornstein-Uhlenbeck, filtre de Kalman, copules, arbitrage de base, microstructure, surapprentissage.
-\end{abstract}
-
-\tableofcontents
-\newpage
 
 % =====================================================================
 \section{Introduction : pourquoi ajouter l'arbitrage à un portefeuille de stratégies}
@@ -59,7 +38,7 @@ Le but final est de générer du profit, et c'est légitime. Mais la littératur
 % =====================================================================
 
 \subsection{Un chapitre à la fois}
-Chaque chapitre est un document PDF autonome au format article, publié dans \texttt{docs/}. On ne passe au suivant que lorsque les exercices du précédent sont faits et que les scripts Python associés tournent sur votre machine. Chaque chapitre suit la même structure :
+Le cours est réuni dans ce seul document, mais il se travaille chapitre par chapitre : on ne passe au suivant que lorsque les exercices du précédent sont faits et que les scripts Python associés tournent sur votre machine. Chaque chapitre suit la même structure :
 \begin{enumerate}
 \item \textbf{Intuition} : une image mentale (encadré bleu) avant toute formule ;
 \item \textbf{Formalisation} : définitions, propositions et démonstrations, chaque étape algébrique justifiée ;
@@ -76,8 +55,21 @@ Le tableau blanc sert à \emph{reconstruire} les démonstrations, pas à les rec
 \subsection{Le cycle \og hypothèse $\rightarrow$ script $\rightarrow$ conclusion\fg}
 Aucune affirmation importante du cours ne doit être crue sur parole. Chaque fois qu'une propriété est énoncée (par exemple \og la variance d'une marche aléatoire croît linéairement avec le temps\fg), un script dans \texttt{code/chXX/} la vérifie par simulation ou sur données réelles, et le résultat chiffré figure dans le chapitre. Vous pouvez relancer chaque script et obtenir les mêmes nombres (graines aléatoires fixées).
 
+
+\subsection{Données réelles et données simulées}
+Deux sortes d'expériences coexistent dans le cours. Les \textbf{simulations} placent la stratégie dans un monde dont on connaît la vérité (le vrai $\beta$, la vraie demi-vie) : c'est le seul moyen de vérifier qu'une méthode retrouve ce qu'elle prétend mesurer. Les \textbf{études de cas réelles} utilisent les clôtures quotidiennes de quatre titres téléchargées via l'API d'Interactive Brokers le 20 octobre 2026 (500 séances, du 21 octobre 2024 au 19 octobre 2026) : deux ETF adossés à l'or physique, GLD et GLDM, qui forment un quasi-arbitrage, et deux actions du même secteur, Coca-Cola (KO) et PepsiCo (PEP), qui forment la paire statistique la plus citée des manuels. Les fichiers sont dans \texttt{data/case\_studies/}. Deux ans de données, c'est court : les études de cas illustrent les méthodes, elles ne prétendent pas établir la rentabilité d'une stratégie.
+
+\subsection{Comment lire les encadrés}
+\begin{itemize}
+\item \textbf{Image mentale} (bleu) : l'intuition, à comprendre avant la formule.
+\item \textbf{Au tableau blanc} (jaune) : les formules à reconstruire et annoter.
+\item \textbf{Piège / limite} (rouge) : ce qui peut coûter de l'argent.
+\item \textbf{Vérification en Python} (vert) : une hypothèse testée, avec le script et les chiffres obtenus.
+\item \textbf{Pour aller plus loin} (gris) : quoi lire, avec la section ou le chapitre précis.
+\end{itemize}
+
 % =====================================================================
-\section{Cartographie : que veut dire \og arbitrage\fg{} ?}
+\section{Cartographie : que veut dire \og arbitrage\fg{} ?}\label{c0:carto}
 % =====================================================================
 
 Le mot \og arbitrage\fg{} est utilisé de façon très lâche sur les réseaux sociaux. Nous distinguerons trois familles, définies formellement au chapitre~1.
@@ -91,7 +83,7 @@ Le mot \og arbitrage\fg{} est utilisé de façon très lâche sur les réseaux s
 \begin{table}[h]
 \centering\small
 \caption{Taxonomie des stratégies étudiées dans le cours.}
-\label{tab:taxo}
+\label{c0:tab:taxo}
 \begin{tabularx}{\textwidth}{>{\raggedright}p{3.1cm}>{\raggedright}p{2.2cm}>{\raggedright}X>{\raggedright\arraybackslash}p{2.3cm}}
 \toprule
 Stratégie & Famille & Source de l'écart et ancre & Chapitres \\
@@ -115,12 +107,12 @@ Apprentissage automatique & Statistique & Prévision des résidus \citep{krauss2
 \section{Prérequis mathématiques et statistiques}
 % =====================================================================
 
-Le tableau~\ref{tab:prereq} liste les notions nécessaires, l'endroit où elles servent et le chapitre où elles sont (re)vues. Celles marquées $\star$ sont indispensables dès le chapitre~1 ; les autres sont introduites au moment où elles servent.
+Le tableau~\ref{c0:tab:prereq} liste les notions nécessaires, l'endroit où elles servent et le chapitre où elles sont (re)vues. Celles marquées $\star$ sont indispensables dès le chapitre~1 ; les autres sont introduites au moment où elles servent.
 
 \begin{table}[h]
 \centering\small
 \caption{Prérequis et lieu d'utilisation.}
-\label{tab:prereq}
+\label{c0:tab:prereq}
 \begin{tabularx}{\textwidth}{>{\raggedright}p{4.3cm}>{\raggedright}X>{\raggedright\arraybackslash}p{1.6cm}}
 \toprule
 Notion & À quoi elle sert dans le cours & Chapitre \\
@@ -147,7 +139,7 @@ Microstructure (carnet d'ordres, \emph{maker}/\emph{taker}) & Coûts réels, ex�
 \section{Programme détaillé}
 % =====================================================================
 
-La figure~\ref{fig:map} donne l'ordre des dépendances. Les flèches indiquent \og doit être compris avant\fg.
+La figure~\ref{c0:fig:map} donne l'ordre des dépendances. Les flèches indiquent \og doit être compris avant\fg.
 
 \begin{figure}[h]
 \centering
@@ -179,14 +171,14 @@ La figure~\ref{fig:map} donne l'ordre des dépendances. Les flèches indiquent \
 \draw[arr] (c12)--(c16); \draw[arr] (c16)--(c17); \draw[arr] (c17)--(c18); \draw[arr] (c15)--(c18); \draw[arr] (c11)--(c18);
 \end{tikzpicture}
 \caption{Carte du cours. Bleu : fondations ; vert : méthodes de \emph{pairs trading} ; orange : arbitrage inter-plateformes ; rouge : validation, risque et mise en production.}
-\label{fig:map}
+\label{c0:fig:map}
 \end{figure}
 
-Pour chaque chapitre, nous indiquons les objectifs, les notions mathématiques, les lectures de référence et le livrable de code. Le livrable vit dans \texttt{code/chXX/} pendant l'apprentissage, puis les fonctions réutilisables migrent dans le paquet \texttt{src/arbhub/}.
+Pour chaque chapitre, nous indiquons les notions mathématiques, les lectures de référence et le code associé. Le code vit dans \texttt{code/chXX/} pendant l'apprentissage, puis les fonctions réutilisables migrent dans le paquet \texttt{src/arbhub/}.
 
 \subsection{Partie I — Fondations statistiques}
 
-\paragraph{Chapitre 1 — Arbitrage, stationnarité et retour à la moyenne.} \emph{Livré avec ce document.}
+\paragraph{Chapitre 1 — Arbitrage, stationnarité et retour à la moyenne.}
 Définitions formelles de l'arbitrage pur et de l'arbitrage statistique \citep{hogan2004} ; rappels de probabilités (espérance, variance, covariance, variance d'une combinaison linéaire) ; ratio de couverture à variance minimale ; processus stochastiques, bruit blanc, stationnarité ; marche aléatoire ; processus AR(1), moyenne et variance stationnaires, autocorrélation, demi-vie ; intuition de la cointégration \citep{murray1994} ; corrélation contre cointégration ; \emph{z-score} et première règle de trading. \textbf{Code :} cinq scripts qui testent les propriétés énoncées. \textbf{Lire :} \citet{hamilton1994} ch.~3 ; \citet{chan2013} ch.~2.
 
 \paragraph{Chapitre 2 — Régression et estimation.}
@@ -249,7 +241,7 @@ Dimensionnement (critère de Kelly fractionné, ciblage de volatilité), stop-lo
 Rédiger un cahier des charges testable ; architecture du paquet \texttt{arbhub} ; tests unitaires, tests de propriétés, intégration continue ; \emph{paper trading}, puis taille réduite, puis taille cible ; journal de trading et revue mensuelle. \textbf{Code :} première stratégie complète en \emph{paper trading}.
 
 % =====================================================================
-\section{Revue de littérature annotée}
+\section{Revue de littérature annotée}\label{c0:litt}
 % =====================================================================
 
 Cette section résume ce que chaque référence apporte et ce qu'il faut en retenir. Les références sont regroupées par question.
@@ -306,7 +298,7 @@ Cette section résume ce que chaque référence apporte et ce qu'il faut en rete
 \section{Dépôts logiciels étudiés}
 % =====================================================================
 
-\subsection{\texttt{atjte} : un moteur d'arbitrage multi-plateformes en conditions réelles}
+\subsection{\texttt{atjte} : un moteur d'arbitrage multi-plateformes en conditions réelles}\label{c0:atjte}
 
 Le dépôt \texttt{atj-khactu/atjte} \citep{atjte} est la référence pratique de ce cours pour l'arbitrage inter-plateformes. Son principe, tel que décrit dans sa documentation et son code, est le suivant.
 
@@ -335,12 +327,12 @@ Le thème GitHub \texttt{statistical-arbitrage} regroupe des projets d'étudiant
 \section{Faisabilité pour un trader particulier}
 % =====================================================================
 
-Le tableau~\ref{tab:feas} croise chaque famille avec les contraintes d'un particulier. Les jugements sont qualitatifs et seront vérifiés chiffres à l'appui dans les chapitres concernés.
+Le tableau~\ref{c0:tab:feas} croise chaque famille avec les contraintes d'un particulier. Les jugements sont qualitatifs et seront vérifiés chiffres à l'appui dans les chapitres concernés.
 
 \begin{table}[h]
 \centering\small
 \caption{Matrice de faisabilité indicative pour un particulier.}
-\label{tab:feas}
+\label{c0:tab:feas}
 \begin{tabularx}{\textwidth}{>{\raggedright}p{3.0cm}>{\raggedright}X>{\raggedright}X>{\raggedright\arraybackslash}p{1.7cm}}
 \toprule
 Stratégie & Infrastructure nécessaire & Risque principal & Faisabilité \\
@@ -366,12 +358,11 @@ arbitrage_hub/
   README.md              présentation, mode d'emploi, avancement du cours
   CLAUDE.md              règles de travail pour Claude Code (tests, conventions)
   docs/
-    shared/              préambule LaTeX commun + bibliographie (references.bib)
-    00_plan/             ce document
-    01_fondations/       chapitre 1 (.tex, .pdf, figures/)
-    02_regression/ ...   un dossier par chapitre
+    cours/               CE COURS : arbitrage_hub_cours_complet.tex/.pdf,
+                         chapitres/chXX.tex, figures/chXX/, references.bib
   code/
-    ch01/ ch02/ ...      scripts pédagogiques, un fichier = une hypothèse testée
+    common/style.py      style des figures, chargement des données réelles
+    ch01/ ... ch18/      scripts pédagogiques : chaque chiffre du cours en sort
   src/arbhub/            paquet réutilisable (migré depuis code/ quand stable)
     data/                chargement, nettoyage, alignement des séries
     stats/               tests (ADF, KPSS, Hurst, Engle-Granger, Johansen)
@@ -384,7 +375,8 @@ arbitrage_hub/
   notebooks/             explorations jetables (jamais de logique critique)
   papers/                liste des articles + liens (PDF à ajouter par vous)
   whiteboard/chXX/       photos datées du tableau blanc
-  data/raw, data/processed   données (non versionnées, voir .gitignore)
+  data/case_studies/   clôtures réelles GLD, GLDM, KO, PEP (IBKR, 2024-2026)
+  data/raw, data/processed   vos données (non versionnées)
 \end{verbatim}}
 
 \paragraph{Règles de travail avec Claude Code.} Le fichier \texttt{CLAUDE.md} fixe les règles que l'assistant doit respecter : toute fonction de \texttt{src/arbhub} a un test ; aucune fonction de signal ne peut lire une donnée datée après l'instant de décision (un test l'impose) ; chaque \emph{backtest} déclare son modèle de coûts ; chaque résultat publié précise le nombre de variantes essayées. Le cycle de travail recommandé est : (1) cahier des charges en Markdown dans \texttt{docs/specs/} ; (2) tests écrits d'abord ; (3) implémentation ; (4) \emph{backtest} hors échantillon ; (5) \emph{paper trading} ; (6) petite taille réelle ; (7) revue.
@@ -399,9 +391,5 @@ arbitrage_hub/
 \section{Limites et avertissements}
 % =====================================================================
 
-Ce document est un support pédagogique, pas un conseil en investissement. Les performances rapportées par les articles sont des résultats historiques obtenus dans des conditions précises (univers, période, coûts) qui ne se reproduisent pas automatiquement. Certaines stratégies d'arbitrage inter-plateformes sont interdites par les conditions générales de courtiers ou de \emph{prop firms} ; il vous revient de vérifier ces conditions avant tout déploiement. Les références ont été vérifiées au moment de la rédaction ; les informations sur les dépôts logiciels (licence, activité) peuvent évoluer.
+Ce cours est un support pédagogique, pas un conseil en investissement. Les performances rapportées par les articles sont des résultats historiques obtenus dans des conditions précises (univers, période, coûts) qui ne se reproduisent pas automatiquement. Certaines stratégies d'arbitrage inter-plateformes sont interdites par les conditions générales de courtiers ou de \emph{prop firms} ; il vous revient de vérifier ces conditions avant tout déploiement. Les références ont été vérifiées au moment de la rédaction ; les informations sur les dépôts logiciels (licence, activité) peuvent évoluer.
 
-\bibliographystyle{plainnat}
-\bibliography{../shared/references}
-
-\end{document}

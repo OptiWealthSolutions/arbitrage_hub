@@ -1,47 +1,28 @@
-\documentclass[11pt,a4paper]{article}
-\input{../shared/preamble.tex}
-\fancyhead[L]{\small\itshape Arbitrage Hub — Chapitre 1}
-\fancyhead[R]{\small\itshape Arbitrage, stationnarité et retour à la moyenne}
-\graphicspath{{figures/}}
+% =====================================================================
+\chapter{Arbitrage, stationnarité et retour à la moyenne}
+\label{ch:1}
+% =====================================================================
 
-\title{\textbf{Chapitre 1 — Arbitrage, stationnarité et retour à la moyenne :\\ les fondations de l'arbitrage statistique}}
-\author{Claude Opus 5.5 (Anthropic)\\[0.2em]
-\small Rédigé pour Léo Lombardini — Horacle Capital\\
-\small Cours \og Arbitrage Hub\fg, partie I : fondations statistiques}
-\date{20 octobre 2026}
-
-\begin{document}
-\maketitle
-\thispagestyle{empty}
-
-\begin{abstract}
-\noindent Ce chapitre pose les fondations de tout le cours. Il commence par définir formellement l'arbitrage pur, le quasi-arbitrage de convergence et l'arbitrage statistique, en s'appuyant sur la définition de \citet{hogan2004}. Il rappelle ensuite les outils probabilistes indispensables et en tire un premier résultat utile au trading : le ratio de couverture qui minimise la variance d'un écart entre deux actifs est la pente de la régression de l'un sur l'autre. Le cœur du chapitre étudie deux processus : la marche aléatoire, dont la variance croît sans limite, et le processus autorégressif d'ordre un, AR(1), qui revient vers sa moyenne avec une demi-vie que l'on calcule explicitement. Ces deux objets permettent de comprendre l'idée centrale de l'arbitrage statistique : deux prix individuellement imprévisibles peuvent avoir un écart prévisible. Chaque propriété énoncée est vérifiée par un script Python dont les résultats chiffrés sont reportés dans le texte. Le chapitre se termine par une première règle de trading en \emph{z-score}, testée dans un monde simulé où la vérité est connue, ce qui permet de mesurer précisément l'effet des coûts de transaction et d'une rupture de la relation.
-
-\medskip\noindent\textbf{Notions clés :} arbitrage, loi du prix unique, variance d'une combinaison linéaire, ratio de couverture, processus stationnaire, bruit blanc, marche aléatoire, AR(1), autocorrélation, demi-vie, cointégration (intuition), régression fallacieuse, \emph{z-score}.
-\end{abstract}
-
-\tableofcontents
-\newpage
 
 % =====================================================================
-\section{Introduction}
+\section{Objectifs et organisation du chapitre}
 % =====================================================================
 
 \paragraph{Objectifs du chapitre.} À la fin de ce chapitre, vous saurez : (1) dire si une opportunité est un arbitrage pur, un quasi-arbitrage ou un arbitrage statistique ; (2) calculer la variance d'un écart entre deux actifs et le ratio de couverture qui la minimise ; (3) définir la stationnarité et expliquer pourquoi elle est la condition de tout trading de retour à la moyenne ; (4) démontrer les propriétés de la marche aléatoire et de l'AR(1) ; (5) calculer et interpréter une demi-vie ; (6) expliquer la différence entre corrélation et cointégration ; (7) construire un \emph{z-score} sans utiliser d'information future.
 
 \paragraph{Prérequis.} Espérance et variance d'une variable aléatoire, loi normale, logarithmes, suites géométriques. Tout le reste est redémontré.
 
-\paragraph{Fichiers associés.} Les cinq scripts du dossier \texttt{code/ch01/} du dépôt. Chacun teste une hypothèse (notée H1 à H5) et écrit ses résultats dans \texttt{code/ch01/results/} et ses figures dans \texttt{docs/01\_fondations/figures/}. Les graines aléatoires sont fixées : en relançant un script, vous obtenez exactement les nombres de ce document.
+\paragraph{Fichiers associés.} Les cinq scripts du dossier \texttt{code/ch01/} du dépôt. Chacun teste une hypothèse (notée H1 à H5) et écrit ses résultats dans \texttt{code/ch01/results/} et ses figures dans \texttt{docs/cours/figures/ch01/}. Les graines aléatoires sont fixées : en relançant un script, vous obtenez exactement les nombres de ce document.
 
 % =====================================================================
-\section{Qu'est-ce que l'arbitrage ?}
+\section{Qu'est-ce que l'arbitrage ?}\label{c1:sec:arb}
 % =====================================================================
 
 \subsection{L'arbitrage pur}
 
 On considère un marché avec $N$ actifs. Aujourd'hui (date $0$) leurs prix forment un vecteur $p \in \R^N$. Demain (date $1$) leurs valeurs sont aléatoires et forment un vecteur $V \in \R^N$. Un portefeuille est un vecteur $\theta \in \R^N$ : $\theta_i > 0$ signifie qu'on détient $\theta_i$ unités de l'actif $i$, $\theta_i < 0$ qu'on en a vendu à découvert $|\theta_i|$ unités. Le coût du portefeuille aujourd'hui est $p^\top\theta = \sum_i p_i\theta_i$ et sa valeur demain est $V^\top\theta$.
 
-\begin{definition}[Arbitrage pur]\label{def:arb}
+\begin{definition}[Arbitrage pur]\label{c1:def:arb}
 Un portefeuille $\theta$ est un \emph{arbitrage} si
 \begin{enumerate}[label=(\roman*)]
 \item il ne coûte rien ou rapporte de l'argent aujourd'hui : $p^\top\theta \le 0$ ;
@@ -54,9 +35,9 @@ Un portefeuille $\theta$ est un \emph{arbitrage} si
 Un arbitrage, c'est un billet de banque posé par terre que personne d'autre n'a encore ramassé : on se baisse (coût nul), on ne peut rien perdre, et on gagne quelque chose. La théorie financière part du principe qu'un tel billet ne reste pas longtemps par terre.
 \end{intuition}
 
-\paragraph{Loi du prix unique.} Conséquence directe : deux actifs qui ont exactement la même valeur demain dans tous les scénarios doivent avoir le même prix aujourd'hui. Sinon, on achète le moins cher, on vend le plus cher, et le portefeuille vérifie la définition~\ref{def:arb} : il rapporte la différence de prix aujourd'hui ($p^\top\theta<0$) et vaut exactement zéro demain.
+\paragraph{Loi du prix unique.} Conséquence directe : deux actifs qui ont exactement la même valeur demain dans tous les scénarios doivent avoir le même prix aujourd'hui. Sinon, on achète le moins cher, on vend le plus cher, et le portefeuille vérifie la définition~\ref{c1:def:arb} : il rapporte la différence de prix aujourd'hui ($p^\top\theta<0$) et vaut exactement zéro demain.
 
-\begin{example}[Le même actif sur deux plateformes]\label{ex:spatial}
+\begin{example}[Le même actif sur deux plateformes]\label{c1:ex:spatial}
 Un actif est proposé à l'achat (\emph{ask}) à $100{,}00$ sur la plateforme A et repris à la vente (\emph{bid}) à $100{,}08$ sur la plateforme B. Les frais sont de $0{,}05\,\%$ du montant échangé sur chaque plateforme. On achète une unité sur A et on la vend sur B :
 \begin{align*}
 \text{gain brut} &= 100{,}08 - 100{,}00 = 0{,}08,\\
@@ -72,13 +53,13 @@ Les frais se mesurent souvent en \emph{points de base} (pb, ou \emph{bps}) : $1\
 
 \subsection{Le quasi-arbitrage de convergence}
 
-Considérons un contrat à terme sur l'or qui expire dans trois mois et l'or au comptant. À l'échéance, le contrat est livré contre de l'or : les deux prix sont \emph{forcés} de coïncider. Avant l'échéance, l'écart (la \og base\fg) reflète le coût de portage (intérêts, stockage) et fluctue autour de lui. Si la base est anormalement élevée, on vend le contrat, on achète l'or, et on attend la convergence. Le gain final est connu à l'avance, mais la position peut subir des pertes latentes avant l'échéance, exiger de la marge, et coûter en financement. C'est un \emph{quasi-arbitrage} : il existe une ancre contractuelle, mais pas d'absence totale de risque. Le moteur \texttt{atjte} étudié dans le document~00 exploite une variante de cette idée entre un instrument cotant l'or sur une plateforme crypto et un CFD sur l'or chez un courtier MetaTrader~5 \citep{atjte}.
+Considérons un contrat à terme sur l'or qui expire dans trois mois et l'or au comptant. À l'échéance, le contrat est livré contre de l'or : les deux prix sont \emph{forcés} de coïncider. Avant l'échéance, l'écart (la \og base\fg) reflète le coût de portage (intérêts, stockage) et fluctue autour de lui. Si la base est anormalement élevée, on vend le contrat, on achète l'or, et on attend la convergence. Le gain final est connu à l'avance, mais la position peut subir des pertes latentes avant l'échéance, exiger de la marge, et coûter en financement. C'est un \emph{quasi-arbitrage} : il existe une ancre contractuelle, mais pas d'absence totale de risque. Le moteur \texttt{atjte} étudié au chapitre~0 exploite une variante de cette idée entre un instrument cotant l'or sur une plateforme crypto et un CFD sur l'or chez un courtier MetaTrader~5 \citep{atjte}.
 
 \subsection{L'arbitrage statistique}
 
-L'arbitrage statistique renonce à la condition (ii) de la définition~\ref{def:arb} : on accepte de pouvoir perdre à court terme, pourvu que la stratégie gagne \emph{en moyenne} et que le risque de perte disparaisse \emph{à long terme}. \citet{hogan2004} en donnent une définition précise. Soit une stratégie autofinancée (on ne rajoute ni ne retire d'argent) de coût initial nul, et $v(t)$ sa valeur cumulée actualisée à la date $t$.
+L'arbitrage statistique renonce à la condition (ii) de la définition~\ref{c1:def:arb} : on accepte de pouvoir perdre à court terme, pourvu que la stratégie gagne \emph{en moyenne} et que le risque de perte disparaisse \emph{à long terme}. \citet{hogan2004} en donnent une définition précise. Soit une stratégie autofinancée (on ne rajoute ni ne retire d'argent) de coût initial nul, et $v(t)$ sa valeur cumulée actualisée à la date $t$.
 
-\begin{definition}[Arbitrage statistique, d'après \citet{hogan2004}]\label{def:statarb}
+\begin{definition}[Arbitrage statistique, d'après \citet{hogan2004}]\label{c1:def:statarb}
 La stratégie est un \emph{arbitrage statistique} si
 \begin{enumerate}[label=(\roman*)]
 \item $v(0) = 0$ : elle ne coûte rien au départ ;
@@ -93,7 +74,7 @@ Pensez au casino face à ses clients à la roulette. Sur un tour, le casino peut
 \end{intuition}
 
 \begin{pitfall}
-La définition~\ref{def:statarb} parle de limites quand $t\to\infty$. Un trader n'a jamais un temps infini : il a un capital fini, des appels de marge et une tolérance limitée aux pertes. Une stratégie peut satisfaire la définition et ruiner son utilisateur avant que la \og loi des grands nombres\fg{} ne joue. C'est le cœur des \og limites de l'arbitrage\fg{} de \citet{shleifer1997}, étudiées au chapitre~17.
+La définition~\ref{c1:def:statarb} parle de limites quand $t\to\infty$. Un trader n'a jamais un temps infini : il a un capital fini, des appels de marge et une tolérance limitée aux pertes. Une stratégie peut satisfaire la définition et ruiner son utilisateur avant que la \og loi des grands nombres\fg{} ne joue. C'est le cœur des \og limites de l'arbitrage\fg{} de \citet{shleifer1997}, étudiées au chapitre~17.
 \end{pitfall}
 
 % =====================================================================
@@ -104,10 +85,10 @@ La définition~\ref{def:statarb} parle de limites quand $t\to\infty$. Un trader 
 
 Pour deux variables aléatoires $X$ et $Y$ et deux constantes $a$, $b$ :
 \begin{align}
-\E[aX + bY] &= a\,\E[X] + b\,\E[Y] && \text{(linéarité)}\label{eq:lin}\\
-\Var(X) &= \E\big[(X-\E X)^2\big] = \E[X^2] - (\E X)^2 \label{eq:var}\\
-\Cov(X,Y) &= \E\big[(X-\E X)(Y-\E Y)\big] \label{eq:cov}\\
-\Corr(X,Y) &= \rho_{XY} = \frac{\Cov(X,Y)}{\sigma_X\,\sigma_Y} \in [-1,1], \qquad \sigma_X = \sqrt{\Var X}. \label{eq:corr}
+\E[aX + bY] &= a\,\E[X] + b\,\E[Y] && \text{(linéarité)}\label{c1:eq:lin}\\
+\Var(X) &= \E\big[(X-\E X)^2\big] = \E[X^2] - (\E X)^2 \label{c1:eq:var}\\
+\Cov(X,Y) &= \E\big[(X-\E X)(Y-\E Y)\big] \label{c1:eq:cov}\\
+\Corr(X,Y) &= \rho_{XY} = \frac{\Cov(X,Y)}{\sigma_X\,\sigma_Y} \in [-1,1], \qquad \sigma_X = \sqrt{\Var X}. \label{c1:eq:corr}
 \end{align}
 Si $X$ et $Y$ sont indépendantes, $\Cov(X,Y)=0$ (la réciproque est fausse en général).
 
@@ -115,28 +96,28 @@ Si $X$ et $Y$ sont indépendantes, $\Cov(X,Y)=0$ (la réciproque est fausse en g
 
 C'est le calcul le plus important du chapitre. On construit un écart (\emph{spread}) $S = Y - \beta X$ : on détient une unité de $Y$ et on est vendeur de $\beta$ unités de $X$.
 
-\begin{proposition}\label{prop:varspread}
+\begin{proposition}\label{c1:prop:varspread}
 $\Var(Y - \beta X) = \sigma_Y^2 + \beta^2\sigma_X^2 - 2\beta\,\Cov(X,Y)$.
 \end{proposition}
 \begin{proof}
-Notons $\mu_X = \E X$, $\mu_Y = \E Y$. Par linéarité \eqref{eq:lin}, $\E[Y-\beta X] = \mu_Y - \beta\mu_X$. Donc
+Notons $\mu_X = \E X$, $\mu_Y = \E Y$. Par linéarité \eqref{c1:eq:lin}, $\E[Y-\beta X] = \mu_Y - \beta\mu_X$. Donc
 \begin{align*}
-\Var(Y-\beta X) &= \E\Big[\big((Y-\beta X) - (\mu_Y - \beta\mu_X)\big)^2\Big] && \text{définition \eqref{eq:var}}\\
+\Var(Y-\beta X) &= \E\Big[\big((Y-\beta X) - (\mu_Y - \beta\mu_X)\big)^2\Big] && \text{définition \eqref{c1:eq:var}}\\
 &= \E\Big[\big((Y-\mu_Y) - \beta(X-\mu_X)\big)^2\Big] && \text{on regroupe les termes}\\
 &= \E\big[(Y-\mu_Y)^2\big] - 2\beta\,\E\big[(Y-\mu_Y)(X-\mu_X)\big] + \beta^2\,\E\big[(X-\mu_X)^2\big] && (a-b)^2 = a^2 - 2ab + b^2\\
-&= \sigma_Y^2 - 2\beta\Cov(X,Y) + \beta^2\sigma_X^2. && \text{définitions \eqref{eq:var}, \eqref{eq:cov}}
+&= \sigma_Y^2 - 2\beta\Cov(X,Y) + \beta^2\sigma_X^2. && \text{définitions \eqref{c1:eq:var}, \eqref{c1:eq:cov}}
 \end{align*}
 \end{proof}
 
 \subsection{Le ratio de couverture à variance minimale}
 
-Quel $\beta$ rend l'écart le moins volatil possible ? La proposition~\ref{prop:varspread} donne une fonction de $\beta$ :
+Quel $\beta$ rend l'écart le moins volatil possible ? La proposition~\ref{c1:prop:varspread} donne une fonction de $\beta$ :
 \[
 f(\beta) = \sigma_Y^2 + \beta^2\sigma_X^2 - 2\beta\,\Cov(X,Y).
 \]
 C'est un polynôme du second degré en $\beta$, de coefficient dominant $\sigma_X^2 > 0$ : une parabole tournée vers le haut, qui a donc un unique minimum.
 
-\begin{proposition}[Ratio de couverture optimal]\label{prop:hedge}
+\begin{proposition}[Ratio de couverture optimal]\label{c1:prop:hedge}
 La variance de $Y-\beta X$ est minimale pour
 \[
 \beta^\star = \frac{\Cov(X,Y)}{\sigma_X^2} = \rho_{XY}\,\frac{\sigma_Y}{\sigma_X},
@@ -144,7 +125,7 @@ La variance de $Y-\beta X$ est minimale pour
 \]
 \end{proposition}
 \begin{proof}
-On dérive $f$ par rapport à $\beta$ : $f'(\beta) = 2\beta\sigma_X^2 - 2\Cov(X,Y)$. Le minimum annule la dérivée : $2\beta^\star\sigma_X^2 = 2\Cov(X,Y)$, d'où $\beta^\star = \Cov(X,Y)/\sigma_X^2$. La dérivée seconde $f''(\beta) = 2\sigma_X^2 > 0$ confirme qu'il s'agit d'un minimum. La seconde écriture vient de \eqref{eq:corr} : $\Cov(X,Y) = \rho_{XY}\sigma_X\sigma_Y$, donc $\beta^\star = \rho_{XY}\sigma_X\sigma_Y/\sigma_X^2 = \rho_{XY}\sigma_Y/\sigma_X$.
+On dérive $f$ par rapport à $\beta$ : $f'(\beta) = 2\beta\sigma_X^2 - 2\Cov(X,Y)$. Le minimum annule la dérivée : $2\beta^\star\sigma_X^2 = 2\Cov(X,Y)$, d'où $\beta^\star = \Cov(X,Y)/\sigma_X^2$. La dérivée seconde $f''(\beta) = 2\sigma_X^2 > 0$ confirme qu'il s'agit d'un minimum. La seconde écriture vient de \eqref{c1:eq:corr} : $\Cov(X,Y) = \rho_{XY}\sigma_X\sigma_Y$, donc $\beta^\star = \rho_{XY}\sigma_X\sigma_Y/\sigma_X^2 = \rho_{XY}\sigma_Y/\sigma_X$.
 
 Pour la variance minimale, on remplace $\beta$ par $\beta^\star$ dans $f$ :
 \begin{align*}
@@ -163,7 +144,7 @@ Couvrir, c'est retirer de $Y$ la partie qui \og ressemble\fg{} à $X$. Ce qui re
 \end{intuition}
 
 \begin{pitfall}
-Ce calcul porte sur des variables aléatoires \og figées\fg. Appliqué à des \emph{prix} qui évoluent dans le temps, il peut donner un résultat absurde : la section~\ref{sec:spurious} montre que la régression d'un prix sur un autre prix peut afficher une relation forte entre deux actifs totalement indépendants. Appliqué à des \emph{rendements}, il donne un ratio de couverture de court terme, qui ne garantit pas que l'écart des prix reste borné. Distinguer ces deux situations est l'objet de la section~\ref{sec:coint}.
+Ce calcul porte sur des variables aléatoires \og figées\fg. Appliqué à des \emph{prix} qui évoluent dans le temps, il peut donner un résultat absurde : la section~\ref{c1:sec:spurious} montre que la régression d'un prix sur un autre prix peut afficher une relation forte entre deux actifs totalement indépendants. Appliqué à des \emph{rendements}, il donne un ratio de couverture de court terme, qui ne garantit pas que l'écart des prix reste borné. Distinguer ces deux situations est l'objet de la section~\ref{c1:sec:coint}.
 \end{pitfall}
 
 \subsection{Loi normale et \emph{z-score}}
@@ -219,7 +200,7 @@ P_t = P_{t-1} + \varepsilon_t = P_{t-2} + \varepsilon_{t-1} + \varepsilon_t = \d
 \]
 \end{definition}
 
-\begin{proposition}\label{prop:rw}
+\begin{proposition}\label{c1:prop:rw}
 Pour une marche aléatoire : $\E[P_t] = P_0$, $\Var(P_t) = t\sigma^2$ et $\Cov(P_t,P_s) = \sigma^2\min(t,s)$.
 \end{proposition}
 \begin{proof}
@@ -252,9 +233,9 @@ qui dépend de $t$ et tend vers 1 quand $t$ est grand : la série est extrêmeme
 
 \begin{figure}[h]
 \centering
-\includegraphics[width=0.92\textwidth]{h1_random_walk_variance.pdf}
+\includegraphics[width=0.92\textwidth]{ch01/h1_random_walk_variance.pdf}
 \caption{À gauche, 40 marches aléatoires et l'enveloppe $\pm 2\sigma\sqrt{t}$. À droite, la variance transversale mesurée sur 20\,000 trajectoires suit la droite théorique $t\sigma^2$.}
-\label{fig:h1}
+\label{c1:fig:h1}
 \end{figure}
 
 \subsection{Prix, log-prix et rendements}
@@ -275,7 +256,7 @@ On cherche d'abord le niveau $\mu$ autour duquel le processus pourrait se stabil
 \mu = \frac{c}{1-\varphi}.
 \]
 En remplaçant $c = \mu(1-\varphi)$ dans la définition, on obtient la forme \og centrée\fg{}, beaucoup plus parlante :
-\begin{equation}\label{eq:ar1c}
+\begin{equation}\label{c1:eq:ar1c}
 X_t - \mu = \varphi\,(X_{t-1}-\mu) + \varepsilon_t.
 \end{equation}
 Notons $Y_t = X_t - \mu$ l'écart à la moyenne. Alors $Y_t = \varphi Y_{t-1} + \varepsilon_t$, et en remplaçant de proche en proche :
@@ -287,7 +268,7 @@ La formule $(\ast)$ dit tout : l'écart d'aujourd'hui est l'écart initial multi
 
 \subsection{Condition de stationnarité et moments}
 
-\begin{proposition}\label{prop:ar1}
+\begin{proposition}\label{c1:prop:ar1}
 Si $|\varphi| < 1$, l'AR(1) admet une solution stationnaire de moyenne $\mu = c/(1-\varphi)$, de variance et d'autocorrélation
 \[
 \gamma(0) = \frac{\sigma^2}{1-\varphi^2}, \qquad \rho(h) = \varphi^{h}\quad (h\ge0).
@@ -297,30 +278,30 @@ Si $\varphi = 1$, le processus est une marche aléatoire (avec dérive $c$) et n
 \begin{proof}
 \emph{Moyenne.} Si $X$ est stationnaire, $\E X_t = \E X_{t-1} = m$. En prenant l'espérance dans la définition : $m = c + \varphi m$, donc $m = c/(1-\varphi) = \mu$.
 
-\emph{Variance.} Dans \eqref{eq:ar1c}, $\varepsilon_t$ est non corrélé avec $X_{t-1}$ (qui ne dépend que des chocs passés). Par la proposition~\ref{prop:varspread} appliquée avec une covariance nulle : $\Var(X_t) = \varphi^2\Var(X_{t-1}) + \sigma^2$. Si la variance est constante, égale à $v$, alors $v = \varphi^2 v + \sigma^2$, soit $v(1-\varphi^2) = \sigma^2$ et $v = \sigma^2/(1-\varphi^2)$. Cette quantité n'est positive et finie que si $\varphi^2<1$, c'est-à-dire $|\varphi|<1$.
+\emph{Variance.} Dans \eqref{c1:eq:ar1c}, $\varepsilon_t$ est non corrélé avec $X_{t-1}$ (qui ne dépend que des chocs passés). Par la proposition~\ref{c1:prop:varspread} appliquée avec une covariance nulle : $\Var(X_t) = \varphi^2\Var(X_{t-1}) + \sigma^2$. Si la variance est constante, égale à $v$, alors $v = \varphi^2 v + \sigma^2$, soit $v(1-\varphi^2) = \sigma^2$ et $v = \sigma^2/(1-\varphi^2)$. Cette quantité n'est positive et finie que si $\varphi^2<1$, c'est-à-dire $|\varphi|<1$.
 
 \emph{Autocovariance.} Avec $Y_t = X_t-\mu$, on itère $(\ast)$ sur $h$ pas à partir de $t-h$ : $Y_t = \varphi^h Y_{t-h} + \sum_{j=0}^{h-1}\varphi^j\varepsilon_{t-j}$. Les chocs $\varepsilon_{t-h+1},\dots,\varepsilon_t$ sont non corrélés avec $Y_{t-h}$, donc
 \[
 \gamma(h) = \Cov(Y_t, Y_{t-h}) = \varphi^h\Var(Y_{t-h}) = \varphi^h\gamma(0), \qquad \rho(h) = \frac{\gamma(h)}{\gamma(0)} = \varphi^h.
 \]
-\emph{Cas $\varphi=1$.} La définition devient $X_t = c + X_{t-1} + \varepsilon_t$ : c'est une marche aléatoire avec dérive, de variance croissante (proposition~\ref{prop:rw}).
+\emph{Cas $\varphi=1$.} La définition devient $X_t = c + X_{t-1} + \varepsilon_t$ : c'est une marche aléatoire avec dérive, de variance croissante (proposition~\ref{c1:prop:rw}).
 \end{proof}
 
 \subsection{L'écriture \og retour à la moyenne\fg}
 
-On soustrait $X_{t-1}-\mu$ des deux côtés de \eqref{eq:ar1c} :
-\begin{equation}\label{eq:ecm}
+On soustrait $X_{t-1}-\mu$ des deux côtés de \eqref{c1:eq:ar1c} :
+\begin{equation}\label{c1:eq:ecm}
 \underbrace{X_t - X_{t-1}}_{\Delta X_t} = -\underbrace{(1-\varphi)}_{\kappa}\,(X_{t-1}-\mu) + \varepsilon_t.
 \end{equation}
 Avec $0<\varphi<1$, le coefficient $\kappa = 1-\varphi$ est compris entre 0 et 1 : à chaque période, le processus corrige en moyenne la fraction $\kappa$ de son écart à la moyenne. Si $X_{t-1}$ est au-dessus de $\mu$, la variation attendue est négative ; s'il est en dessous, elle est positive.
 
 \begin{intuition}
-Imaginez une balle attachée à un élastique fixé au point $\mu$. À chaque instant, quelqu'un la pousse au hasard (le choc $\varepsilon_t$), mais l'élastique la tire vers $\mu$ avec une force proportionnelle à la distance. Plus $\kappa$ est grand, plus l'élastique est raide. Avec $\varphi = 1$, il n'y a plus d'élastique : on retrouve le promeneur ivre. L'équation \eqref{eq:ecm} préfigure le modèle à correction d'erreur du chapitre~4 et le processus d'Ornstein-Uhlenbeck du chapitre~5, qui en est la version en temps continu.
+Imaginez une balle attachée à un élastique fixé au point $\mu$. À chaque instant, quelqu'un la pousse au hasard (le choc $\varepsilon_t$), mais l'élastique la tire vers $\mu$ avec une force proportionnelle à la distance. Plus $\kappa$ est grand, plus l'élastique est raide. Avec $\varphi = 1$, il n'y a plus d'élastique : on retrouve le promeneur ivre. L'équation \eqref{c1:eq:ecm} préfigure le modèle à correction d'erreur du chapitre~4 et le processus d'Ornstein-Uhlenbeck du chapitre~5, qui en est la version en temps continu.
 \end{intuition}
 
 \subsection{La demi-vie}
 
-\begin{proposition}[Demi-vie]\label{prop:hl}
+\begin{proposition}[Demi-vie]\label{c1:prop:hl}
 Pour $0<\varphi<1$, l'écart \emph{espéré} à la moyenne est divisé par deux en
 \[
 h_{1/2} = -\frac{\ln 2}{\ln\varphi} \quad\text{périodes},\qquad\text{avec l'approximation}\qquad h_{1/2} \approx \frac{\ln 2}{1-\varphi}\ \text{ quand } \varphi \text{ est proche de } 1.
@@ -333,7 +314,7 @@ D'après $(\ast)$ appliquée à partir de la date $t$, $Y_{t+h} = \varphi^hY_t +
 \begin{table}[h]
 \centering\small
 \caption{Demi-vie en fonction de $\varphi$ (en nombre de périodes, par exemple en jours sur données quotidiennes).}
-\label{tab:hl}
+\label{c1:tab:hl}
 \begin{tabular}{lccccc}
 \toprule
 $\varphi$ & 0,50 & 0,80 & 0,90 & 0,95 & 0,99 \\
@@ -351,13 +332,13 @@ approximation $\ln 2/(1-\varphi)$ & 1,39 & 3,47 & 6,93 & 13,86 & 69,31 \\
 \begin{codebox}[ — script \texttt{h2\_ar1\_half\_life.py}]
 \textbf{Hypothèses :} pour $\varphi = 0{,}95$ et $\sigma = 1$ : (a) $\gamma(0) = 1/(1-0{,}95^2) = 10{,}256$ ; (b) $\rho(h) = 0{,}95^h$ ; (c) demi-vie $13{,}51$ ; (d) biais de l'estimateur sur échantillon court.
 
-\textbf{Résultats :} (a) variance mesurée sur 200\,000 points : $10{,}355$ ; (b) autocorrélation au retard 10 : $0{,}602$ contre $0{,}599$ en théorie ; (c) sur 20\,000 trajectoires partant d'un écart de 10, l'écart moyen passe sous 5 après $13{,}59$ périodes ; (d) voir le tableau~\ref{tab:bias}.
+\textbf{Résultats :} (a) variance mesurée sur 200\,000 points : $10{,}355$ ; (b) autocorrélation au retard 10 : $0{,}602$ contre $0{,}599$ en théorie ; (c) sur 20\,000 trajectoires partant d'un écart de 10, l'écart moyen passe sous 5 après $13{,}59$ périodes ; (d) voir le tableau~\ref{c1:tab:bias}.
 \end{codebox}
 
 \begin{table}[h]
 \centering\small
 \caption{Estimation de $\varphi$ et de la demi-vie par moindres carrés sur 2\,000 échantillons simulés ($\varphi = 0{,}95$, vraie demi-vie $13{,}51$).}
-\label{tab:bias}
+\label{c1:tab:bias}
 \begin{tabular}{rccccc}
 \toprule
 Taille $n$ & $\overline{\hat\varphi}$ & biais & demi-vie médiane & quantile 5\,\% & quantile 95\,\% \\
@@ -371,9 +352,9 @@ Taille $n$ & $\overline{\hat\varphi}$ & biais & demi-vie médiane & quantile 5\,
 
 \begin{figure}[h]
 \centering
-\includegraphics[width=0.98\textwidth]{h2_ar1_half_life.pdf}
+\includegraphics[width=0.98\textwidth]{ch01/h2_ar1_half_life.pdf}
 \caption{À gauche, l'autocorrélation empirique suit $\varphi^h$. Au centre, 30 trajectoires partant de $x_0 = 10$ et leur moyenne, qui suit $\varphi^t x_0$ et coupe le niveau 5 à la demi-vie. À droite, la dispersion de la demi-vie estimée sur 250 observations (environ un an de données quotidiennes).}
-\label{fig:h2}
+\label{c1:fig:h2}
 \end{figure}
 
 \begin{pitfall}
@@ -381,7 +362,7 @@ Avec un an de données quotidiennes ($n = 250$), la demi-vie estimée est en mé
 \end{pitfall}
 
 % =====================================================================
-\section{De deux prix non stationnaires à un écart stationnaire}\label{sec:coint}
+\section{De deux prix non stationnaires à un écart stationnaire}\label{c1:sec:coint}
 % =====================================================================
 
 \subsection{L'ivrogne et son chien}
@@ -404,7 +385,7 @@ C'est l'erreur la plus fréquente chez les débutants : choisir des paires parce
 \textbf{Paire B} : $X$ est une marche aléatoire et $Y_t = X_t + s_t$, où $s_t$ est un AR(1) avec $\varphi = 0{,}5$ et des chocs d'écart-type $\sigma_s = 2$, plus grand que celui des chocs de $X$ (égal à 1). L'écart $Y - X = s$ est stationnaire, mais les rendements de $Y$ sont dominés par le bruit de $s$.
 \end{example}
 
-On peut même calculer la corrélation des rendements de la paire B. Les rendements sont $\Delta X_t = u_t$ et $\Delta Y_t = u_t + \Delta s_t$. Calculons d'abord la variance de $\Delta s_t = s_t - s_{t-1}$ par la proposition~\ref{prop:varspread} (avec $\beta = 1$) et la proposition~\ref{prop:ar1} :
+On peut même calculer la corrélation des rendements de la paire B. Les rendements sont $\Delta X_t = u_t$ et $\Delta Y_t = u_t + \Delta s_t$. Calculons d'abord la variance de $\Delta s_t = s_t - s_{t-1}$ par la proposition~\ref{c1:prop:varspread} (avec $\beta = 1$) et la proposition~\ref{c1:prop:ar1} :
 \[
 \Var(\Delta s_t) = \gamma(0) + \gamma(0) - 2\gamma(1) = 2\gamma(0)(1-\varphi), \qquad \gamma(0) = \frac{\sigma_s^2}{1-\varphi^2} = \frac{4}{0{,}75} = 5{,}33,
 \]
@@ -419,12 +400,12 @@ donc $\Var(\Delta s_t) = 2\times 5{,}33\times 0{,}5 = 5{,}33$. Comme $u_t$ est i
 
 \begin{figure}[h]
 \centering
-\includegraphics[width=0.9\textwidth]{h3_correlation_vs_cointegration.pdf}
+\includegraphics[width=0.9\textwidth]{ch01/h3_correlation_vs_cointegration.pdf}
 \caption{En haut, les prix des deux paires ; en bas, leurs écarts. La paire A, très corrélée, dérive sans retour ; la paire B, peu corrélée, a un écart qui oscille autour de zéro.}
-\label{fig:h3}
+\label{c1:fig:h3}
 \end{figure}
 
-\subsection{Le piège de la régression fallacieuse}\label{sec:spurious}
+\subsection{Le piège de la régression fallacieuse}\label{c1:sec:spurious}
 
 Si l'on régresse un prix sur un autre pour trouver $\beta$, on risque de \og découvrir\fg{} une relation qui n'existe pas. \citet{granger1974} ont montré que la régression d'une marche aléatoire sur une autre, \emph{indépendante}, produit très souvent une pente \og significative\fg{} au sens du test de Student usuel et un $R^2$ élevé. La raison : les deux séries ont des tendances aléatoires qui, sur un échantillon fini, semblent aller dans le même sens ou en sens opposé, et les hypothèses du test de Student (résidus non corrélés et stationnaires) sont violées.
 
@@ -434,9 +415,9 @@ Si l'on régresse un prix sur un autre pour trouver $\beta$, on risque de \og d�
 
 \begin{figure}[h]
 \centering
-\includegraphics[width=0.85\textwidth]{h4_spurious_regression.pdf}
+\includegraphics[width=0.85\textwidth]{ch01/h4_spurious_regression.pdf}
 \caption{Distribution de la statistique $t$ de la pente. En niveaux (gauche), elle est très dispersée et sort presque toujours de la zone $|t|<1{,}96$ ; en rendements (droite), elle suit à peu près une loi normale centrée réduite.}
-\label{fig:h4}
+\label{c1:fig:h4}
 \end{figure}
 
 \begin{pitfall}
@@ -451,7 +432,7 @@ Une régression de prix sur prix ne prouve rien par elle-même. Elle n'a de sens
 
 On dispose de deux séries de prix $X_t$ et $Y_t$. On coupe l'historique en deux : une \emph{période de formation} (les $n_f$ premières dates) et une \emph{période de trading} (les suivantes). Tout ce qui est estimé l'est \emph{uniquement} sur la formation.
 \begin{enumerate}
-\item Sur la formation, on estime $Y_t = \alpha + \beta X_t + e_t$ par moindres carrés (proposition~\ref{prop:hedge}), d'où $\hat\alpha$, $\hat\beta$, puis la moyenne $m$ et l'écart-type $d$ des résidus.
+\item Sur la formation, on estime $Y_t = \alpha + \beta X_t + e_t$ par moindres carrés (proposition~\ref{c1:prop:hedge}), d'où $\hat\alpha$, $\hat\beta$, puis la moyenne $m$ et l'écart-type $d$ des résidus.
 \item Sur la période de trading, on calcule l'écart $S_t = Y_t - \hat\beta X_t - \hat\alpha$ et le \emph{z-score} $z_t = (S_t - m)/d$.
 \item Règle : si l'on n'a pas de position et $z_t > 2$, on \emph{vend} l'écart (on vend une unité de $Y$ et on achète $\hat\beta$ unités de $X$) ; si $z_t < -2$, on \emph{achète} l'écart ; on sort quand $z_t$ repasse par 0.
 \end{enumerate}
@@ -473,13 +454,13 @@ où $c$ est exprimé en fraction (5 pb $= 0{,}0005$).
 Pour isoler l'effet de chaque ingrédient, on teste la règle dans un monde où la vérité est connue : $X$ est une marche aléatoire autour de 100, $Y_t = 1{,}5\,X_t + s_t$ et $s_t$ est un AR(1) avec $\varphi = 0{,}9$ (demi-vie de 6,6 jours) et des chocs d'écart-type 1. La formation dure 500 jours, le trading 1\,000 jours, et l'on répète l'expérience 400 fois.
 
 \begin{codebox}[ — script \texttt{h5\_zscore\_toy\_strategy.py}]
-\textbf{Estimation :} $\hat\beta$ vaut en moyenne $1{,}4999$ (écart-type $0{,}058$) : la régression retrouve bien le vrai ratio \emph{quand la paire est réellement cointégrée}. \textbf{Gain et coûts :} voir le tableau~\ref{tab:h5}. \textbf{Rupture :} dans une seconde série de mondes, l'écart devient une marche aléatoire ($\varphi = 1$) au 200\textsuperscript{e} jour de trading ; on compare les résultats réalisés \emph{après} ce jour (tableau~\ref{tab:h5b}).
+\textbf{Estimation :} $\hat\beta$ vaut en moyenne $1{,}4999$ (écart-type $0{,}058$) : la régression retrouve bien le vrai ratio \emph{quand la paire est réellement cointégrée}. \textbf{Gain et coûts :} voir le tableau~\ref{c1:tab:h5}. \textbf{Rupture :} dans une seconde série de mondes, l'écart devient une marche aléatoire ($\varphi = 1$) au 200\textsuperscript{e} jour de trading ; on compare les résultats réalisés \emph{après} ce jour (tableau~\ref{c1:tab:h5b}).
 \end{codebox}
 
 \begin{table}[h]
 \centering\small
 \caption{Règle $|z|>2$, sortie à $z = 0$, relation stable. Moyennes sur 400 mondes simulés ; gain exprimé en dollars pour une unité d'écart.}
-\label{tab:h5}
+\label{c1:tab:h5}
 \begin{tabular}{rcccc}
 \toprule
 Coût par jambe & Gain moyen & Part des mondes gagnants & Sharpe annualisé médian & Allers-retours \\
@@ -496,7 +477,7 @@ Coût par jambe & Gain moyen & Part des mondes gagnants & Sharpe annualisé méd
 \begin{table}[h]
 \centering\small
 \caption{Après le 200\textsuperscript{e} jour de trading, coût de 5 pb par jambe : relation stable contre relation rompue.}
-\label{tab:h5b}
+\label{c1:tab:h5b}
 \begin{tabular}{lcc}
 \toprule
  & Relation stable & Relation rompue \\
@@ -513,9 +494,9 @@ Pire trade & $-5{,}57$ & $-83{,}76$ \\
 
 \begin{figure}[h]
 \centering
-\includegraphics[width=0.98\textwidth]{h5_zscore_toy_strategy.pdf}
+\includegraphics[width=0.98\textwidth]{ch01/h5_zscore_toy_strategy.pdf}
 \caption{À gauche, le \emph{z-score} d'un monde simulé, les seuils $\pm 2$ et les périodes en position (grisées). Au centre, le Sharpe médian baisse avec le coût. À droite, distribution du gain réalisé après le 200\textsuperscript{e} jour, avec et sans rupture.}
-\label{fig:h5}
+\label{c1:fig:h5}
 \end{figure}
 
 \needspace{8\baselineskip}
@@ -570,7 +551,7 @@ Ces résultats proviennent d'un monde simulé \emph{construit pour que la strat�
 % =====================================================================
 
 \begin{exercise}
-Montrez que $\Var(aX + bY) = a^2\sigma_X^2 + b^2\sigma_Y^2 + 2ab\Cov(X,Y)$, puis retrouvez la proposition~\ref{prop:varspread} comme cas particulier.
+Montrez que $\Var(aX + bY) = a^2\sigma_X^2 + b^2\sigma_Y^2 + 2ab\Cov(X,Y)$, puis retrouvez la proposition~\ref{c1:prop:varspread} comme cas particulier.
 \end{exercise}
 
 \begin{exercise}
@@ -578,7 +559,7 @@ Deux actifs ont des volatilités quotidiennes $\sigma_X = 1{,}2\,\%$ et $\sigma_
 \end{exercise}
 
 \begin{exercise}
-Sur données quotidiennes, on estime $\hat\varphi = 0{,}98$. Calculez la demi-vie exacte et approchée. Quel $\varphi$ correspond à une demi-vie de 10 jours ? En utilisant le tableau~\ref{tab:bias}, discutez la fiabilité de cette estimation si elle repose sur un an de données.
+Sur données quotidiennes, on estime $\hat\varphi = 0{,}98$. Calculez la demi-vie exacte et approchée. Quel $\varphi$ correspond à une demi-vie de 10 jours ? En utilisant le tableau~\ref{c1:tab:bias}, discutez la fiabilité de cette estimation si elle repose sur un an de données.
 \end{exercise}
 
 \begin{exercise}
@@ -598,7 +579,7 @@ Ajoutez à \texttt{h5} un stop-loss : on ferme la position si $|z_t| > 4$. Mesur
 \end{exercise}
 
 \begin{exercise}[données réelles]
-Téléchargez les prix quotidiens de deux ETF adossés à l'or (par exemple via Interactive Brokers). Estimez $\hat\beta$, l'écart, sa demi-vie, et appliquez le test ADF. S'agit-il d'arbitrage statistique ou de quasi-arbitrage au sens de la section~2 ? Rapprochez votre réponse du moteur \texttt{atjte} (document~00, section~7).
+Téléchargez les prix quotidiens de deux ETF adossés à l'or (par exemple via Interactive Brokers). Estimez $\hat\beta$, l'écart, sa demi-vie, et appliquez le test ADF. S'agit-il d'arbitrage statistique ou de quasi-arbitrage au sens de la section~\ref{c1:sec:arb} ? Rapprochez votre réponse du moteur \texttt{atjte} (chapitre~0, section~\ref{c0:atjte}).
 \end{exercise}
 
 % =====================================================================
@@ -611,34 +592,33 @@ Téléchargez les prix quotidiens de deux ETF adossés à l'or (par exemple via 
 \item \citet{tsay2010}, chapitre~2, sections sur la stationnarité, l'autocorrélation, le bruit blanc et les modèles AR simples : même contenu, orienté données financières, avec des exemples.
 \item \citet{chan2013}, chapitre~2 (\og The Basics of Mean Reversion\fg) : stationnarité, demi-vie et cointégration vues par un praticien, avec code.
 \item \citet{murray1994} : trois pages, l'image de l'ivrogne et du chien ; à lire en entier.
-\item \citet{hogan2004} : la section qui définit l'arbitrage statistique (définition~\ref{def:statarb} de ce chapitre).
+\item \citet{hogan2004} : la section qui définit l'arbitrage statistique (définition~\ref{c1:def:statarb} de ce chapitre).
 \item \citet{granger1974} : l'article original sur la régression fallacieuse, court et lisible.
-\item Document~00 de ce cours, section~6 : la revue de littérature, pour situer la suite.
+\item Chapitre~0, section~\ref{c0:litt} : la revue de littérature, pour situer la suite.
 \end{itemize}
 \end{toread}
 
-\paragraph{Prochain chapitre.} Le chapitre~2 dérive les moindres carrés sous forme matricielle, explique pourquoi régresser $Y$ sur $X$ ne donne pas le même ratio que régresser $X$ sur $Y$, introduit le maximum de vraisemblance et revient sur le biais de petit échantillon mesuré au tableau~\ref{tab:bias}.
+\paragraph{Prochain chapitre.} Le chapitre~2 dérive les moindres carrés sous forme matricielle, explique pourquoi régresser $Y$ sur $X$ ne donne pas le même ratio que régresser $X$ sur $Y$, introduit le maximum de vraisemblance et revient sur le biais de petit échantillon mesuré au tableau~\ref{c1:tab:bias}.
 
-\appendix
-\section{Correspondance figures, tableaux et scripts}
+\section{Scripts du chapitre}
 
 \begin{center}\small
 \begin{tabular}{ll}
 \toprule
 Élément & Script (\texttt{code/ch01/}) \\
 \midrule
-Figure~\ref{fig:h1} & \texttt{h1\_random\_walk\_variance.py} \\
-Figure~\ref{fig:h2}, tableau~\ref{tab:bias} & \texttt{h2\_ar1\_half\_life.py} \\
-Figure~\ref{fig:h3} & \texttt{h3\_correlation\_vs\_cointegration.py} \\
-Figure~\ref{fig:h4} & \texttt{h4\_spurious\_regression.py} \\
-Figure~\ref{fig:h5}, tableaux~\ref{tab:h5} et~\ref{tab:h5b} & \texttt{h5\_zscore\_toy\_strategy.py} \\
+Figure~\ref{c1:fig:h1} & \texttt{h1\_random\_walk\_variance.py} \\
+Figure~\ref{c1:fig:h2}, tableau~\ref{c1:tab:bias} & \texttt{h2\_ar1\_half\_life.py} \\
+Figure~\ref{c1:fig:h3} & \texttt{h3\_correlation\_vs\_cointegration.py} \\
+Figure~\ref{c1:fig:h4} & \texttt{h4\_spurious\_regression.py} \\
+Figure~\ref{c1:fig:h5}, tableaux~\ref{c1:tab:h5} et~\ref{c1:tab:h5b} & \texttt{h5\_zscore\_toy\_strategy.py} \\
 \bottomrule
 \end{tabular}
 \end{center}
 
 \noindent Chaque script écrit ses chiffres dans \texttt{code/ch01/results/} sous le même nom avec l'extension \texttt{.json}. Pour tout relancer : \texttt{cd code/ch01 \&\& for f in h*.py; do python \$f; done} (dépendances : \texttt{numpy}, \texttt{matplotlib}, \texttt{statsmodels}).
 
-\section{Estimer une demi-vie en quatre lignes}
+\subsection*{Estimer une demi-vie en quatre lignes}
 
 \begin{lstlisting}[language=Python]
 import numpy as np
@@ -648,7 +628,3 @@ def half_life(x):
     return -np.log(2) / np.log(b) if 0 < b < 1 else np.inf
 \end{lstlisting}
 
-\bibliographystyle{plainnat}
-\bibliography{../shared/references}
-
-\end{document}
