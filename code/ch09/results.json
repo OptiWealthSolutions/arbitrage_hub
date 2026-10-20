@@ -1,0 +1,84 @@
+{
+  "E1": {
+    "gaussienne": {
+      "tau_mesure": 0.497,
+      "P(U<1%,V<1%)_en_pct": 0.267,
+      "P(U>99%,V>99%)_en_pct": 0.28,
+      "P(V<1%|U<1%)": 0.27
+    },
+    "student_nu4": {
+      "tau_mesure": 0.503,
+      "P(U<1%,V<1%)_en_pct": 0.45,
+      "P(U>99%,V>99%)_en_pct": 0.454,
+      "P(V<1%|U<1%)": 0.446
+    },
+    "clayton": {
+      "tau_mesure": 0.498,
+      "P(U<1%,V<1%)_en_pct": 0.699,
+      "P(U>99%,V>99%)_en_pct": 0.032,
+      "P(V<1%|U<1%)": 0.702
+    },
+    "independance_P(U<1%,V<1%)_pct": 0.01,
+    "dependance_de_queue_theorique": {
+      "gaussienne": 0.0,
+      "clayton_basse": 0.707,
+      "student_nu4": 0.397
+    }
+  },
+  "E2": {
+    "gaussienne": {
+      "choix_AIC_sur_100": {
+        "gaussienne": 98,
+        "student": 2,
+        "clayton": 0
+      },
+      "parametre_moyen": 0.71,
+      "vrai_parametre": 0.7071
+    },
+    "student": {
+      "choix_AIC_sur_100": {
+        "gaussienne": 0,
+        "student": 100,
+        "clayton": 0
+      },
+      "parametre_moyen": 0.704,
+      "vrai_parametre": 0.7071
+    },
+    "clayton": {
+      "choix_AIC_sur_100": {
+        "gaussienne": 0,
+        "student": 0,
+        "clayton": 100
+      },
+      "parametre_moyen": 2.011,
+      "vrai_parametre": 2.0
+    }
+  },
+  "E3": {
+    "z_score_moyen_pct_sur_500j": 9.05,
+    "z_score_ecart_type_pct": 4.63,
+    "copule_moyen_pct_sur_500j": 1.61,
+    "copule_ecart_type_pct": 2.25,
+    "copules_choisies": {
+      "student": 60
+    },
+    "paires": 60
+  },
+  "E4": {
+    "tau_kendall": 0.449,
+    "copule_AIC": "gaussienne",
+    "loglik": {
+      "gaussienne": 121.4,
+      "student": 114.5,
+      "clayton": 46.5
+    },
+    "co_baisses_sous_5pct_observees": 5,
+    "co_baisses_attendues": {
+      "gaussienne": 8.6,
+      "student": 10.8,
+      "clayton": 16.4
+    },
+    "attendu_si_independance": 1.2,
+    "jours": 499
+  }
+}

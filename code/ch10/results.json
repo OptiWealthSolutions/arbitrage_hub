@@ -1,0 +1,76 @@
+{
+  "E1": {
+    "5_plus_grandes_valeurs_propres": [
+      29.74,
+      10.38,
+      6.84,
+      1.42,
+      1.39
+    ],
+    "borne_MP": 2.657,
+    "nb_au_dessus_borne": 3,
+    "part_variance_3_facteurs": 0.47
+  },
+  "E2_E3": {
+    "signal_k=1_cout=0pb": {
+      "rendement_annuel_pct": 9.13,
+      "volatilite_annuelle_pct": 2.25,
+      "sharpe": 4.05
+    },
+    "signal_k=1_cout=5pb": {
+      "rendement_annuel_pct": 8.22,
+      "volatilite_annuelle_pct": 2.25,
+      "sharpe": 3.65
+    },
+    "signal_k=1_cout=10pb": {
+      "rendement_annuel_pct": 7.32,
+      "volatilite_annuelle_pct": 2.25,
+      "sharpe": 3.25
+    },
+    "signal_k=3_cout=0pb": {
+      "rendement_annuel_pct": 10.52,
+      "volatilite_annuelle_pct": 1.17,
+      "sharpe": 8.99
+    },
+    "signal_k=3_cout=5pb": {
+      "rendement_annuel_pct": 9.58,
+      "volatilite_annuelle_pct": 1.17,
+      "sharpe": 8.18
+    },
+    "signal_k=3_cout=10pb": {
+      "rendement_annuel_pct": 8.64,
+      "volatilite_annuelle_pct": 1.17,
+      "sharpe": 7.37
+    },
+    "signal_k=10_cout=0pb": {
+      "rendement_annuel_pct": 10.08,
+      "volatilite_annuelle_pct": 1.2,
+      "sharpe": 8.4
+    },
+    "signal_k=10_cout=5pb": {
+      "rendement_annuel_pct": 9.04,
+      "volatilite_annuelle_pct": 1.2,
+      "sharpe": 7.54
+    },
+    "signal_k=10_cout=10pb": {
+      "rendement_annuel_pct": 8.01,
+      "volatilite_annuelle_pct": 1.2,
+      "sharpe": 6.67
+    },
+    "nul_k=3_cout=0pb": {
+      "rendement_annuel_pct": -0.1,
+      "volatilite_annuelle_pct": 1.3,
+      "sharpe": -0.08
+    },
+    "nul_k=3_cout=5pb": {
+      "rendement_annuel_pct": -0.98,
+      "volatilite_annuelle_pct": 1.3,
+      "sharpe": -0.75
+    },
+    "nul_k=3_cout=10pb": {
+      "rendement_annuel_pct": -1.86,
+      "volatilite_annuelle_pct": 1.3,
+      "sharpe": -1.43
+    }
+  }
+}

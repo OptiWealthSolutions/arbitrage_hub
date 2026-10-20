@@ -1,0 +1,61 @@
+{
+  "E1": {
+    "kfold_melange": {
+      "precision_moyenne": 0.584,
+      "min": 0.547,
+      "max": 0.607
+    },
+    "walk_forward_purge": {
+      "precision_moyenne": 0.507,
+      "min": 0.464,
+      "max": 0.55
+    },
+    "series": 10,
+    "horizon_etiquette": 10,
+    "vraie_precision": 0.5
+  },
+  "E2": {
+    "foret": {
+      "pnl_moyen": 0.5443,
+      "taux_de_reussite": 0.533
+    },
+    "regle_zscore": {
+      "pnl_moyen": 0.8744,
+      "taux_de_reussite": 0.535
+    }
+  },
+  "E3": {
+    "par_univers": [
+      {
+        "groupes": 27,
+        "paires_candidates": 59,
+        "vraies_dans_candidates": 10,
+        "retenues_apres_BH": 10,
+        "vraies_retenues": 10
+      },
+      {
+        "groupes": 31,
+        "paires_candidates": 93,
+        "vraies_dans_candidates": 10,
+        "retenues_apres_BH": 10,
+        "vraies_retenues": 10
+      },
+      {
+        "groupes": 28,
+        "paires_candidates": 71,
+        "vraies_dans_candidates": 10,
+        "retenues_apres_BH": 11,
+        "vraies_retenues": 10
+      },
+      {
+        "groupes": 28,
+        "paires_candidates": 57,
+        "vraies_dans_candidates": 10,
+        "retenues_apres_BH": 10,
+        "vraies_retenues": 10
+      }
+    ],
+    "paires_possibles": 4950,
+    "vraies_paires": 10
+  }
+}

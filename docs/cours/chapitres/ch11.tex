@@ -1,1 +1,141 @@
-\chapter{À rédiger}
+% =====================================================================
+\chapter{Apprentissage automatique}
+\label{ch:11}
+% =====================================================================
+
+\section{Objectifs et organisation du chapitre}
+
+\paragraph{Objectifs.} L'apprentissage automatique promet de découvrir des relations non linéaires que les modèles des chapitres précédents ignorent. Il promet aussi, et surtout, de se tromper avec une assurance remarquable. À la fin de ce chapitre, vous saurez : (1) situer les usages de l'apprentissage automatique en arbitrage statistique ; (2) construire variables explicatives et étiquettes sans information future ; (3) reconnaître et éviter la fuite d'information en validation croisée ; (4) comparer honnêtement un modèle complexe à une règle simple ; (5) utiliser la réduction de dimension et le \emph{clustering} pour sélectionner des paires.
+
+\paragraph{Code.} \texttt{code/ch11/ch11\_machine\_learning.py} (\texttt{scikit-learn}).
+
+% =====================================================================
+\section{Trois usages}
+% =====================================================================
+
+\begin{enumerate}
+\item \textbf{Prévoir les rendements relatifs.} \citet{krauss2017ml} entraînent chaque jour des réseaux profonds, du \emph{gradient boosting} et des forêts aléatoires à prédire quelles actions du S\&P~500 surperformeront la médiane le lendemain, à partir des rendements passés ; ils achètent les mieux classées et vendent les moins bien classées. L'ensemble des modèles produit, selon les auteurs, environ $0{,}45\,\%$ par jour avant coûts sur 1992–2015, avec un net déclin dans la période récente.
+\item \textbf{Extraire des signaux des résidus.} \citet{guijarro2021} appliquent des réseaux convolutifs et des \emph{transformers} aux trajectoires de résidus (au sens du chapitre~10) pour apprendre directement la règle de trading, et rapportent des ratios de Sharpe hors échantillon élevés.
+\item \textbf{Sélectionner les paires.} \citet{sarmento2020} réduisent la dimension des rendements par ACP, regroupent les actions par un algorithme de \emph{clustering} (OPTICS), puis appliquent les tests de cointégration à l'intérieur des groupes.
+\end{enumerate}
+
+% =====================================================================
+\section{Variables, étiquettes et fuite d'information}
+% =====================================================================
+
+\subsection{Variables et étiquettes}
+
+Une \emph{variable explicative} (\emph{feature}) $f_t$ doit être calculable avec l'information disponible à la date $t$ : rendements passés, \emph{z-score} de l'écart, volatilité récente, demi-vie estimée. Une \emph{étiquette} (\emph{label}) $y_t$ décrit ce qu'on veut prévoir et regarde par définition vers l'avenir : signe du rendement de l'écart sur les $H$ prochains jours, ou résultat d'un trade (gain, perte, expiration) selon la méthode des trois barrières de \citet{lopezdeprado2018}.
+
+\subsection{Le problème du chevauchement}
+
+Si l'étiquette porte sur $H > 1$ jours, les étiquettes de deux dates voisines partagent $H-1$ jours de rendements futurs : $y_t$ et $y_{t+1}$ sont presque identiques. Une validation croisée classique (\emph{K-fold}) qui mélange les dates place des dates voisines à la fois dans l'apprentissage et dans le test. Le modèle \og reconnaît\fg{} la période et recopie l'étiquette de la date voisine : il paraît prévoir, alors qu'il se souvient.
+
+\begin{intuition}
+C'est comme préparer un examen avec les corrigés de la veille d'une épreuve dont la moitié des questions sont reprises le lendemain. Votre note sera excellente, et ne dira rien de votre capacité à résoudre une question nouvelle.
+\end{intuition}
+
+\paragraph{Le remède : validation séquentielle purgée.} On entraîne toujours sur le passé et on teste sur le futur (\emph{walk-forward}) ; on \emph{purge} de l'apprentissage les dates dont les étiquettes chevauchent la période de test, et l'on ajoute un \emph{embargo} de quelques jours après le test \citep{lopezdeprado2018}.
+
+\begin{codebox}[ — E1, fuite d'information]
+\textbf{Protocole :} 10 marches aléatoires de 3\,000 jours (\emph{aucune} prévisibilité) ; six variables passées (rendements sur 1, 5, 10, 20 jours, \emph{z-score} sur 20 jours, volatilité) ; étiquette : signe du rendement sur les 10 jours suivants ; forêt aléatoire de 200 arbres. \textbf{Résultats :} précision en validation croisée mélangée à 5 blocs : $58{,}4\,\%$ en moyenne (de $54{,}7$ à $60{,}7\,\%$) ; en validation séquentielle purgée : $50{,}7\,\%$ (de $46{,}4$ à $55{,}0\,\%$). La vraie précision possible est $50\,\%$.
+\end{codebox}
+
+\begin{pitfall}
+Une précision de 58\,\% en validation croisée ressemble à une découverte majeure : avec un ratio gain/perte de 1, elle donnerait un ratio de Sharpe considérable. Elle est entièrement due à la fuite d'information. Toute étude d'apprentissage automatique en finance qui ne précise pas comment elle a évité le chevauchement doit être considérée comme fausse jusqu'à preuve du contraire.
+\end{pitfall}
+
+% =====================================================================
+\section{Complexe contre simple}
+% =====================================================================
+
+Quand la structure du signal est connue et linéaire (un écart qui revient à la moyenne), un modèle flexible doit au mieux redécouvrir la règle simple, avec plus de variance.
+
+\begin{codebox}[ — E2, forêt aléatoire contre règle \emph{z-score}]
+\textbf{Protocole :} 10 écarts simulés (AR(1) avec $\varphi = 0{,}95$ plus une petite marche aléatoire), 4\,000 jours, apprentissage sur la première moitié, test sur la seconde ; étiquette : signe du rendement du lendemain ; position de la forêt si la probabilité prédite sort de $[0{,}45\,;\,0{,}55]$ ; règle simple : \emph{z-score} à 20 jours au-delà de $\pm1$ ; coûts de 1 pb. \textbf{Résultats :} taux de réussite $53{,}3\,\%$ (forêt) contre $53{,}5\,\%$ (règle) ; P\&L moyen $0{,}54$ contre $0{,}87$ (en unités de l'écart).
+\end{codebox}
+
+La forêt n'apporte rien et perd une partie du signal : elle doit apprendre à partir de bruit ce que la règle encode directement. L'apprentissage automatique n'a d'intérêt que s'il existe une structure que les modèles simples ne capturent pas (interactions entre variables, non-linéarités, informations hétérogènes comme les volumes ou le carnet d'ordres), \emph{et} assez de données pour l'apprendre.
+
+\paragraph{Bonnes pratiques.} Comparer systématiquement à une règle simple de référence ; préférer des modèles peu profonds et fortement régularisés ; compter toutes les variantes essayées (chapitre~16) ; mesurer l'importance des variables sur l'échantillon de test ; ré-entraîner à intervalles réguliers en walk-forward, jamais sur l'échantillon complet.
+
+% =====================================================================
+\section{Sélection de paires par \emph{clustering}}
+% =====================================================================
+
+\subsection{La méthode}
+
+Le chapitre~7 a montré que tester toutes les paires coûte cher en faux positifs. L'idée de \citet{sarmento2020} : réduire d'abord l'univers à des groupes d'actions qui se ressemblent, puis tester seulement à l'intérieur des groupes.
+\begin{enumerate}
+\item On standardise les rendements et l'on fait une ACP : chaque action est représentée par ses coordonnées sur les $k$ premières composantes (ses \og expositions\fg{} aux facteurs).
+\item On regroupe les actions proches dans cet espace avec OPTICS, un algorithme qui détecte des groupes de densité variable et laisse de côté les points isolés.
+\item On teste la cointégration (avec correction BH) uniquement pour les paires d'un même groupe.
+\end{enumerate}
+
+\begin{codebox}[ — E3, ACP + OPTICS + cointégration]
+\textbf{Protocole :} univers simulé du chapitre~7 (100 actions, 10 vraies paires de demi-vie 4,3 jours), 500 jours ; 8 composantes ; OPTICS avec \texttt{min\_samples = 2}. \textbf{Résultats} (4 univers) : 27 à 31 groupes ; 57 à 93 paires candidates au lieu de 4\,950 ; les 10 vraies paires sont toujours parmi les candidates ; après BH, 10 ou 11 paires retenues dont les 10 vraies.
+\end{codebox}
+
+Le \emph{clustering} divise le nombre de tests par 50 à 80 sans perdre les vraies paires, ce qui rend la correction pour tests multiples beaucoup moins coûteuse en puissance. Dans cette simulation, les deux actions d'une vraie paire ont exactement les mêmes expositions aux facteurs, ce qui les rend faciles à regrouper ; sur données réelles, les groupes sont moins nets et le résultat doit être vérifié.
+
+% =====================================================================
+\section{Ce que la théorie apporte, et ses limites}
+% =====================================================================
+
+\paragraph{Apports.} Des modèles capables d'exploiter des structures non linéaires et des données hétérogènes ; des outils de réduction de dimension et de regroupement qui structurent la recherche de paires ; une discipline de validation (purge, embargo, walk-forward) utile à toute stratégie.
+
+\paragraph{Limites.} Rapport signal/bruit très faible des rendements financiers ; non-stationnarité (ce qui a été appris peut ne plus valoir) ; risque de surapprentissage démultiplié par le nombre d'hyperparamètres ; résultats publiés obtenus sur des univers très liquides, avec des coûts que le particulier ne peut pas toujours égaler ; opacité qui complique le diagnostic quand la stratégie se dégrade.
+
+% =====================================================================
+\section{Fiche à recopier au tableau blanc}
+% =====================================================================
+
+\begin{whiteboard}
+\begin{itemize}[leftmargin=1.2em]
+\item \textbf{Variable :} calculable en $t$ ; \textbf{étiquette :} regarde vers $t+H$.
+\item \textbf{Chevauchement :} étiquettes à horizon $H$ partagent $H-1$ jours $\Rightarrow$ K-fold mélangé fuit.
+\item \textbf{Remède :} walk-forward, purge des dates qui chevauchent le test, embargo.
+\item \textbf{Test de base :} toujours comparer à une règle simple sur le même échantillon de test.
+\item \textbf{Sélection :} ACP (expositions) $\to$ OPTICS (groupes) $\to$ cointégration intra-groupe $+$ BH.
+\end{itemize}
+\end{whiteboard}
+
+% =====================================================================
+\section{Exercices}
+% =====================================================================
+
+\begin{exercise}
+Avec une étiquette à horizon $H = 10$ et 2\,500 dates, combien de dates faut-il purger autour d'un bloc de test de 250 dates ? Quelle fraction des données d'apprentissage perd-on par bloc ?
+\end{exercise}
+
+\begin{exercise}
+Expliquez pourquoi une forêt aléatoire dont les feuilles contiennent une seule observation (\texttt{min\_samples\_leaf = 1}) amplifie la fuite d'information de E1.
+\end{exercise}
+
+\begin{exercise}[à coder]
+Refaites E1 avec \texttt{min\_samples\_leaf = 200}. La précision de la validation mélangée baisse-t-elle ? Disparaît-elle ?
+\end{exercise}
+
+\begin{exercise}[à coder]
+Dans E2, ajoutez une non-linéarité réelle : le retour à la moyenne n'existe que quand la volatilité récente est basse. La forêt bat-elle alors la règle simple ? Avec combien de données ?
+\end{exercise}
+
+\begin{exercise}[données réelles]
+Appliquez la méthode ACP + OPTICS à un univers d'une cinquantaine d'actions de deux ou trois secteurs. Les groupes trouvés correspondent-ils aux secteurs ?
+\end{exercise}
+
+% =====================================================================
+\section{Pour aller plus loin}
+% =====================================================================
+
+\begin{toread}
+\begin{itemize}[leftmargin=1.2em]
+\item \citet{lopezdeprado2018}, chapitres~3 (étiquetage, méthode des trois barrières), 4 (pondération des échantillons qui se chevauchent) et 7 (validation croisée purgée).
+\item \citet{krauss2017ml} : protocole complet de prévision quotidienne sur le S\&P~500.
+\item \citet{guijarro2021} : signaux appris sur les résidus d'arbitrage statistique.
+\item \citet{sarmento2020} : la sélection de paires par ACP et OPTICS.
+\end{itemize}
+\end{toread}
+
+\section{Scripts du chapitre}
+\noindent\texttt{code/ch11/ch11\_machine\_learning.py} : E1 (fuite d'information), E2 (forêt contre règle), E3 (\emph{clustering}).

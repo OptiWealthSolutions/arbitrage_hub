@@ -1,0 +1,296 @@
+{
+  "E1_E2_phi_0.95": {
+    "vraies_paires_par_univers": 10,
+    "univers": 12,
+    "par_regle": {
+      "p<0.05": {
+        "tests_par_univers": 4950,
+        "selectionnees_moy": 272.75,
+        "vraies_moy": 8.42,
+        "fausses_moy": 264.33,
+        "rendement_moyen_par_paire_pct": 4.38,
+        "erreur_type_pct": 0.271,
+        "rendement_vraies_pct": 2.648,
+        "faux_positifs_partiellement_lies_moy": 98.08,
+        "rendement_partiellement_lies_pct": 7.361,
+        "faux_positifs_sans_lien_moy": 166.25,
+        "rendement_sans_lien_pct": 2.709,
+        "erreur_type_naive_sans_lien_pct": 0.363,
+        "sans_lien_par_univers": {
+          "moyenne_des_univers_pct": 1.69,
+          "erreur_type_inter_univers_pct": 1.61,
+          "univers": 12,
+          "min_pct": -4.5,
+          "max_pct": 13.1
+        },
+        "partiels_par_univers": {
+          "moyenne_des_univers_pct": 3.68,
+          "erreur_type_inter_univers_pct": 1.83,
+          "univers": 12,
+          "min_pct": -6.9,
+          "max_pct": 16.7
+        },
+        "vraies_par_univers": {
+          "moyenne_des_univers_pct": 2.65,
+          "erreur_type_inter_univers_pct": 0.18,
+          "univers": 12,
+          "min_pct": 1.3,
+          "max_pct": 3.6
+        }
+      },
+      "Bonferroni": {
+        "tests_par_univers": 4950,
+        "selectionnees_moy": 0.08,
+        "vraies_moy": 0.08,
+        "fausses_moy": 0.0,
+        "rendement_moyen_par_paire_pct": 4.028,
+        "erreur_type_pct": null,
+        "rendement_vraies_pct": 4.028,
+        "faux_positifs_partiellement_lies_moy": 0.0,
+        "rendement_partiellement_lies_pct": null,
+        "faux_positifs_sans_lien_moy": 0.0,
+        "rendement_sans_lien_pct": null,
+        "erreur_type_naive_sans_lien_pct": null,
+        "sans_lien_par_univers": null,
+        "partiels_par_univers": null,
+        "vraies_par_univers": null
+      },
+      "BH": {
+        "tests_par_univers": 4950,
+        "selectionnees_moy": 0.08,
+        "vraies_moy": 0.08,
+        "fausses_moy": 0.0,
+        "rendement_moyen_par_paire_pct": 4.028,
+        "erreur_type_pct": null,
+        "rendement_vraies_pct": 4.028,
+        "faux_positifs_partiellement_lies_moy": 0.0,
+        "rendement_partiellement_lies_pct": null,
+        "faux_positifs_sans_lien_moy": 0.0,
+        "rendement_sans_lien_pct": null,
+        "erreur_type_naive_sans_lien_pct": null,
+        "sans_lien_par_univers": null,
+        "partiels_par_univers": null,
+        "vraies_par_univers": null
+      },
+      "secteur+BH": {
+        "tests_par_univers": 950,
+        "selectionnees_moy": 0.33,
+        "vraies_moy": 0.25,
+        "fausses_moy": 0.08,
+        "rendement_moyen_par_paire_pct": 2.893,
+        "erreur_type_pct": 0.947,
+        "rendement_vraies_pct": 3.63,
+        "faux_positifs_partiellement_lies_moy": 0.0,
+        "rendement_partiellement_lies_pct": null,
+        "faux_positifs_sans_lien_moy": 0.08,
+        "rendement_sans_lien_pct": 0.681,
+        "erreur_type_naive_sans_lien_pct": null,
+        "sans_lien_par_univers": null,
+        "partiels_par_univers": null,
+        "vraies_par_univers": {
+          "moyenne_des_univers_pct": 3.63,
+          "erreur_type_inter_univers_pct": 0.84,
+          "univers": 3,
+          "min_pct": 2.0,
+          "max_pct": 4.8
+        }
+      },
+      "secteur+BH+demi-vie<30": {
+        "tests_par_univers": 950,
+        "selectionnees_moy": 0.33,
+        "vraies_moy": 0.25,
+        "fausses_moy": 0.08,
+        "rendement_moyen_par_paire_pct": 2.893,
+        "erreur_type_pct": 0.947,
+        "rendement_vraies_pct": 3.63,
+        "faux_positifs_partiellement_lies_moy": 0.0,
+        "rendement_partiellement_lies_pct": null,
+        "faux_positifs_sans_lien_moy": 0.08,
+        "rendement_sans_lien_pct": 0.681,
+        "erreur_type_naive_sans_lien_pct": null,
+        "sans_lien_par_univers": null,
+        "partiels_par_univers": null,
+        "vraies_par_univers": {
+          "moyenne_des_univers_pct": 3.63,
+          "erreur_type_inter_univers_pct": 0.84,
+          "univers": 3,
+          "min_pct": 2.0,
+          "max_pct": 4.8
+        }
+      }
+    }
+  },
+  "E3_phi_0.95": {
+    "BH_selectionnees": 1,
+    "reselectionnees_fenetre_suivante": 1,
+    "dont_vraies": 1
+  },
+  "E1_E2_phi_0.85": {
+    "vraies_paires_par_univers": 10,
+    "univers": 12,
+    "par_regle": {
+      "p<0.05": {
+        "tests_par_univers": 4950,
+        "selectionnees_moy": 275.17,
+        "vraies_moy": 10.0,
+        "fausses_moy": 265.17,
+        "rendement_moyen_par_paire_pct": 4.445,
+        "erreur_type_pct": 0.27,
+        "rendement_vraies_pct": 3.707,
+        "faux_positifs_partiellement_lies_moy": 98.92,
+        "rendement_partiellement_lies_pct": 7.437,
+        "faux_positifs_sans_lien_moy": 166.25,
+        "rendement_sans_lien_pct": 2.709,
+        "erreur_type_naive_sans_lien_pct": 0.363,
+        "sans_lien_par_univers": {
+          "moyenne_des_univers_pct": 1.69,
+          "erreur_type_inter_univers_pct": 1.61,
+          "univers": 12,
+          "min_pct": -4.5,
+          "max_pct": 13.1
+        },
+        "partiels_par_univers": {
+          "moyenne_des_univers_pct": 3.49,
+          "erreur_type_inter_univers_pct": 1.93,
+          "univers": 12,
+          "min_pct": -7.6,
+          "max_pct": 17.2
+        },
+        "vraies_par_univers": {
+          "moyenne_des_univers_pct": 3.71,
+          "erreur_type_inter_univers_pct": 0.14,
+          "univers": 12,
+          "min_pct": 3.0,
+          "max_pct": 4.6
+        }
+      },
+      "Bonferroni": {
+        "tests_par_univers": 4950,
+        "selectionnees_moy": 9.0,
+        "vraies_moy": 9.0,
+        "fausses_moy": 0.0,
+        "rendement_moyen_par_paire_pct": 3.717,
+        "erreur_type_pct": 0.138,
+        "rendement_vraies_pct": 3.717,
+        "faux_positifs_partiellement_lies_moy": 0.0,
+        "rendement_partiellement_lies_pct": null,
+        "faux_positifs_sans_lien_moy": 0.0,
+        "rendement_sans_lien_pct": null,
+        "erreur_type_naive_sans_lien_pct": null,
+        "sans_lien_par_univers": null,
+        "partiels_par_univers": null,
+        "vraies_par_univers": {
+          "moyenne_des_univers_pct": 3.71,
+          "erreur_type_inter_univers_pct": 0.15,
+          "univers": 12,
+          "min_pct": 3.0,
+          "max_pct": 4.6
+        }
+      },
+      "BH": {
+        "tests_par_univers": 4950,
+        "selectionnees_moy": 10.92,
+        "vraies_moy": 10.0,
+        "fausses_moy": 0.92,
+        "rendement_moyen_par_paire_pct": 3.651,
+        "erreur_type_pct": 0.381,
+        "rendement_vraies_pct": 3.707,
+        "faux_positifs_partiellement_lies_moy": 0.33,
+        "rendement_partiellement_lies_pct": 15.396,
+        "faux_positifs_sans_lien_moy": 0.58,
+        "rendement_sans_lien_pct": -4.025,
+        "erreur_type_naive_sans_lien_pct": 4.933,
+        "sans_lien_par_univers": {
+          "moyenne_des_univers_pct": 0.02,
+          "erreur_type_inter_univers_pct": 5.65,
+          "univers": 4,
+          "min_pct": -14.2,
+          "max_pct": 13.4
+        },
+        "partiels_par_univers": {
+          "moyenne_des_univers_pct": 15.4,
+          "erreur_type_inter_univers_pct": 7.87,
+          "univers": 2,
+          "min_pct": 7.5,
+          "max_pct": 23.3
+        },
+        "vraies_par_univers": {
+          "moyenne_des_univers_pct": 3.71,
+          "erreur_type_inter_univers_pct": 0.14,
+          "univers": 12,
+          "min_pct": 3.0,
+          "max_pct": 4.6
+        }
+      },
+      "secteur+BH": {
+        "tests_par_univers": 950,
+        "selectionnees_moy": 10.67,
+        "vraies_moy": 10.0,
+        "fausses_moy": 0.67,
+        "rendement_moyen_par_paire_pct": 3.595,
+        "erreur_type_pct": 0.204,
+        "rendement_vraies_pct": 3.707,
+        "faux_positifs_partiellement_lies_moy": 0.25,
+        "rendement_partiellement_lies_pct": 1.468,
+        "faux_positifs_sans_lien_moy": 0.42,
+        "rendement_sans_lien_pct": 2.17,
+        "erreur_type_naive_sans_lien_pct": 3.64,
+        "sans_lien_par_univers": {
+          "moyenne_des_univers_pct": 2.17,
+          "erreur_type_inter_univers_pct": 3.64,
+          "univers": 5,
+          "min_pct": -7.6,
+          "max_pct": 13.4
+        },
+        "partiels_par_univers": null,
+        "vraies_par_univers": {
+          "moyenne_des_univers_pct": 3.71,
+          "erreur_type_inter_univers_pct": 0.14,
+          "univers": 12,
+          "min_pct": 3.0,
+          "max_pct": 4.6
+        }
+      },
+      "secteur+BH+demi-vie<30": {
+        "tests_par_univers": 950,
+        "selectionnees_moy": 10.67,
+        "vraies_moy": 10.0,
+        "fausses_moy": 0.67,
+        "rendement_moyen_par_paire_pct": 3.595,
+        "erreur_type_pct": 0.204,
+        "rendement_vraies_pct": 3.707,
+        "faux_positifs_partiellement_lies_moy": 0.25,
+        "rendement_partiellement_lies_pct": 1.468,
+        "faux_positifs_sans_lien_moy": 0.42,
+        "rendement_sans_lien_pct": 2.17,
+        "erreur_type_naive_sans_lien_pct": 3.64,
+        "sans_lien_par_univers": {
+          "moyenne_des_univers_pct": 2.17,
+          "erreur_type_inter_univers_pct": 3.64,
+          "univers": 5,
+          "min_pct": -7.6,
+          "max_pct": 13.4
+        },
+        "partiels_par_univers": null,
+        "vraies_par_univers": {
+          "moyenne_des_univers_pct": 3.71,
+          "erreur_type_inter_univers_pct": 0.14,
+          "univers": 12,
+          "min_pct": 3.0,
+          "max_pct": 4.6
+        }
+      }
+    }
+  },
+  "E3_phi_0.85": {
+    "BH_selectionnees": 131,
+    "reselectionnees_fenetre_suivante": 122,
+    "dont_vraies": 120
+  },
+  "E4": {
+    "statique_formation": 0.0255,
+    "glissant_60j": 0.073,
+    "glissant_250j": 0.0325,
+    "vrai_beta": 1.0
+  }
+}

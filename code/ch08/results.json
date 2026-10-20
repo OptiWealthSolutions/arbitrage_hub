@@ -1,0 +1,81 @@
+{
+  "E1_E2": {
+    "kalman": {
+      "delta=1e-08": {
+        "rmse_beta": 0.043,
+        "log_vraisemblance": -2462.3
+      },
+      "delta=1e-07": {
+        "rmse_beta": 0.0166,
+        "log_vraisemblance": -1927.8
+      },
+      "delta=1e-06": {
+        "rmse_beta": 0.0306,
+        "log_vraisemblance": -1597.3
+      },
+      "delta=1e-05": {
+        "rmse_beta": 0.0612,
+        "log_vraisemblance": -1370.1
+      },
+      "delta=0.0001": {
+        "rmse_beta": 0.0909,
+        "log_vraisemblance": -1470.1
+      },
+      "delta=0.001": {
+        "rmse_beta": 0.1076,
+        "log_vraisemblance": -2179.2
+      }
+    },
+    "comparaison": {
+      "MCO_glissant_60": 0.1134,
+      "MCO_glissant_250": 0.0387,
+      "MCO_statique_formation": 0.048
+    }
+  },
+  "E3": {
+    "kalman": {
+      "moyenne_annuelle_pct": 6.52,
+      "ecart_type_pct": 4.22,
+      "part_positive": 0.99
+    },
+    "statique": {
+      "moyenne_annuelle_pct": 1.72,
+      "ecart_type_pct": 2.37,
+      "part_positive": 0.72
+    }
+  },
+  "E4": {
+    "KO_PEP": {
+      "beta_debut": 0.763,
+      "beta_milieu": 0.523,
+      "beta_fin": 0.579,
+      "beta_min": 0.511,
+      "beta_max": 0.771
+    },
+    "GLD_GLDM": {
+      "beta_debut": 1.202,
+      "beta_milieu": 1.046,
+      "beta_fin": 1.021,
+      "beta_min": 1.021,
+      "beta_max": 1.202
+    }
+  },
+  "E5": {
+    "vrai": {
+      "rho": 0.8,
+      "sigma_M": 1.0,
+      "sigma_R": 0.4,
+      "R2_MR": 0.874
+    },
+    "mediane": {
+      "rho": 0.801,
+      "sigma_M": 1.005,
+      "sigma_R": 0.379,
+      "R2_MR": 0.88
+    },
+    "q05_q95_rho": [
+      0.732,
+      0.835
+    ]
+  }
+}

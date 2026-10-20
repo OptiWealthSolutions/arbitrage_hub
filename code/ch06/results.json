@@ -1,0 +1,56 @@
+{
+  "E1_E2_E3": {
+    "cout_0pb": {
+      "rendement_semestriel_capital_engage_moyen": 0.463,
+      "annualise_pct": 0.93,
+      "rendement_semestriel_capital_employe_moyen": 0.523,
+      "part_semestres_positifs": 0.653
+    },
+    "selection": {
+      "semestres": 72,
+      "part_vraies_paires_dans_top20": 0.499,
+      "vraies_paires_existantes": 10,
+      "gain_moyen_vraie_paire_pct": 2.098,
+      "gain_moyen_fausse_paire_pct": -1.167,
+      "paires_ouvertes_sur_20": 17.7
+    },
+    "cout_5pb": {
+      "rendement_semestriel_capital_engage_moyen": 0.177,
+      "annualise_pct": 0.35,
+      "rendement_semestriel_capital_employe_moyen": 0.2,
+      "part_semestres_positifs": 0.583
+    },
+    "cout_10pb": {
+      "rendement_semestriel_capital_engage_moyen": -0.11,
+      "annualise_pct": -0.22,
+      "rendement_semestriel_capital_employe_moyen": -0.122,
+      "part_semestres_positifs": 0.556
+    },
+    "cout_20pb": {
+      "rendement_semestriel_capital_engage_moyen": -0.682,
+      "annualise_pct": -1.36,
+      "rendement_semestriel_capital_employe_moyen": -0.766,
+      "part_semestres_positifs": 0.5
+    }
+  },
+  "E3_nombre_de_paires_annualise_pct": {
+    "5": 4.11,
+    "10": 3.72,
+    "20": 0.35,
+    "50": -1.13
+  },
+  "E4": {
+    "KO_PEP": {
+      "ecart_type_formation_pct": 9.565,
+      "trades": 1,
+      "gain_brut_pct": -24.05,
+      "gain_net_5pb_pct": -24.25
+    },
+    "GLD_GLDM": {
+      "ecart_type_formation_pct": 0.135,
+      "trades": 1,
+      "gain_brut_pct": -0.01,
+      "gain_net_5pb_pct": -0.21
+    }
+  }
+}
