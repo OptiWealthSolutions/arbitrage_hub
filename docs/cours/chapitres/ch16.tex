@@ -7,7 +7,7 @@
 
 \paragraph{Objectifs.} Un \emph{backtest} rejoue une stratégie sur des données passées pour estimer ce qu'elle aurait rapporté. C'est l'outil central du trader quantitatif, et c'est aussi le meilleur moyen de se mentir. À la fin du chapitre, vous saurez : (1) reconnaître et éliminer les biais d'anticipation, de survie et de sélection ; (2) organiser formation, validation et test sans fuite d'information ; (3) calculer l'erreur-type d'un ratio de Sharpe et savoir combien d'années il faut pour distinguer un bon Sharpe du hasard ; (4) corriger un Sharpe du nombre de variantes essayées (ratio de Sharpe déflaté) ; (5) estimer la probabilité qu'une optimisation soit du surapprentissage (PBO) ; (6) utiliser le moteur de \emph{backtest} du paquet \texttt{arbhub}, testé contre l'anticipation.
 
-\paragraph{Code.} \texttt{code/ch16/ch16\_backtest.py} (expériences E1 à E6), et les modules réutilisables \texttt{src/arbhub/backtest/engine.py} et \texttt{metrics.py}, avec leurs tests dans \texttt{tests/test\_backtest.py}.
+\paragraph{Code.}\sloppy \texttt{code/ch16/ch16\_backtest.py} (expériences E1 à E6), et les modules réutilisables \texttt{src/arbhub/backtest/engine.py} et \texttt{metrics.py}, avec leurs tests dans \texttt{tests/test\_backtest.py}.
 
 \begin{intuition}
 Un \emph{backtest}, c'est un examen blanc dont vous auriez écrit vous-même le sujet. Si vous avez vu les réponses en écrivant le sujet (anticipation), si vous n'avez gardé que les copies des élèves qui ont réussi l'année (survie), ou si vous avez passé l'examen cinquante fois en ne retenant que la meilleure note (sélection), la note ne dit rien de ce qui se passera le jour du vrai examen. Tout ce chapitre consiste à rendre l'examen blanc aussi honnête que le vrai.
@@ -371,4 +371,4 @@ Reprenez votre meilleure paire du chapitre~7. Notez honnêtement combien de pair
 \end{toread}
 
 \section{Scripts du chapitre}
-\noindent\texttt{code/ch16/ch16\_backtest.py} : E1 (figure~\ref{c16:fig:lookahead}), E2, E3 (figure~\ref{c16:fig:emax}), E4–E5 (figure~\ref{c16:fig:pbo}), E6. Modules : \texttt{src/arbhub/backtest/engine.py}, \texttt{metrics.py} ; tests : \texttt{tests/test\_backtest.py}.
+\sloppy\noindent\texttt{code/ch16/ch16\_backtest.py} : E1 (figure~\ref{c16:fig:lookahead}), E2, E3 (figure~\ref{c16:fig:emax}), E4–E5 (figure~\ref{c16:fig:pbo}), E6. Modules : \texttt{src/arbhub/backtest/engine.py}, \texttt{metrics.py} ; tests : \texttt{tests/test\_backtest.py}.

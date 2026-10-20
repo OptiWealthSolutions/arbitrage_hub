@@ -7,7 +7,7 @@
 
 \paragraph{Objectifs.} Une stratégie d'arbitrage statistique gagne souvent un peu et perd rarement beaucoup. Le risque se concentre dans quelques épisodes : une paire qui se rompt, un écart qui s'élargit avant de converger, une foule d'arbitragistes qui liquident en même temps. À la fin du chapitre, vous saurez : (1) dimensionner une position avec le critère de Kelly et comprendre pourquoi on n'en utilise qu'une fraction ; (2) choisir et calibrer des protections contre la rupture d'une paire ; (3) expliquer, chiffres à l'appui, pourquoi un arbitrage \og certain\fg{} peut ruiner celui qui le porte ; (4) mesurer ce que vaut réellement la diversification entre paires ; (5) recenser les risques non statistiques (plateforme, contrepartie, réglementation, règles des \emph{prop firms}) et fixer des limites de risque.
 
-\paragraph{Code.} \texttt{code/ch17/ch17\_risk.py} (expériences E1 à E4) ; module \texttt{src/arbhub/risk/sizing.py} et ses tests \texttt{tests/test\_risk.py}.
+\paragraph{Code.}\sloppy \texttt{code/ch17/ch17\_risk.py} (expériences E1 à E4) ; module \texttt{src/arbhub/risk/sizing.py} et ses tests \texttt{tests/test\_risk.py}.
 
 % =====================================================================
 \section{Combien miser ? Le critère de Kelly}
@@ -41,9 +41,11 @@ La croissance est une colline. Jusqu'au sommet ($f^\star$), plus de levier fait 
 \begin{codebox}[ — E1, stratégie de Sharpe annuel 1 (rendement 10\,\%, volatilité 10\,\% sans levier), 4\,000 trajectoires de 10 ans]
 Le levier de Kelly vaut $f^\star = 0{,}10/0{,}10^2 = 10$, soit une volatilité de 100\,\% par an.
 \begin{center}\small
+\setlength{\tabcolsep}{4pt}
 \begin{tabular}{rrcccc}
 \toprule
-Fraction de Kelly & Levier & Croissance médiane & P(perte à 10 ans) & P(drawdown $>50\,\%$) & Drawdown médian \\
+Fraction & Levier & Croissance & P(perte & P(drawdown & Drawdown \\
+de Kelly & & médiane & à 10 ans) & $>50\,\%$) & médian \\
 \midrule
 0,10 & 1 & 10,0\,\%/an & 0,2\,\% & 0\,\% & 15,8\,\% \\
 0,25 & 2,5 & 24,6\,\%/an & 0,3\,\% & 9,1\,\% & 36,1\,\% \\
@@ -293,4 +295,4 @@ Rédigez la fiche de limites de risque (section précédente) pour votre propre 
 \end{toread}
 
 \section{Scripts du chapitre}
-\noindent\texttt{code/ch17/ch17\_risk.py} : E1 (figure~\ref{c17:fig:kelly}), E2 (figure~\ref{c17:fig:protect}), E3 (figure~\ref{c17:fig:margin}), E4. Module : \texttt{src/arbhub/risk/sizing.py} ; tests : \texttt{tests/test\_risk.py}.
+\sloppy\noindent\texttt{code/ch17/ch17\_risk.py} : E1 (figure~\ref{c17:fig:kelly}), E2 (figure~\ref{c17:fig:protect}), E3 (figure~\ref{c17:fig:margin}), E4. Module : \texttt{src/arbhub/risk/sizing.py} ; tests : \texttt{tests/test\_risk.py}.

@@ -1,0 +1,187 @@
+{
+  "E1": {
+    "KO_PEP": {
+      "ecart_max_positions": 0.0,
+      "ecart_max_beta": 0.0,
+      "changements_de_position": 16
+    },
+    "GLD_GLDM": {
+      "ecart_max_positions": 0.0,
+      "ecart_max_beta": 0.0,
+      "changements_de_position": 20
+    }
+  },
+  "E2": {
+    "simulee_cointegree_1": {
+      "p_engle_granger_formation": 0.0001,
+      "demi_vie_formation_jours": 3.2,
+      "variante_retenue": {
+        "beta_window": 120,
+        "z_window": 40,
+        "entry": 2.0
+      },
+      "sharpe_formation": 4.37,
+      "dsr_formation": 1.0,
+      "sharpe_test_net": 2.61,
+      "rendement_test_net_pct": 12.93,
+      "trades_test": 14,
+      "cout_rentabilite_nulle_pb": 51.3,
+      "G1_cointegration": true,
+      "G2_demi_vie_1_30j": true,
+      "G3_dsr_sup_0_95": true,
+      "G4_test_positif": true,
+      "G5_marge_couts_x2": true,
+      "decision": "GO paper trading"
+    },
+    "simulee_cointegree_2": {
+      "p_engle_granger_formation": 0.0019,
+      "demi_vie_formation_jours": 4.8,
+      "variante_retenue": {
+        "beta_window": 120,
+        "z_window": 60,
+        "entry": 1.5
+      },
+      "sharpe_formation": 2.33,
+      "dsr_formation": 0.814,
+      "sharpe_test_net": 2.6,
+      "rendement_test_net_pct": 16.04,
+      "trades_test": 20,
+      "cout_rentabilite_nulle_pb": 44.0,
+      "G1_cointegration": true,
+      "G2_demi_vie_1_30j": true,
+      "G3_dsr_sup_0_95": false,
+      "G4_test_positif": true,
+      "G5_marge_couts_x2": true,
+      "decision": "NO-GO"
+    },
+    "simulee_cointegree_3": {
+      "p_engle_granger_formation": 0.0478,
+      "demi_vie_formation_jours": 3.4,
+      "variante_retenue": {
+        "beta_window": 120,
+        "z_window": 20,
+        "entry": 1.5
+      },
+      "sharpe_formation": 3.51,
+      "dsr_formation": 0.951,
+      "sharpe_test_net": 2.1,
+      "rendement_test_net_pct": 16.07,
+      "trades_test": 36,
+      "cout_rentabilite_nulle_pb": 26.9,
+      "G1_cointegration": true,
+      "G2_demi_vie_1_30j": true,
+      "G3_dsr_sup_0_95": true,
+      "G4_test_positif": true,
+      "G5_marge_couts_x2": true,
+      "decision": "GO paper trading"
+    },
+    "KO_PEP": {
+      "p_engle_granger_formation": 0.0974,
+      "demi_vie_formation_jours": 10.6,
+      "variante_retenue": {
+        "beta_window": 120,
+        "z_window": 40,
+        "entry": 2.0
+      },
+      "sharpe_formation": 2.12,
+      "dsr_formation": 0.356,
+      "sharpe_test_net": 0.19,
+      "rendement_test_net_pct": 3.1,
+      "trades_test": 11,
+      "cout_rentabilite_nulle_pb": 19.7,
+      "G1_cointegration": false,
+      "G2_demi_vie_1_30j": true,
+      "G3_dsr_sup_0_95": false,
+      "G4_test_positif": true,
+      "G5_marge_couts_x2": true,
+      "decision": "NO-GO"
+    },
+    "GLD_GLDM": {
+      "p_engle_granger_formation": 0.0,
+      "demi_vie_formation_jours": 0.4,
+      "variante_retenue": {
+        "beta_window": 60,
+        "z_window": 60,
+        "entry": 2.0
+      },
+      "sharpe_formation": -1.48,
+      "dsr_formation": 0.002,
+      "sharpe_test_net": -1.6,
+      "rendement_test_net_pct": -0.66,
+      "trades_test": 15,
+      "cout_rentabilite_nulle_pb": 2.2,
+      "G1_cointegration": true,
+      "G2_demi_vie_1_30j": false,
+      "G3_dsr_sup_0_95": false,
+      "G4_test_positif": false,
+      "G5_marge_couts_x2": false,
+      "decision": "NO-GO"
+    }
+  },
+  "E2_grille": {
+    "variantes": 12,
+    "cout_pb_par_jambe": 5.0,
+    "formation": 250,
+    "test": 250
+  },
+  "E3": [
+    {
+      "phi": 0.5,
+      "demi_vie_jours": 1.0,
+      "sharpe_median_execution_cloture": 3.2,
+      "sharpe_median_execution_lendemain": 1.47
+    },
+    {
+      "phi": 0.8,
+      "demi_vie_jours": 3.1,
+      "sharpe_median_execution_cloture": 2.48,
+      "sharpe_median_execution_lendemain": 1.93
+    },
+    {
+      "phi": 0.9,
+      "demi_vie_jours": 6.6,
+      "sharpe_median_execution_cloture": 1.76,
+      "sharpe_median_execution_lendemain": 1.57
+    },
+    {
+      "phi": 0.95,
+      "demi_vie_jours": 13.5,
+      "sharpe_median_execution_cloture": 1.15,
+      "sharpe_median_execution_lendemain": 1.06
+    }
+  ],
+  "E4": [
+    {
+      "sharpe_vrai": 1.5,
+      "sharpe_annonce": 1.5,
+      "part_alarmes_controle_quotidien": 0.31,
+      "part_alarmes_controle_unique_250j": 0.054,
+      "part_alarmes_4_controles_bonferroni": 0.04,
+      "delai_median_jours": 56.0
+    },
+    {
+      "sharpe_vrai": 1.0,
+      "sharpe_annonce": 2.0,
+      "part_alarmes_controle_quotidien": 0.673,
+      "part_alarmes_controle_unique_250j": 0.251,
+      "part_alarmes_4_controles_bonferroni": 0.256,
+      "delai_median_jours": 92.0
+    },
+    {
+      "sharpe_vrai": 0.0,
+      "sharpe_annonce": 1.5,
+      "part_alarmes_controle_quotidien": 0.869,
+      "part_alarmes_controle_unique_250j": 0.456,
+      "part_alarmes_4_controles_bonferroni": 0.521,
+      "delai_median_jours": 88.0
+    },
+    {
+      "sharpe_vrai": 0.0,
+      "sharpe_annonce": 3.0,
+      "part_alarmes_controle_quotidien": 0.999,
+      "part_alarmes_controle_unique_250j": 0.91,
+      "part_alarmes_4_controles_bonferroni": 0.98,
+      "delai_median_jours": 45.0
+    }
+  ]
+}
