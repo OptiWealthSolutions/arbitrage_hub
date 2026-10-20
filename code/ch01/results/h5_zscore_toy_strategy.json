@@ -1,0 +1,65 @@
+{
+  "seed": 5,
+  "repetitions": 400,
+  "beta": 1.5,
+  "phi": 0.9,
+  "beta_hat_moyen": 1.4999,
+  "beta_hat_ecart_type": 0.0582,
+  "par_cout_bps": {
+    "0": {
+      "pnl_moyen": 70.25,
+      "part_pnl_positif": 1.0,
+      "sharpe_median": 2.02,
+      "allers_retours_moyens": 13.3
+    },
+    "5": {
+      "pnl_moyen": 66.21,
+      "part_pnl_positif": 1.0,
+      "sharpe_median": 1.91,
+      "allers_retours_moyens": 13.3
+    },
+    "10": {
+      "pnl_moyen": 62.17,
+      "part_pnl_positif": 1.0,
+      "sharpe_median": 1.8,
+      "allers_retours_moyens": 13.3
+    },
+    "25": {
+      "pnl_moyen": 50.06,
+      "part_pnl_positif": 1.0,
+      "sharpe_median": 1.45,
+      "allers_retours_moyens": 13.3
+    },
+    "50": {
+      "pnl_moyen": 29.88,
+      "part_pnl_positif": 0.988,
+      "sharpe_median": 0.84,
+      "allers_retours_moyens": 13.3
+    }
+  },
+  "apres_jour_200_cout_5bps": {
+    "stable": {
+      "pnl_moyen": 53.41,
+      "pnl_q05": 27.64,
+      "trades": {
+        "nb_trades": 4217,
+        "taux_gagnants": 0.991,
+        "gain_moyen": 5.01,
+        "perte_moyenne": -1.73,
+        "pire_trade": -5.57
+      }
+    },
+    "rupture": {
+      "pnl_moyen": -2.09,
+      "erreur_type_moyenne": 1.27,
+      "pnl_q05": -46.66,
+      "trades": {
+        "nb_trades": 1583,
+        "taux_gagnants": 0.78,
+        "gain_moyen": 5.17,
+        "perte_moyenne": -20.4,
+        "pire_trade": -83.76
+      }
+    }
+  }
+}

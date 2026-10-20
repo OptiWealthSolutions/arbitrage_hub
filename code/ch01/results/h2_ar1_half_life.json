@@ -1,0 +1,35 @@
+{
+  "phi": 0.95,
+  "sigma": 1.0,
+  "seed": 2,
+  "variance_empirique": 10.355,
+  "variance_theorique": 10.256,
+  "acf_lag1_emp": 0.9504,
+  "acf_lag10_emp": 0.602,
+  "acf_lag10_th": 0.5987,
+  "demi_vie_theorique": 13.51,
+  "demi_vie_observee_sur_moyenne": 13.59,
+  "petits_echantillons": {
+    "250": {
+      "phi_moyen": 0.9343,
+      "biais_phi": -0.0157,
+      "demi_vie_mediane": 10.82,
+      "demi_vie_q05": 5.87,
+      "demi_vie_q95": 21.38
+    },
+    "1000": {
+      "phi_moyen": 0.946,
+      "biais_phi": -0.004,
+      "demi_vie_mediane": 12.65,
+      "demi_vie_q05": 9.28,
+      "demi_vie_q95": 17.81
+    },
+    "5000": {
+      "phi_moyen": 0.9493,
+      "biais_phi": -0.0007,
+      "demi_vie_mediane": 13.39,
+      "demi_vie_q05": 11.51,
+      "demi_vie_q95": 15.55
+    }
+  }
+}

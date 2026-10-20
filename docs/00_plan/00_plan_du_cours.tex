@@ -1,0 +1,407 @@
+\documentclass[11pt,a4paper]{article}
+\input{../shared/preamble.tex}
+\usepackage{tikz}
+\usetikzlibrary{positioning,arrows.meta,fit}
+\fancyhead[L]{\small\itshape Arbitrage Hub — Document 00}
+\fancyhead[R]{\small\itshape Plan d'étude et revue de littérature}
+
+\title{\textbf{Arbitrage statistique et arbitrage inter-plateformes :\\ plan d'étude, revue de littérature et feuille de route vers la production}\\[0.4em]
+\large Document 00 du cours \og Arbitrage Hub\fg}
+\author{Claude Opus 5.5 (Anthropic)\\[0.2em]
+\small Rédigé pour Léo Lombardini — Horacle Capital\\
+\small\url{https://github.com/OptiWealthSolutions/arbitrage_hub}}
+\date{20 octobre 2026}
+
+\begin{document}
+\maketitle
+\thispagestyle{empty}
+
+\begin{abstract}
+\noindent Ce document ouvre un cours complet sur l'arbitrage statistique (\emph{statistical arbitrage}), le \emph{pairs trading} et l'arbitrage inter-plateformes accessible à un trader particulier (\og retail\fg). Il remplit quatre fonctions. (i) Il définit précisément ce que recouvre le mot \og arbitrage\fg{} et sépare l'arbitrage pur, sans risque, de l'arbitrage statistique, qui n'est qu'un pari à espérance positive. (ii) Il liste, dans l'ordre où elles doivent être apprises, toutes les notions mathématiques, statistiques et de microstructure nécessaires, et les organise en dix-huit chapitres répartis en cinq parties. (iii) Il propose une revue de littérature annotée des articles fondateurs (Gatev, Goetzmann et Rouwenhorst ; Engle et Granger ; Avellaneda et Lee ; Krauss ; Makarov et Schoar ; Bailey et López de Prado, entre autres) et des dépôts logiciels ouverts, dont le moteur \texttt{atjte} d'arbitrage multi-plateformes. (iv) Il fixe l'architecture du dépôt \texttt{arbitrage\_hub} et une méthode de travail qui mène du tableau blanc à des stratégies codées, testées et auditables avec Claude Code. Le document se veut honnête sur un point central : la littérature montre que les profits du \emph{pairs trading} classique ont fortement diminué depuis les années 2000, et que les opportunités d'arbitrage \og pur\fg{} entre plateformes sont soit capturées par des acteurs plus rapides, soit interdites par les règles des courtiers et des \emph{prop firms}. L'objectif du cours est donc de construire un avantage réel, mesuré et robuste, pas de promettre un profit.
+
+\medskip\noindent\textbf{Mots-clés :} arbitrage statistique, pairs trading, cointégration, Ornstein-Uhlenbeck, filtre de Kalman, copules, arbitrage de base, microstructure, surapprentissage.
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+% =====================================================================
+\section{Introduction : pourquoi ajouter l'arbitrage à un portefeuille de stratégies}
+% =====================================================================
+
+Un portefeuille de stratégies comprenant déjà une stratégie macro/quantitative et des \emph{Expert Advisors} (EA) déployés sur des comptes de \emph{prop firms} est, par construction, exposé à la direction des marchés. Même un EA qui alterne achats et ventes gagne de l'argent parce qu'il anticipe correctement un mouvement de prix. L'arbitrage statistique repose sur une logique différente : on ne parie pas sur le niveau d'un prix, mais sur la \emph{relation} entre plusieurs prix. On achète ce qui est relativement bon marché et on vend ce qui est relativement cher, de sorte que le mouvement général du marché s'annule en grande partie dans la position.
+
+\begin{intuition}
+Imaginez deux bateaux amarrés côte à côte dans un port agité. Prédire la hauteur d'un bateau dans une heure est presque impossible : elle dépend de la marée et des vagues. En revanche, l'écart de hauteur entre les deux bateaux reste petit, car ils sont soulevés par la même eau. L'arbitrage statistique consiste à parier sur cet \emph{écart}, pas sur la marée. Quand l'écart devient anormalement grand (une vague a frappé un bateau avant l'autre), on parie qu'il va se refermer.
+\end{intuition}
+
+Cette logique apporte une diversification réelle : un portefeuille \og neutre au marché\fg{} a, en principe, une faible corrélation avec des stratégies directionnelles. Mais elle comporte des risques propres, très différents : la relation entre les prix peut se rompre définitivement, les coûts de transaction peuvent dévorer un avantage de quelques points de base, et l'exécution simultanée de deux ordres sur deux plateformes peut échouer à moitié. Ce cours étudie ces trois questions avec autant de soin que la théorie.
+
+\subsection{Objectifs d'apprentissage}
+
+À la fin du cours, vous devez être capable de :
+\begin{enumerate}[label=\textbf{O\arabic*.}]
+\item distinguer formellement arbitrage pur, quasi-arbitrage de convergence et arbitrage statistique, et dire pour chaque opportunité dans quelle catégorie elle tombe ;
+\item démontrer les propriétés des processus utilisés (marche aléatoire, AR(1), processus d'Ornstein-Uhlenbeck, systèmes cointégrés) et savoir les estimer sur données réelles ;
+\item appliquer et interpréter les tests statistiques (ADF, KPSS, Engle-Granger, Johansen, ratio de variance, exposant de Hurst) en connaissant leurs hypothèses et leurs faiblesses ;
+\item implémenter les cinq grandes familles de \emph{pairs trading} (distance, cointégration, séries temporelles, copules, apprentissage automatique) ainsi que l'arbitrage multi-facteurs ;
+\item modéliser une opportunité inter-plateformes (arbitrage spatial, triangulaire, de base, de \emph{funding}) en intégrant frais, latence, financement et risque de contrepartie ;
+\item valider une stratégie sans se mentir : séparation formation/test, coûts réalistes, tests multiples, ratio de Sharpe déflaté, probabilité de surapprentissage ;
+\item rédiger un cahier des charges que Claude Code peut transformer en code testé, puis déployer progressivement (papier, petite taille, taille cible).
+\end{enumerate}
+
+\subsection{Ce que ce cours ne promet pas}
+
+Le but final est de générer du profit, et c'est légitime. Mais la littérature impose trois constats que nous garderons en tête à chaque chapitre. Premièrement, la rentabilité du \emph{pairs trading} simple sur actions américaines a nettement baissé au fil du temps \citep{dofaff2010,dofaff2012}. Deuxièmement, l'arbitrage pur entre plateformes est une course de vitesse que les acteurs institutionnels gagnent à la milliseconde \citep{budish2015}. Troisièmement, la plupart des stratégies qui semblent rentables en \emph{backtest} le sont par hasard, parce qu'on a essayé beaucoup de variantes \citep{bailey2014dsr,harvey2016}. Le cours est construit pour transformer ces trois obstacles en critères de sélection.
+
+% =====================================================================
+\section{Méthode de travail}
+% =====================================================================
+
+\subsection{Un chapitre à la fois}
+Chaque chapitre est un document PDF autonome au format article, publié dans \texttt{docs/}. On ne passe au suivant que lorsque les exercices du précédent sont faits et que les scripts Python associés tournent sur votre machine. Chaque chapitre suit la même structure :
+\begin{enumerate}
+\item \textbf{Intuition} : une image mentale (encadré bleu) avant toute formule ;
+\item \textbf{Formalisation} : définitions, propositions et démonstrations, chaque étape algébrique justifiée ;
+\item \textbf{Vérification} : un script Python teste l'hypothèse au lieu de l'affirmer (encadré vert) ;
+\item \textbf{Limites} : ce que la théorie ne dit pas, et comment cela peut coûter de l'argent (encadré rouge) ;
+\item \textbf{Fiche tableau blanc} : les formules à recopier et annoter (encadré jaune) ;
+\item \textbf{Quoi lire} : références précises (article, section ou chapitre) pour approfondir (encadré gris) ;
+\item \textbf{Exercices}, dont au moins un à coder.
+\end{enumerate}
+
+\subsection{Le tableau blanc}
+Le tableau blanc sert à \emph{reconstruire} les démonstrations, pas à les recopier. La méthode conseillée : (1) lire la section une fois sans écrire ; (2) fermer le PDF et réécrire au tableau la définition et l'énoncé ; (3) refaire la démonstration en ne rouvrant le PDF qu'en cas de blocage ; (4) photographier le tableau et déposer la photo dans \texttt{whiteboard/chXX/} du dépôt, pour garder une trace datée de votre progression.
+
+\subsection{Le cycle \og hypothèse $\rightarrow$ script $\rightarrow$ conclusion\fg}
+Aucune affirmation importante du cours ne doit être crue sur parole. Chaque fois qu'une propriété est énoncée (par exemple \og la variance d'une marche aléatoire croît linéairement avec le temps\fg), un script dans \texttt{code/chXX/} la vérifie par simulation ou sur données réelles, et le résultat chiffré figure dans le chapitre. Vous pouvez relancer chaque script et obtenir les mêmes nombres (graines aléatoires fixées).
+
+% =====================================================================
+\section{Cartographie : que veut dire \og arbitrage\fg{} ?}
+% =====================================================================
+
+Le mot \og arbitrage\fg{} est utilisé de façon très lâche sur les réseaux sociaux. Nous distinguerons trois familles, définies formellement au chapitre~1.
+
+\begin{description}
+\item[Arbitrage pur.] Une stratégie qui ne coûte rien aujourd'hui, ne peut jamais perdre, et gagne avec une probabilité strictement positive. Exemple : un même actif coté à deux prix différents au même instant, achetable et vendable simultanément. En pratique, l'arbitrage pur n'existe que pendant des fractions de seconde, ou en présence de frictions (frais, transferts, contrôles des capitaux) qui en font justement autre chose qu'un arbitrage pur.
+\item[Quasi-arbitrage de convergence.] Deux instruments liés par une relation \emph{contractuelle} ou \emph{économique forte} (un contrat à terme et son sous-jacent, un jeton adossé à l'or et un CFD sur l'or, un ETF et son panier) dont l'écart doit converger à une date connue ou rester borné. Le risque existe (l'écart peut s'élargir avant de converger, le financement peut coûter cher), mais la relation a une \emph{ancre} théorique.
+\item[Arbitrage statistique.] Une relation purement \emph{estimée} à partir de données historiques (deux actions du même secteur, un panier de devises) et supposée persister. Aucune loi n'oblige la relation à durer : c'est un pari à espérance positive, justifié par des tests statistiques, et c'est la famille la plus exposée au risque de rupture.
+\end{description}
+
+\begin{table}[h]
+\centering\small
+\caption{Taxonomie des stratégies étudiées dans le cours.}
+\label{tab:taxo}
+\begin{tabularx}{\textwidth}{>{\raggedright}p{3.1cm}>{\raggedright}p{2.2cm}>{\raggedright}X>{\raggedright\arraybackslash}p{2.3cm}}
+\toprule
+Stratégie & Famille & Source de l'écart et ancre & Chapitres \\
+\midrule
+Arbitrage spatial (même actif, deux plateformes) & Pur / quasi & Fragmentation, frais, transferts lents \citep{makarov2020} & 12, 13 \\
+Arbitrage triangulaire (FX, crypto) & Pur & Incohérence de trois taux croisés & 13 \\
+Base \emph{cash-and-carry} (futures vs comptant) & Quasi & Coût de portage, convergence à l'échéance \citep{hull2022} & 14 \\
+\emph{Funding} des perpétuels & Quasi & Taux de financement périodique & 14 \\
+Perpétuel/jeton vs CFD (cas \texttt{atjte}) & Quasi & Même sous-jacent, deux plateformes \citep{atjte} & 14, 15 \\
+\emph{Pairs trading} par distance & Statistique & Co-mouvement historique \citep{gatev2006} & 6 \\
+\emph{Pairs trading} par cointégration & Statistique & Équilibre de long terme \citep{englegranger1987} & 4, 7 \\
+Modèles espace-état, Kalman & Statistique & Ratio de couverture variable \citep{elliott2005} & 8 \\
+Copules & Statistique & Dépendance non linéaire \citep{liewwu2013} & 9 \\
+Multi-facteurs (ACP, résidus) & Statistique & Résidus d'un modèle de facteurs \citep{avellaneda2010} & 10 \\
+Apprentissage automatique & Statistique & Prévision des résidus \citep{krauss2017ml} & 11 \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+% =====================================================================
+\section{Prérequis mathématiques et statistiques}
+% =====================================================================
+
+Le tableau~\ref{tab:prereq} liste les notions nécessaires, l'endroit où elles servent et le chapitre où elles sont (re)vues. Celles marquées $\star$ sont indispensables dès le chapitre~1 ; les autres sont introduites au moment où elles servent.
+
+\begin{table}[h]
+\centering\small
+\caption{Prérequis et lieu d'utilisation.}
+\label{tab:prereq}
+\begin{tabularx}{\textwidth}{>{\raggedright}p{4.3cm}>{\raggedright}X>{\raggedright\arraybackslash}p{1.6cm}}
+\toprule
+Notion & À quoi elle sert dans le cours & Chapitre \\
+\midrule
+$\star$ Espérance, variance, covariance, corrélation & Variance d'un \emph{spread}, ratio de couverture optimal & 1 \\
+$\star$ Loi normale, quantiles & Seuils d'entrée en \emph{z-score}, intervalles de confiance & 1 \\
+$\star$ Suites géométriques, logarithmes & Fonction d'autocorrélation, demi-vie & 1 \\
+Régression linéaire, moindres carrés & Ratio de couverture, test d'Engle-Granger & 2 \\
+Maximum de vraisemblance & Estimation AR(1) et Ornstein-Uhlenbeck & 2, 5 \\
+Tests d'hypothèse, $p$-valeur, puissance & ADF, KPSS, tests multiples & 3, 16 \\
+Algèbre linéaire (matrices, valeurs propres) & Johansen, ACP, portefeuilles multi-actifs & 4, 10 \\
+Calcul stochastique de base (mouvement brownien, lemme d'Itô) & Processus d'Ornstein-Uhlenbeck & 5 \\
+Temps d'arrêt, temps de premier passage & Seuils optimaux \citep{bertram2010,leungli2015} & 5 \\
+Modèles espace-état, filtrage bayésien & Filtre de Kalman & 8 \\
+Copules, théorème de Sklar & Dépendance non gaussienne & 9 \\
+Apprentissage supervisé, validation croisée purgée & Sélection de paires, prévision & 11, 16 \\
+Microstructure (carnet d'ordres, \emph{maker}/\emph{taker}) & Coûts réels, exécution inter-plateformes & 12, 15 \\
+Évaluation des futures (portage) & Arbitrage de base et de \emph{funding} & 14 \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+% =====================================================================
+\section{Programme détaillé}
+% =====================================================================
+
+La figure~\ref{fig:map} donne l'ordre des dépendances. Les flèches indiquent \og doit être compris avant\fg.
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[node distance=0.45cm and 0.5cm,
+  box/.style={draw,rounded corners=2pt,font=\scriptsize,align=center,minimum width=2.3cm,minimum height=0.75cm,fill=white},
+  arr/.style={-{Stealth[length=4pt]},thin,gray!70!black}]
+\node[box,fill=Blue!8] (c1) {Ch.~1\\Fondations};
+\node[box,fill=Blue!8,right=of c1] (c2) {Ch.~2\\Régression, MV};
+\node[box,fill=Blue!8,right=of c2] (c3) {Ch.~3\\Tests de\\stationnarité};
+\node[box,fill=Blue!8,right=of c3] (c4) {Ch.~4\\Cointégration};
+\node[box,fill=Blue!8,right=of c4] (c5) {Ch.~5\\Ornstein-\\Uhlenbeck};
+\node[box,fill=Green!8,below=0.9cm of c1] (c6) {Ch.~6\\Distance};
+\node[box,fill=Green!8,right=of c6] (c7) {Ch.~7\\Cointégration\\appliquée};
+\node[box,fill=Green!8,right=of c7] (c8) {Ch.~8\\Kalman};
+\node[box,fill=Green!8,right=of c8] (c9) {Ch.~9\\Copules};
+\node[box,fill=Green!8,right=of c9] (c10) {Ch.~10\\Multi-facteurs};
+\node[box,fill=Green!8,below=0.9cm of c10] (c11) {Ch.~11\\Machine\\learning};
+\node[box,fill=Orange!10,below=0.9cm of c6] (c12) {Ch.~12\\Microstructure};
+\node[box,fill=Orange!10,right=of c12] (c13) {Ch.~13\\Spatial et\\triangulaire};
+\node[box,fill=Orange!10,right=of c13] (c14) {Ch.~14\\Base et\\\emph{funding}};
+\node[box,fill=Orange!10,right=of c14] (c15) {Ch.~15\\Exécution\\et couverture};
+\node[box,fill=Red!8,below=0.9cm of c12] (c16) {Ch.~16\\Backtest\\rigoureux};
+\node[box,fill=Red!8,right=of c16] (c17) {Ch.~17\\Risque et\\limites};
+\node[box,fill=Red!8,right=of c17] (c18) {Ch.~18\\Du papier\\au code};
+\draw[arr] (c1)--(c2); \draw[arr] (c2)--(c3); \draw[arr] (c3)--(c4); \draw[arr] (c4)--(c5);
+\draw[arr] (c1)--(c6); \draw[arr] (c4)--(c7); \draw[arr] (c7)--(c8); \draw[arr] (c8)--(c9); \draw[arr] (c9)--(c10); \draw[arr] (c10)--(c11);
+\draw[arr] (c5)--(c10);
+\draw[arr] (c6)--(c12); \draw[arr] (c12)--(c13); \draw[arr] (c13)--(c14); \draw[arr] (c14)--(c15);
+\draw[arr] (c12)--(c16); \draw[arr] (c16)--(c17); \draw[arr] (c17)--(c18); \draw[arr] (c15)--(c18); \draw[arr] (c11)--(c18);
+\end{tikzpicture}
+\caption{Carte du cours. Bleu : fondations ; vert : méthodes de \emph{pairs trading} ; orange : arbitrage inter-plateformes ; rouge : validation, risque et mise en production.}
+\label{fig:map}
+\end{figure}
+
+Pour chaque chapitre, nous indiquons les objectifs, les notions mathématiques, les lectures de référence et le livrable de code. Le livrable vit dans \texttt{code/chXX/} pendant l'apprentissage, puis les fonctions réutilisables migrent dans le paquet \texttt{src/arbhub/}.
+
+\subsection{Partie I — Fondations statistiques}
+
+\paragraph{Chapitre 1 — Arbitrage, stationnarité et retour à la moyenne.} \emph{Livré avec ce document.}
+Définitions formelles de l'arbitrage pur et de l'arbitrage statistique \citep{hogan2004} ; rappels de probabilités (espérance, variance, covariance, variance d'une combinaison linéaire) ; ratio de couverture à variance minimale ; processus stochastiques, bruit blanc, stationnarité ; marche aléatoire ; processus AR(1), moyenne et variance stationnaires, autocorrélation, demi-vie ; intuition de la cointégration \citep{murray1994} ; corrélation contre cointégration ; \emph{z-score} et première règle de trading. \textbf{Code :} cinq scripts qui testent les propriétés énoncées. \textbf{Lire :} \citet{hamilton1994} ch.~3 ; \citet{chan2013} ch.~2.
+
+\paragraph{Chapitre 2 — Régression et estimation.}
+Moindres carrés ordinaires (dérivation matricielle), hypothèses de Gauss-Markov, propriétés des résidus ; régression fallacieuse \citep{granger1974} ; maximum de vraisemblance, application à l'AR(1) ; biais des petits échantillons sur le coefficient autorégressif ; régression orthogonale (moindres carrés totaux) et asymétrie du choix $Y$ sur $X$ contre $X$ sur $Y$. \textbf{Code :} estimateurs écrits à la main, comparés à \texttt{statsmodels} \citep{statsmodels}.
+
+\paragraph{Chapitre 3 — Tester la stationnarité et le retour à la moyenne.}
+Test de Dickey-Fuller et version augmentée \citep{dickeyfuller1979} : pourquoi la statistique ne suit pas une loi de Student ; test KPSS \citep{kpss1992} et logique d'hypothèse nulle inversée ; ratio de variance \citep{lomackinlay1988} ; exposant de Hurst ; puissance des tests sur échantillons courts ; tests multiples sur un univers de paires. \textbf{Code :} simulation de la distribution de Dickey-Fuller ; courbe de puissance en fonction de la taille d'échantillon.
+
+\paragraph{Chapitre 4 — Cointégration.}
+Ordre d'intégration, définition de la cointégration ; méthode en deux étapes d'Engle-Granger et valeurs critiques spécifiques \citep{englegranger1987} ; modèle à correction d'erreur ; théorème de représentation de Granger ; VAR, VECM et procédure de Johansen (tests de la trace et de la valeur propre maximale) \citep{johansen1991} ; cointégration partielle \citep{clegg2018}. \textbf{Code :} générateur de systèmes cointégrés ; implémentation pas à pas d'Engle-Granger ; comparaison avec Johansen.
+
+\paragraph{Chapitre 5 — Le processus d'Ornstein-Uhlenbeck.}
+Mouvement brownien, équation différentielle stochastique, lemme d'Itô ; solution explicite \citep{uhlenbeck1930} ; lien exact avec l'AR(1) ; estimation par maximum de vraisemblance ; temps de premier passage ; seuils d'entrée et de sortie optimaux \citep{bertram2010}, avec coûts et stop-loss \citep{leungli2015,leungli2016}. \textbf{Code :} simulation exacte, estimation, optimisation numérique des seuils.
+
+\subsection{Partie II — Les méthodes de \emph{pairs trading}}
+
+Cette partie suit la taxonomie de la revue de \citet{krauss2017survey}, qui classe la littérature en approches par distance, cointégration, séries temporelles, contrôle stochastique et \og autres\fg{} (copules, apprentissage).
+
+\paragraph{Chapitre 6 — La méthode des distances.}
+Réplication de \citet{gatev2006} : normalisation des prix, somme des écarts quadratiques, période de formation de douze mois, période de trading de six mois, seuil de deux écarts-types ; calcul des rendements sur capital engagé ; résultats de \citet{dofaff2010,dofaff2012} sur la baisse de rentabilité et l'effet des coûts. \textbf{Code :} réplication sur un univers d'actions ou d'ETF accessible via Interactive Brokers.
+
+\paragraph{Chapitre 7 — Cointégration appliquée.}
+Sélection des paires (secteur, cointégration, demi-vie, nombre de croisements de la moyenne) \citep{vidyamurthy2004,huck2009} ; ratio de couverture statique contre glissant ; comparaison distance/cointégration/copule \citep{rad2016} ; risque de rupture et suivi en ligne. \textbf{Code :} pipeline de sélection avec correction pour tests multiples.
+
+\paragraph{Chapitre 8 — Modèles espace-état et filtre de Kalman.}
+Le \emph{spread} comme état caché observé avec bruit \citep{elliott2005} ; dérivation du filtre de Kalman (prédiction, mise à jour, gain) ; ratio de couverture variable dans le temps ; réglage des variances de bruit. \textbf{Code :} filtre écrit à la main, comparé à une régression glissante.
+
+\paragraph{Chapitre 9 — Copules.}
+Théorème de Sklar, copules gaussienne, de Student, de Clayton, de Gumbel, de Frank ; dépendance de queue ; probabilités conditionnelles comme signal \citep{liewwu2013,xie2016}. \textbf{Code :} ajustement de copules et comparaison des signaux.
+
+\paragraph{Chapitre 10 — Arbitrage statistique multi-actifs.}
+Analyse en composantes principales des rendements ; résidus d'un modèle de facteurs (ACP ou ETF sectoriels) modélisés comme Ornstein-Uhlenbeck et \emph{s-score} \citep{avellaneda2010} ; portefeuilles de retour à la moyenne parcimonieux \citep{boxtiao1977,daspremont2011}. \textbf{Code :} réplication simplifiée d'Avellaneda-Lee sur un univers liquide.
+
+\paragraph{Chapitre 11 — Apprentissage automatique.}
+Prévision des rendements relatifs par forêts aléatoires, \emph{gradient boosting} et réseaux \citep{krauss2017ml} ; extraction de signaux sur résidus par réseaux profonds \citep{guijarro2021} ; sélection de paires par réduction de dimension et \emph{clustering} \citep{sarmento2020} ; étiquetage, validation croisée purgée \citep{lopezdeprado2018}. \textbf{Code :} sélection de paires par \emph{clustering}, puis comparaison avec la sélection par cointégration.
+
+\subsection{Partie III — Arbitrage inter-plateformes}
+
+\paragraph{Chapitre 12 — Microstructure et coûts.}
+Carnet d'ordres, fourchette achat-vente, ordres \emph{maker} et \emph{taker}, remises, glissement, impact de marché, latence \citep{harris2003} ; modèle de coût complet par aller-retour ; pourquoi un avantage de 5 points de base disparaît avec deux fourchettes et deux commissions. \textbf{Code :} modèle de coûts paramétrable et réutilisable par toutes les stratégies.
+
+\paragraph{Chapitre 13 — Arbitrage spatial et triangulaire.}
+Loi du prix unique entre plateformes ; résultats empiriques sur les cryptomonnaies \citep{makarov2020} : écarts importants et persistants entre pays, beaucoup plus faibles à l'intérieur d'un même pays ; contraintes de transfert, de capital et de risque de contrepartie ; arbitrage triangulaire et pourquoi il est quasi inaccessible sans colocalisation \citep{budish2015}. \textbf{Code :} détecteur d'écarts sur données publiques, avec calcul du profit net de frais.
+
+\paragraph{Chapitre 14 — Arbitrage de base et de \emph{funding}.}
+Relation de portage $F = S\,e^{(r-q)T}$ \citep{hull2022} ; contrats à terme datés contre comptant ; contrats perpétuels et mécanisme de \emph{funding} ; stratégie \emph{cash-and-carry} ; cas d'étude \texttt{atjte} : \emph{spread} entre un jeton ou perpétuel sur l'or et un CFD sur MetaTrader~5, bande de Bollinger sur le \emph{spread}, base \og juste\fg{} d'un futur daté \citep{atjte}. \textbf{Code :} calculateur de base et de rendement annualisé net du financement.
+
+\paragraph{Chapitre 15 — Exécution et couverture.}
+Risque de jambe (\emph{leg risk}) : une jambe exécutée, l'autre non ; stratégie \emph{maker} d'un côté, couverture \emph{taker} de l'autre ; réconciliation des positions ; coupe-circuit (\emph{dead man's switch}) ; architecture par passerelles (\emph{gateways}) qui isolent les clés. \textbf{Code :} simulateur d'exécution avec latence et rejets aléatoires.
+
+\subsection{Partie IV — Validation, risque et mise en production}
+
+\paragraph{Chapitre 16 — \emph{Backtest} rigoureux.}
+Biais d'anticipation, de survie, de sélection ; périodes formation/test, \emph{walk-forward} ; coûts réalistes ; problème des tests multiples \citep{harvey2016} ; ratio de Sharpe déflaté \citep{bailey2014dsr} ; probabilité de surapprentissage \citep{bailey2017pbo}. \textbf{Code :} moteur de \emph{backtest} vectorisé avec tests unitaires anti-anticipation.
+
+\paragraph{Chapitre 17 — Risque et limites de l'arbitrage.}
+Dimensionnement (critère de Kelly fractionné, ciblage de volatilité), stop-loss sur \emph{spread}, détection de rupture ; limites de l'arbitrage et rappels de marge \citep{shleifer1997} ; foule et liquidation forcée : la crise des \emph{quants} d'août 2007 \citep{khandanilo2011} ; risque de plateforme, de contrepartie et réglementaire ; règles des \emph{prop firms}. \textbf{Code :} tableau de bord de risque.
+
+\paragraph{Chapitre 18 — Du papier au code avec Claude Code.}
+Rédiger un cahier des charges testable ; architecture du paquet \texttt{arbhub} ; tests unitaires, tests de propriétés, intégration continue ; \emph{paper trading}, puis taille réduite, puis taille cible ; journal de trading et revue mensuelle. \textbf{Code :} première stratégie complète en \emph{paper trading}.
+
+% =====================================================================
+\section{Revue de littérature annotée}
+% =====================================================================
+
+Cette section résume ce que chaque référence apporte et ce qu'il faut en retenir. Les références sont regroupées par question.
+
+\subsection{Le \emph{pairs trading} fonctionne-t-il ? La base empirique}
+
+\citet{gatev2006} est l'article fondateur. Les auteurs apparient chaque action américaine à celle dont la trajectoire de prix normalisée est la plus proche sur douze mois, puis ouvrent une position quand l'écart dépasse deux écarts-types historiques et la ferment quand les prix se recroisent. Sur 1962–2002, les portefeuilles des meilleures paires produisent des rendements excédentaires annualisés de l'ordre de 11\,\% selon les auteurs, avec une faible exposition aux facteurs de risque usuels. \textbf{À retenir :} la règle est simple et non paramétrique ; elle sert de référence pour toute méthode plus sophistiquée.
+
+\citet{dofaff2010} prolongent l'étude jusqu'en 2009 et montrent une baisse marquée de la rentabilité à partir des années 1990, avec une résistance relative pendant les périodes de turbulence. \citet{dofaff2012} ajoutent des coûts de transaction réalistes : une grande partie du profit disparaît, sauf pour des paires mieux sélectionnées. \textbf{À retenir :} sans modèle de coûts sérieux, un \emph{backtest} de \emph{pairs trading} n'a aucune valeur.
+
+\citet{krauss2017survey} propose la revue la plus complète, avec la taxonomie adoptée dans ce cours, et liste les questions ouvertes (sélection des paires, robustesse, coûts). \citet{rad2016} comparent sur longue période les méthodes par distance, cointégration et copules, toutes avec le même protocole : selon les auteurs, les trois approches produisent des rendements positifs dont l'ampleur décroît dans le temps, et leurs profils de risque diffèrent. \textbf{À retenir :} aucune méthode n'est dominante en toute circonstance ; le protocole de test compte autant que la méthode.
+
+\subsection{Cointégration : la théorie de l'équilibre de long terme}
+
+\citet{englegranger1987} définissent la cointégration et proposent le test en deux étapes ; \citet{johansen1991} généralise à plusieurs actifs par maximum de vraisemblance. \citet{murray1994} donne l'image pédagogique d'une promeneuse ivre et de son chien, reprise au chapitre~1. \citet{vidyamurthy2004} est le premier livre de praticien entièrement consacré au \emph{pairs trading} par cointégration. \citet{clegg2018} introduisent la cointégration partielle : le \emph{spread} y est la somme d'une composante qui revient à la moyenne et d'une composante de marche aléatoire, ce qui décrit mieux les paires réelles dont la relation dérive lentement.
+
+\subsection{Modéliser le \emph{spread} : Ornstein-Uhlenbeck et seuils optimaux}
+
+\citet{bertram2010} obtient des expressions analytiques des seuils d'entrée et de sortie qui maximisent le rendement espéré par unité de temps (ou le ratio de Sharpe) quand le \emph{spread} suit un processus d'Ornstein-Uhlenbeck, en tenant compte des coûts. \citet{leungli2015} formulent le problème comme un double arrêt optimal avec coûts de transaction et stop-loss. \textbf{À retenir :} le seuil \og deux écarts-types\fg{} n'a rien d'optimal ; les seuils dépendent de la vitesse de retour, de la volatilité et des coûts.
+
+\subsection{Ratio de couverture variable : modèles espace-état}
+
+\citet{elliott2005} modélisent le \emph{spread} comme un processus de retour à la moyenne observé avec du bruit, estimé par filtre de Kalman. Ce cadre permet de suivre un ratio de couverture qui évolue, au lieu de le figer sur une période de formation.
+
+\subsection{Au-delà de la corrélation linéaire : copules}
+
+\citet{liewwu2013} et \citet{xie2016} utilisent les copules pour mesurer la probabilité conditionnelle qu'une action soit \og trop chère\fg{} sachant le prix de l'autre. Les copules captent la dépendance de queue, qui compte justement lors des grands écarts.
+
+\subsection{Arbitrage statistique multi-actifs}
+
+\citet{avellaneda2010} décomposent les rendements d'un large univers d'actions en facteurs (ACP ou ETF sectoriels) et en résidus, modélisent les résidus cumulés comme des processus d'Ornstein-Uhlenbeck et tradent leur \emph{s-score}. Selon le résumé des auteurs, la version ACP affiche un ratio de Sharpe annuel moyen de 1,44 sur 1997–2007, avec une performance plus forte avant 2003. \citet{daspremont2011} cherche des portefeuilles parcimonieux qui reviennent fortement à la moyenne, dans la lignée de l'analyse canonique de \citet{boxtiao1977}.
+
+\subsection{Apprentissage automatique}
+
+\citet{krauss2017ml} entraînent des réseaux profonds, du \emph{gradient boosting} et des forêts aléatoires à prédire quelles actions du S\&P~500 surperformeront le lendemain ; l'ensemble des modèles produit, selon les auteurs, des rendements quotidiens d'environ 0,45\,\% avant coûts sur 1992–2015, en net déclin dans la période récente. \citet{guijarro2021} extraient les signaux de résidus de portefeuilles d'arbitrage par réseaux convolutifs et \emph{transformers} et rapportent des ratios de Sharpe hors échantillon élevés. \citet{sarmento2020} utilisent la réduction de dimension et le \emph{clustering} pour proposer des paires candidates. \textbf{À retenir :} ces résultats sont obtenus sur des univers très liquides avec des hypothèses de coûts précises ; leur transposition à un compte particulier exige de refaire tout le calcul des coûts.
+
+\subsection{Les limites de l'arbitrage}
+
+\citet{shleifer1997} montrent que l'arbitrage est réalisé par un petit nombre d'acteurs spécialisés qui gèrent un capital emprunté ou délégué : quand l'écart s'élargit, ces acteurs subissent des pertes, des appels de marge ou des retraits de capital, et doivent liquider au pire moment. Pour un particulier, l'équivalent est l'appel de marge du courtier. \citet{khandanilo2011} analysent la crise d'août 2007, où de nombreux fonds d'arbitrage statistique ont subi en quelques jours des pertes importantes parce qu'ils détenaient des positions semblables et ont dû les déboucler en même temps. \textbf{À retenir :} le risque d'une stratégie de retour à la moyenne se concentre dans les rares épisodes où l'écart s'élargit beaucoup plus que d'habitude.
+
+\subsection{Arbitrage entre plateformes et vitesse}
+
+\citet{makarov2020} documentent des écarts de prix du bitcoin importants et récurrents entre plateformes, surtout entre pays (avec des contrôles de capitaux), beaucoup plus faibles entre plateformes d'un même pays. \citet{budish2015} montrent que les opportunités d'arbitrage mécanique entre le future S\&P~500 et l'ETF SPY persistent mais que leur durée est passée à quelques millisecondes : la compétition porte sur la vitesse. \textbf{À retenir :} un particulier ne doit pas chercher à battre les institutionnels sur la latence ; il doit chercher des écarts qui durent assez longtemps pour être exploités à son échelle de temps.
+
+\subsection{Validation et surapprentissage}
+
+\citet{harvey2016} montrent qu'après des centaines de \og facteurs\fg{} testés, un seuil de $t$-statistique de 2 est beaucoup trop faible. \citet{bailey2014dsr} corrigent le ratio de Sharpe du nombre d'essais et de la non-normalité des rendements ; \citet{bailey2017pbo} estiment la probabilité qu'une stratégie choisie en échantillon soit sous la médiane hors échantillon. \citet{lopezdeprado2018} détaille les méthodes de validation croisée adaptées aux séries financières.
+
+\subsection{Livres de référence}
+
+\citet{hamilton1994} et \citet{tsay2010} pour les séries temporelles ; \citet{vidyamurthy2004}, \citet{pole2007} et \citet{chan2013} pour la pratique de l'arbitrage statistique ; \citet{leungli2016} pour le contrôle optimal ; \citet{hull2022} pour les futures ; \citet{harris2003} pour la microstructure.
+
+% =====================================================================
+\section{Dépôts logiciels étudiés}
+% =====================================================================
+
+\subsection{\texttt{atjte} : un moteur d'arbitrage multi-plateformes en conditions réelles}
+
+Le dépôt \texttt{atj-khactu/atjte} \citep{atjte} est la référence pratique de ce cours pour l'arbitrage inter-plateformes. Son principe, tel que décrit dans sa documentation et son code, est le suivant.
+
+\begin{itemize}
+\item \textbf{Deux jambes.} Une jambe de cotation sur une plateforme d'échange (Kraken, Kraken Futures, Coinbase, Binance, Hyperliquid, Lighter, ou des futures cotés chez Interactive Brokers) et une jambe de couverture sous forme de CFD sur MetaTrader~5.
+\item \textbf{Le \emph{spread}.} Il est défini par $s_t = P^{\text{plateforme}}_t - k\,P^{\text{MT5}}_t$, où $k$ (\texttt{HEDGE\_RATIO}) convertit les unités (par exemple une part d'un ETF sur l'or contre une once de XAUUSD). Un module vérifie que $k$ est cohérent avec le rapport des prix, pour éviter une erreur d'unité qui couvrirait dix fois trop ou trop peu.
+\item \textbf{L'exécution.} Les ordres sont des ordres limites \emph{maker} (\emph{post-only}) sur la plateforme d'échange, au prix $k\times\text{MT5}_{\text{bid}} + \text{niveau}$ à l'achat ; chaque exécution est immédiatement couverte par un ordre au marché opposé sur MT5. Au plus un ordre d'achat et un ordre de vente reposent à la fois.
+\item \textbf{Les stratégies fournies.} Niveaux fixes, grille, bandes de Bollinger sur le \emph{spread} (moyenne glissante $\pm$ un multiple de l'écart-type), et une grille sur futures datés centrée sur une base \og juste\fg{} égale au coût de portage multiplié par le nombre de jours jusqu'à l'échéance.
+\item \textbf{L'infrastructure.} Chaque plateforme est atteinte par une passerelle (\emph{gateway}) qui détient seule les clés ; les robots ne voient jamais de clé. Le moteur réconcilie régulièrement la position réelle des deux côtés, s'arrête si les flux temps réel sont muets, et enregistre un historique du \emph{spread} à la seconde.
+\end{itemize}
+
+\begin{pitfall}
+Ce que ce dépôt enseigne : (1) l'arbitrage \og multi-plateformes\fg{} accessible à un particulier est en réalité un \textbf{quasi-arbitrage de convergence} sur un \emph{spread} qui fluctue autour d'une valeur de référence, pas un gain sans risque ; (2) l'essentiel du code concerne l'exécution, la couverture et la réconciliation, pas le signal ; (3) le document du dépôt lui-même rappelle qu'une couverture peut échouer ou être exécutée en retard, qu'une plateforme peut tomber et que le \emph{spread} peut évoluer défavorablement plus longtemps que la marge ne le permet. Enfin, les \emph{prop firms} interdisent en règle générale l'arbitrage de latence et la couverture croisée entre comptes \citep{nexusfi}. Ces stratégies doivent donc tourner sur du capital propre et chez des courtiers qui les acceptent explicitement, jamais sur vos comptes de \emph{prop firms}.
+\end{pitfall}
+
+\subsection{ArbitrageLab (Hudson \& Thames)}
+Bibliothèque Python \citep{arbitragelab}, sous licence BSD-3, qui implémente une grande partie de la littérature (cointégration, Ornstein-Uhlenbeck, seuils de Bertram, copules, Kalman, approches par apprentissage) en suivant la taxonomie de \citet{krauss2017survey}. Le dépôt n'est plus activement mis à jour (dernière modification en 2024 selon un agrégateur) : on l'utilisera comme \textbf{référence de lecture et de comparaison}, en réécrivant nous-mêmes les fonctions dont on dépend.
+
+\subsection{\texttt{statsmodels}}
+La bibliothèque économétrique standard en Python \citep{statsmodels} : tests ADF, KPSS, Engle-Granger (\texttt{coint}), Johansen (\texttt{coint\_johansen}), modèles ARIMA et espace-état. On l'utilisera pour vérifier nos propres implémentations.
+
+\subsection{Autres dépôts}
+Le thème GitHub \texttt{statistical-arbitrage} regroupe des projets d'étudiants et de praticiens (comparaison de méthodes, filtres de Kalman, copules). Leur qualité est très variable : aucun ne sera utilisé sans relecture et tests.
+
+% =====================================================================
+\section{Faisabilité pour un trader particulier}
+% =====================================================================
+
+Le tableau~\ref{tab:feas} croise chaque famille avec les contraintes d'un particulier. Les jugements sont qualitatifs et seront vérifiés chiffres à l'appui dans les chapitres concernés.
+
+\begin{table}[h]
+\centering\small
+\caption{Matrice de faisabilité indicative pour un particulier.}
+\label{tab:feas}
+\begin{tabularx}{\textwidth}{>{\raggedright}p{3.0cm}>{\raggedright}X>{\raggedright}X>{\raggedright\arraybackslash}p{1.7cm}}
+\toprule
+Stratégie & Infrastructure nécessaire & Risque principal & Faisabilité \\
+\midrule
+Pairs trading actions/ETF (journalier) & Courtier avec vente à découvert (IBKR), données quotidiennes & Rupture de la relation, coûts d'emprunt & Élevée \\
+Arbitrage statistique multi-facteurs & Univers large, données propres, calcul & Coûts, foule \citep{khandanilo2011} & Moyenne \\
+\emph{Cash-and-carry} / \emph{funding} crypto & Comptes sur plateformes, gestion de marge & Contrepartie, liquidation d'une jambe & Élevée \\
+Perpétuel/jeton vs CFD (\texttt{atjte}) & Passerelles, VPS, deux comptes & Couverture ratée, courtier, \emph{funding} & Moyenne \\
+Futures calendaires (même sous-jacent) & Courtier futures & Écart de base, marge & Moyenne \\
+Arbitrage spatial crypto & Fonds sur plusieurs plateformes & Transferts, frais, contrepartie & Faible à moyenne \\
+Arbitrage triangulaire & Colocalisation, très faible latence & Course de vitesse \citep{budish2015} & Faible \\
+Arbitrage de latence & Flux plus rapide que le courtier & Interdit par la plupart des \emph{prop firms} et courtiers & À exclure \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+% =====================================================================
+\section{Architecture du dépôt \texttt{arbitrage\_hub}}
+% =====================================================================
+
+{\footnotesize\begin{verbatim}
+arbitrage_hub/
+  README.md              présentation, mode d'emploi, avancement du cours
+  CLAUDE.md              règles de travail pour Claude Code (tests, conventions)
+  docs/
+    shared/              préambule LaTeX commun + bibliographie (references.bib)
+    00_plan/             ce document
+    01_fondations/       chapitre 1 (.tex, .pdf, figures/)
+    02_regression/ ...   un dossier par chapitre
+  code/
+    ch01/ ch02/ ...      scripts pédagogiques, un fichier = une hypothèse testée
+  src/arbhub/            paquet réutilisable (migré depuis code/ quand stable)
+    data/                chargement, nettoyage, alignement des séries
+    stats/               tests (ADF, KPSS, Hurst, Engle-Granger, Johansen)
+    models/              AR(1), Ornstein-Uhlenbeck, Kalman, copules
+    signals/             z-score, s-score, seuils optimaux
+    backtest/            moteur vectorisé, modèle de coûts, métriques
+    execution/           simulateur d'exécution, connecteurs (plus tard)
+    risk/                dimensionnement, limites, détection de rupture
+  tests/                 tests unitaires (pytest), dont tests anti-anticipation
+  notebooks/             explorations jetables (jamais de logique critique)
+  papers/                liste des articles + liens (PDF à ajouter par vous)
+  whiteboard/chXX/       photos datées du tableau blanc
+  data/raw, data/processed   données (non versionnées, voir .gitignore)
+\end{verbatim}}
+
+\paragraph{Règles de travail avec Claude Code.} Le fichier \texttt{CLAUDE.md} fixe les règles que l'assistant doit respecter : toute fonction de \texttt{src/arbhub} a un test ; aucune fonction de signal ne peut lire une donnée datée après l'instant de décision (un test l'impose) ; chaque \emph{backtest} déclare son modèle de coûts ; chaque résultat publié précise le nombre de variantes essayées. Le cycle de travail recommandé est : (1) cahier des charges en Markdown dans \texttt{docs/specs/} ; (2) tests écrits d'abord ; (3) implémentation ; (4) \emph{backtest} hors échantillon ; (5) \emph{paper trading} ; (6) petite taille réelle ; (7) revue.
+
+% =====================================================================
+\section{Calendrier indicatif}
+% =====================================================================
+
+À raison de deux à trois séances par semaine, un rythme réaliste est d'environ un chapitre par semaine pour la partie~I, et d'une à deux semaines par chapitre ensuite, soit quatre à cinq mois au total. La première stratégie en \emph{paper trading} peut démarrer dès la fin du chapitre~7, en parallèle du reste du cours, ce qui permet d'accumuler des données d'exécution réelles pendant l'apprentissage.
+
+% =====================================================================
+\section{Limites et avertissements}
+% =====================================================================
+
+Ce document est un support pédagogique, pas un conseil en investissement. Les performances rapportées par les articles sont des résultats historiques obtenus dans des conditions précises (univers, période, coûts) qui ne se reproduisent pas automatiquement. Certaines stratégies d'arbitrage inter-plateformes sont interdites par les conditions générales de courtiers ou de \emph{prop firms} ; il vous revient de vérifier ces conditions avant tout déploiement. Les références ont été vérifiées au moment de la rédaction ; les informations sur les dépôts logiciels (licence, activité) peuvent évoluer.
+
+\bibliographystyle{plainnat}
+\bibliography{../shared/references}
+
+\end{document}

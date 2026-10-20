@@ -1,0 +1,14 @@
+{
+  "seed": 4,
+  "n": 500,
+  "repetitions": 2000,
+  "niveaux": {
+    "part_rejet_5pct": 0.89,
+    "R2_median": 0.169,
+    "part_R2_sup_0.3": 0.35
+  },
+  "rendements": {
+    "part_rejet_5pct": 0.043,
+    "R2_median": 0.0009
+  }
+}

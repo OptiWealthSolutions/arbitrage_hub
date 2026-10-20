@@ -1,0 +1,36 @@
+{
+  "hypothese": "Var(P_t) = t sigma^2 et E[P_t] = P_0",
+  "seed": 1,
+  "n_paths": 20000,
+  "n_steps": 1000,
+  "points_de_controle": [
+    {
+      "t": 10,
+      "var_empirique": 10.09,
+      "var_theorique": 10.0,
+      "ecart_relatif_pct": 0.87
+    },
+    {
+      "t": 100,
+      "var_empirique": 99.1,
+      "var_theorique": 100.0,
+      "ecart_relatif_pct": -0.9
+    },
+    {
+      "t": 500,
+      "var_empirique": 493.09,
+      "var_theorique": 500.0,
+      "ecart_relatif_pct": -1.38
+    },
+    {
+      "t": 1000,
+      "var_empirique": 1016.89,
+      "var_theorique": 1000.0,
+      "ecart_relatif_pct": 1.69
+    }
+  ],
+  "pente_loglog": 1.0045,
+  "ordonnee_loglog": -0.0279,
+  "moyenne_max_abs": 0.2,
+  "conclusion": "pente ~ 1 : croissance linéaire de la variance confirmée"
+}

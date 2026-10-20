@@ -1,0 +1,24 @@
+{
+  "seed": 3,
+  "n": 1000,
+  "tirage_illustre": {
+    "A": {
+      "corr": 0.899,
+      "adf_p": 0.3069
+    },
+    "B": {
+      "corr": 0.415,
+      "adf_p": 0.0
+    }
+  },
+  "sur_500_tirages": {
+    "A": {
+      "corr_rendements_moyenne": 0.9,
+      "part_ADF_rejette_5pct": 0.058
+    },
+    "B": {
+      "corr_rendements_moyenne": 0.395,
+      "part_ADF_rejette_5pct": 1.0
+    }
+  }
+}
