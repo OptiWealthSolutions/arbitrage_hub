@@ -1,0 +1,159 @@
+{
+  "E1": {
+    "correct": {
+      "sharpe_median": 0.07,
+      "part_positive": 0.547
+    },
+    "meme_jour": {
+      "sharpe_median": -0.89,
+      "part_positive": 0.007
+    },
+    "normalisation_globale": {
+      "sharpe_median": 0.85,
+      "part_positive": 0.777
+    },
+    "beta_global": {
+      "sharpe_median": 0.24,
+      "part_positive": 0.667
+    },
+    "monde_avec_avantage": {
+      "correct": {
+        "sharpe_median": 1.09
+      },
+      "meme_jour": {
+        "sharpe_median": -0.13
+      }
+    }
+  },
+  "E2": [
+    {
+      "annees": 1,
+      "ecart_type_normal": 0.981,
+      "formule_lo": 1.003,
+      "ecart_type_student4": 1.012,
+      "intervalle_95_normal": [
+        -0.92,
+        2.92
+      ]
+    },
+    {
+      "annees": 3,
+      "ecart_type_normal": 0.581,
+      "formule_lo": 0.578,
+      "ecart_type_student4": 0.58,
+      "intervalle_95_normal": [
+        -0.14,
+        2.14
+      ]
+    },
+    {
+      "annees": 5,
+      "ecart_type_normal": 0.442,
+      "formule_lo": 0.448,
+      "ecart_type_student4": 0.447,
+      "intervalle_95_normal": [
+        0.13,
+        1.87
+      ]
+    },
+    {
+      "annees": 10,
+      "ecart_type_normal": 0.316,
+      "formule_lo": 0.317,
+      "ecart_type_student4": 0.316,
+      "intervalle_95_normal": [
+        0.38,
+        1.62
+      ]
+    }
+  ],
+  "E3": [
+    {
+      "N": 1,
+      "max_moyen_simule": -0.073,
+      "formule": 0.0
+    },
+    {
+      "N": 5,
+      "max_moyen_simule": 0.692,
+      "formule": 0.689
+    },
+    {
+      "N": 10,
+      "max_moyen_simule": 0.873,
+      "formule": 0.91
+    },
+    {
+      "N": 50,
+      "max_moyen_simule": 1.316,
+      "formule": 1.315
+    },
+    {
+      "N": 100,
+      "max_moyen_simule": 1.458,
+      "formule": 1.462
+    },
+    {
+      "N": 500,
+      "max_moyen_simule": 1.777,
+      "formule": 1.764
+    },
+    {
+      "N": 1000,
+      "max_moyen_simule": 1.889,
+      "formule": 1.881
+    }
+  ],
+  "E4_E5": {
+    "sans_avantage": {
+      "sharpe_IS_meilleure": 0.96,
+      "sharpe_OOS_meilleure": -0.03,
+      "sharpe_OOS_mediane_grille": -0.1,
+      "dsr_moyen": 0.516,
+      "part_dsr_sup_0_95": 0.0,
+      "pbo_moyen": 0.38
+    },
+    "avec_avantage": {
+      "sharpe_IS_meilleure": 1.64,
+      "sharpe_OOS_meilleure": 1.02,
+      "sharpe_OOS_mediane_grille": 0.83,
+      "dsr_moyen": 0.852,
+      "part_dsr_sup_0_95": 0.15,
+      "pbo_moyen": 0.297
+    }
+  },
+  "E6": {
+    "paires": 400,
+    "survivantes": 303,
+    "toutes": {
+      "pnl_moyen": 52.05,
+      "sharpe_median": 1.92
+    },
+    "survivantes_seules": {
+      "pnl_moyen": 62.86,
+      "sharpe_median": 2.03
+    }
+  },
+  "grille": {
+    "variantes": 50,
+    "seuils": [
+      1.0,
+      1.5,
+      2.0,
+      2.5,
+      3.0
+    ],
+    "fenetres": [
+      20,
+      40,
+      60,
+      120,
+      250
+    ],
+    "sorties": [
+      0.0,
+      0.5
+    ],
+    "cout_pb": 5
+  }
+}
