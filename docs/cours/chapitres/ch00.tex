@@ -235,10 +235,10 @@ Risque de jambe (\emph{leg risk}) : une jambe exécutée, l'autre non ; stratég
 Biais d'anticipation, de survie, de sélection ; périodes formation/test, \emph{walk-forward} ; coûts réalistes ; problème des tests multiples \citep{harvey2016} ; ratio de Sharpe déflaté \citep{bailey2014dsr} ; probabilité de surapprentissage \citep{bailey2017pbo}. \textbf{Code :} moteur de \emph{backtest} vectorisé avec tests unitaires anti-anticipation.
 
 \paragraph{Chapitre 17 — Risque et limites de l'arbitrage.}
-Dimensionnement (critère de Kelly fractionné, ciblage de volatilité), stop-loss sur \emph{spread}, détection de rupture ; limites de l'arbitrage et rappels de marge \citep{shleifer1997} ; foule et liquidation forcée : la crise des \emph{quants} d'août 2007 \citep{khandanilo2011} ; risque de plateforme, de contrepartie et réglementaire ; règles des \emph{prop firms}. \textbf{Code :} tableau de bord de risque.
+Dimensionnement (critère de Kelly fractionné, ciblage de volatilité), stop-loss sur \emph{spread}, détection de rupture ; limites de l'arbitrage et rappels de marge \citep{shleifer1997} ; foule et liquidation forcée : la crise des \emph{quants} d'août 2007 \citep{khandanilo2011} ; risque de plateforme, de contrepartie et réglementaire ; règles des \emph{prop firms}. \textbf{Code :} module de dimensionnement et de détection de rupture (Kelly, ciblage de volatilité, CUSUM), spirale de marge simulée.
 
 \paragraph{Chapitre 18 — Du papier au code avec Claude Code.}
-Rédiger un cahier des charges testable ; architecture du paquet \texttt{arbhub} ; tests unitaires, tests de propriétés, intégration continue ; \emph{paper trading}, puis taille réduite, puis taille cible ; journal de trading et revue mensuelle. \textbf{Code :} première stratégie complète en \emph{paper trading}.
+Rédiger un cahier des charges testable ; architecture du paquet \texttt{arbhub} ; tests unitaires, tests de propriétés, intégration continue ; \emph{paper trading}, puis taille réduite, puis taille cible ; journal de trading et revue mensuelle. \textbf{Code :} stratégie de paire en deux versions (recherche et production) testées pour la parité, grille de critères de passage appliquée à des paires réelles, suivi statistique du \emph{paper trading}.
 
 % =====================================================================
 \section{Revue de littérature annotée}\label{c0:litt}

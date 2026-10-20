@@ -1,0 +1,219 @@
+\chapter{Formulaire récapitulatif}
+\label{ann:formulaire}
+
+Cette annexe rassemble les fiches \og tableau blanc\fg{} de tous les chapitres. Elle est générée automatiquement par \texttt{docs/cours/make\_formulaire.py}.
+
+\section*{Chapitre 1 — Arbitrage, stationnarité et retour à la moyenne}
+\addcontentsline{toc}{section}{Chapitre 1 — Arbitrage, stationnarité et retour à la moyenne}
+\begin{itemize}[leftmargin=1.2em,itemsep=0.05em]
+\item \textbf{Arbitrage pur :} coût $\le 0$, perte impossible, gain possible. \textbf{Statistique :} $v(0)=0$, $\E[v(t)]\to>0$, $\Prob(v(t)<0)\to0$, $\Var(v(t))/t\to0$.
+\item \textbf{Variance d'un écart :} $\Var(Y-\beta X) = \sigma_Y^2 + \beta^2\sigma_X^2 - 2\beta\Cov(X,Y)$.
+\item \textbf{Couverture optimale :} $\beta^\star = \Cov(X,Y)/\sigma_X^2 = \rho\,\sigma_Y/\sigma_X$ ; variance restante $\sigma_Y^2(1-\rho^2)$.
+\item \textbf{Stationnarité faible :} $\E X_t = \mu$, $\Var X_t = \gamma(0)$, $\Cov(X_t,X_{t-h}) = \gamma(h)$, indépendants de $t$.
+\item \textbf{Marche aléatoire :} $P_t = P_0 + \sum\varepsilon_i$ ; $\E P_t = P_0$ ; $\Var P_t = t\sigma^2$ ; non stationnaire ; $I(1)$.
+\item \textbf{AR(1) :} $X_t - \mu = \varphi(X_{t-1}-\mu) + \varepsilon_t$ ; stationnaire si $|\varphi|<1$ ; $\mu = c/(1-\varphi)$ ; $\gamma(0) = \sigma^2/(1-\varphi^2)$ ; $\rho(h) = \varphi^h$.
+\item \textbf{Retour à la moyenne :} $\Delta X_t = -(1-\varphi)(X_{t-1}-\mu) + \varepsilon_t$.
+\item \textbf{Demi-vie :} $h_{1/2} = -\ln2/\ln\varphi \approx \ln 2/(1-\varphi)$.
+\item \textbf{Cointégration (intuition) :} $X, Y \sim I(1)$ et $Y - \beta X \sim I(0)$.
+\item \textbf{Z-score :} $z_t = (S_t - m)/d$, avec $m$, $d$ estimés \emph{sur la formation seulement}.
+\item \textbf{Gain sans anticipation :} $G_{t+1} = q_t(S_{t+1}-S_t)$.
+\end{itemize}
+
+\section*{Chapitre 2 — Régression et estimation}
+\addcontentsline{toc}{section}{Chapitre 2 — Régression et estimation}
+\begin{itemize}[leftmargin=1.2em,itemsep=0.05em]
+\item \textbf{MCO simples :} $\hat b = \sum(x-\bar x)(y-\bar y)/\sum(x-\bar x)^2$, $\hat a = \bar y - \hat b\bar x$.
+\item \textbf{MCO matriciels :} $\hat\beta = (X^\top X)^{-1}X^\top y$ ; $X^\top e = 0$ ; $\hat\sigma^2 = e^\top e/(n-k)$.
+\item \textbf{Sans biais :} $\hat\beta = \beta + (X^\top X)^{-1}X^\top\varepsilon$ ; $\Var(\hat\beta) = \sigma^2(X^\top X)^{-1}$ sous (H4).
+\item \textbf{Sandwich :} $(X^\top X)^{-1}\,\hat\Omega\,(X^\top X)^{-1}$ ; Newey-West : poids $1-j/(L+1)$.
+\item \textbf{Asymétrie :} $\hat\beta_{Y|X}\hat\beta_{X|Y} = \hat\rho^2$.
+\item \textbf{Orthogonale :} $s_{XY}b^2 + (s_{XX}-s_{YY})b - s_{XY} = 0$, racine de même signe que $s_{XY}$.
+\item \textbf{Log-vraisemblance AR(1) :} $\ell = -\frac n2\ln(2\pi\sigma^2) - \frac1{2\sigma^2}\sum(x_t - c - \varphi x_{t-1})^2$ ; MV conditionnel $=$ MCO.
+\item \textbf{Asymptotique :} $\Var(\hat\varphi)\approx(1-\varphi^2)/n$.
+\item \textbf{Correction de Kendall :} $\hat\varphi_c = \hat\varphi + (1+3\hat\varphi)/n$.
+\end{itemize}
+
+\section*{Chapitre 3 — Tester la stationnarité et le retour à la moyenne}
+\addcontentsline{toc}{section}{Chapitre 3 — Tester la stationnarité et le retour à la moyenne}
+\begin{itemize}[leftmargin=1.2em,itemsep=0.05em]
+\item \textbf{DF :} $\Delta x_t = c + \gamma x_{t-1} + \varepsilon_t$, $H_0 : \gamma = 0$ (racine unitaire), $\tau = \hat\gamma/\mathrm{se}$.
+\item \textbf{Pourquoi non normale :} $\sum x_{t-1}\varepsilon_t = \frac12(x_n^2 - \sum\varepsilon_t^2)$ $\Rightarrow$ $\frac12(W^2-1)$, négatif 68\,\% du temps.
+\item \textbf{Seuils 5\,\% :} $-1{,}95$ (rien), $-2{,}86$ (constante), $-3{,}41$ (tendance).
+\item \textbf{ADF :} ajouter $\sum\delta_j\Delta x_{t-j}$, choisir $p$ par AIC.
+\item \textbf{Puissance :} gouvernée par $n(1-\varphi)\approx 0{,}69\,n/h_{1/2}$ ; viser $\ge 30$ demi-vies.
+\item \textbf{KPSS :} $H_0$ stationnarité ; $\eta = n^{-2}\sum S_t^2/\hat\sigma^2_{LR}$ ; seuil $0{,}463$.
+\item \textbf{Ratio de variance :} $VR(q) = \Var(x_{t+q}-x_t)/(q\Var(\Delta x))$ ; AR(1) : $(1-\varphi^q)/(q(1-\varphi))$.
+\item \textbf{Hurst :} $\mathrm{sd}(x_{t+\tau}-x_t)\propto\tau^H$ ; $H<\frac12$ retour, $=\frac12$ marche, $>\frac12$ tendance.
+\end{itemize}
+
+\section*{Chapitre 4 — Cointégration}
+\addcontentsline{toc}{section}{Chapitre 4 — Cointégration}
+\begin{itemize}[leftmargin=1.2em,itemsep=0.05em]
+\item \textbf{$I(d)$ :} différencier $d$ fois pour être stationnaire. Prix $\sim I(1)$.
+\item \textbf{Cointégration :} $x\sim I(1)$, $\beta^\top x\sim I(0)$ ; rang $r$ = nombre de relations indépendantes.
+\item \textbf{Engle-Granger :} MCO en niveaux, puis ADF sur résidus ; seuils 5\,\% : $-3{,}34$ (2 var.), $-3{,}74$ (3 var.).
+\item \textbf{Superconvergence :} $\hat b - b = O(1/n)$ si la paire est cointégrée.
+\item \textbf{Correction d'erreur :} $\Delta x_{1t} = \alpha_1S_{t-1}+\dots$, $\Delta x_{2t} = \alpha_2S_{t-1}+\dots$ ; $\varphi_S = 1+\alpha_1-\beta\alpha_2$.
+\item \textbf{VECM :} $\Delta x_t = \Pi x_{t-1} + \sum\Gamma_i\Delta x_{t-i} + \varepsilon_t$, $\Pi = \alpha\beta^\top$, rang $r$.
+\item \textbf{Johansen :} trace $= -T\sum_{i>r}\ln(1-\hat\lambda_i)$ ; tester $r = 0, 1, \dots$
+\item \textbf{Cointégration partielle :} $S = M + R$ ; $R^2_{MR} = 2\sigma_M^2/(2\sigma_M^2 + (1+\rho)\sigma_R^2)$.
+\end{itemize}
+
+\section*{Chapitre 5 — Le processus d'Ornstein-Uhlenbeck}
+\addcontentsline{toc}{section}{Chapitre 5 — Le processus d'Ornstein-Uhlenbeck}
+\begin{itemize}[leftmargin=1.2em,itemsep=0.05em]
+\item \textbf{Brownien :} $W_t - W_s\sim\N(0,t-s)$, $(\dd W)^2 = \dd t$.
+\item \textbf{Itô :} $\dd f = (\partial_tf + b\,\partial_xf + \frac12s^2\partial_{xx}f)\dd t + s\,\partial_xf\,\dd W$.
+\item \textbf{OU :} $\dd X = \theta(\mu - X)\dd t + \sigma\dd W$ ; $X_t = \mu + (X_0-\mu)e^{-\theta t} + \sigma\int_0^te^{-\theta(t-u)}\dd W_u$.
+\item \textbf{Moments :} moyenne $\mu + (X_0-\mu)e^{-\theta t}$ ; variance $\frac{\sigma^2}{2\theta}(1-e^{-2\theta t})$ ; $\sigma_{eq} = \sigma/\sqrt{2\theta}$ ; $h_{1/2} = \ln2/\theta$.
+\item \textbf{OU $\leftrightarrow$ AR(1) :} $\varphi = e^{-\theta\Delta}$, $\sigma_\eta^2 = \frac{\sigma^2}{2\theta}(1-\varphi^2)$ ; $\hat\theta = -\ln\hat\varphi/\Delta$.
+\item \textbf{Kolmogorov :} $\frac12s^2u'' + bu' = -1$.
+\item \textbf{Retour :} $T_{a\to0} = \frac2{\sigma^2}\int_0^ae^{ky^2}\int_y^\infty e^{-kz^2}\dd z\,\dd y$, $k=\theta/\sigma^2$.
+\item \textbf{Seuil optimal :} maximiser $(a-c)/(T_{0\to\pm a}+T_{a\to0})$ ; le seuil monte avec les coûts.
+\end{itemize}
+
+\section*{Chapitre 6 — La méthode des distances}
+\addcontentsline{toc}{section}{Chapitre 6 — La méthode des distances}
+\begin{itemize}[leftmargin=1.2em,itemsep=0.05em]
+\item \textbf{Formation 12 mois :} $\tilde P_{i,t} = P_{i,t}/P_{i,0}$, $\mathrm{SSD}_{ij} = \sum_t(\tilde P_{i,t}-\tilde P_{j,t})^2$, top 20 paires.
+\item \textbf{Calcul matriciel :} $\mathrm{SSD} = \mathrm{diag}(G)\mathbf 1^\top + \mathbf 1\mathrm{diag}(G)^\top - 2G$, $G = \tilde P^\top\tilde P$.
+\item \textbf{Trading 6 mois :} ouvrir à $|D_t| > 2\hat\sigma$ (1\,\$ long / 1\,\$ court), fermer au croisement.
+\item \textbf{Gain d'un trade :} $(P^L_{t_1}/P^L_{t_0}-1) - (P^C_{t_1}/P^C_{t_0}-1)$.
+\item \textbf{Capital engagé :} somme des gains / 20 ; \textbf{employé :} / nombre de paires ouvertes.
+\item \textbf{Biais de la SSD :} $\mathrm{SSD}/T = \bar D^2 + \widehat\Var(D)$ : favorise les écarts peu volatils.
+\end{itemize}
+
+\section*{Chapitre 7 — Cointégration appliquée : sélectionner les paires sans se mentir}
+\addcontentsline{toc}{section}{Chapitre 7 — Cointégration appliquée : sélectionner les paires sans se mentir}
+\begin{itemize}[leftmargin=1.2em,itemsep=0.05em]
+\item \textbf{Faux positifs attendus :} $m\alpha$, avec $m = N(N-1)/2$.
+\item \textbf{FWER} $=\Prob(V\ge1)$ ; \textbf{FDR} $=\E[V/\max(R,1)]$.
+\item \textbf{Bonferroni :} rejeter si $p < \alpha/m$ ; preuve par l'inégalité de la réunion.
+\item \textbf{BH :} plus grand $k$ tel que $p_{(k)}\le kq/m$ ; rejeter les $k$ plus petites.
+\item \textbf{Pipeline :} a priori économique $\to$ test corrigé $\to$ demi-vie et amplitude $\to$ stabilité $\to$ contraintes pratiques.
+\item \textbf{Erreur-type honnête :} regrouper par univers ou période, jamais par paire si les paires partagent des actifs.
+\item \textbf{Taille :} notionnel $K = R/\sigma_S$.
+\end{itemize}
+
+\section*{Chapitre 8 — Modèles espace-état et filtre de Kalman}
+\addcontentsline{toc}{section}{Chapitre 8 — Modèles espace-état et filtre de Kalman}
+\begin{itemize}[leftmargin=1.2em,itemsep=0.05em]
+\item \textbf{Modèle :} $\xi_t = F\xi_{t-1} + w_t$ ($Q$) ; $y_t = H_t\xi_t + v_t$ ($R$).
+\item \textbf{Conditionnement :} $\E[X|y] = \mu_X + \Sigma_{XY}\Sigma_{YY}^{-1}(y-\mu_Y)$ ; $\Var = \Sigma_{XX} - \Sigma_{XY}\Sigma_{YY}^{-1}\Sigma_{YX}$.
+\item \textbf{Prédiction :} $m^- = Fm$, $P^- = FPF^\top + Q$.
+\item \textbf{Innovation :} $e = y - Hm^-$, $F_t = HP^-H^\top + R$.
+\item \textbf{Mise à jour :} $K = P^-H^\top F_t^{-1}$, $m = m^- + Ke$, $P = P^- - KHP^-$.
+\item \textbf{Scalaire :} $K = P/(P+R)$.
+\item \textbf{Vraisemblance :} $\ell = -\frac12\sum(\ln 2\pi F_t + e_t^2/F_t)$.
+\item \textbf{Ratio variable :} $\xi = (\alpha,\beta)$, $F = I$, $Q = \frac\delta{1-\delta}I$, $H_t = (1,x_t)$ ; signal $e_t/\sqrt{F_t}$.
+\end{itemize}
+
+\section*{Chapitre 9 — Copules}
+\addcontentsline{toc}{section}{Chapitre 9 — Copules}
+\begin{itemize}[leftmargin=1.2em,itemsep=0.05em]
+\item \textbf{Transformation :} $U = F_X(X)\sim\mathcal U[0,1]$.
+\item \textbf{Sklar :} $H(x,y) = C(F_X(x),F_Y(y))$.
+\item \textbf{Kendall :} $\tau = \Prob(\text{concordance}) - \Prob(\text{discordance})$ ; gaussienne/Student : $\rho = \sin(\pi\tau/2)$ ; Clayton : $\theta = 2\tau/(1-\tau)$.
+\item \textbf{Queue :} $\lambda_L = \lim_{q\to0}\Prob(V\le q\mid U\le q)$ ; Clayton $2^{-1/\theta}$ ; gaussienne 0.
+\item \textbf{Clayton :} $C = (u^{-\theta}+v^{-\theta}-1)^{-1/\theta}$.
+\item \textbf{Fonction $h$ :} $h(u|v) = \partial C/\partial v$ ; gaussienne $\Phi\big((\Phi^{-1}(u)-\rho\Phi^{-1}(v))/\sqrt{1-\rho^2}\big)$.
+\item \textbf{Pseudo-observations :} rang$/(n+1)$ ; choix par AIC $= 2k-2\ell$.
+\end{itemize}
+
+\section*{Chapitre 10 — Arbitrage statistique multi-actifs}
+\addcontentsline{toc}{section}{Chapitre 10 — Arbitrage statistique multi-actifs}
+\begin{itemize}[leftmargin=1.2em,itemsep=0.05em]
+\item \textbf{ACP :} $\max_w w^\top Cw$ s.c. $w^\top w=1$ $\Rightarrow$ $Cw = \lambda w$ ; part expliquée $\sum_{j\le k}\lambda_j/N$.
+\item \textbf{Portefeuille propre :} $Q_{ij} = v_{j,i}/\sigma_i$, $F_{jt} = \sum_iQ_{ij}R_{it}$.
+\item \textbf{Marchenko-Pastur :} bruit entre $(1\pm\sqrt{N/T})^2$.
+\item \textbf{Modèle :} $R_i = \alpha_i + \sum_j\beta_{ij}F_j + \dd X_i$, $X_i$ OU.
+\item \textbf{AR(1) sur $X$ :} $\kappa = -252\ln b$, $m = a/(1-b)$, $\sigma_{eq} = \sqrt{\Var(\zeta)/(1-b^2)}$.
+\item \textbf{s-score :} $s = (X - m)/\sigma_{eq}$ ; ouvrir à $\pm1{,}25$, fermer court à $0{,}75$, long à $-0{,}5$ ; filtre $\kappa > 252/30$.
+\item \textbf{Box-Tiao :} minimiser $w^\top A\Gamma A^\top w/w^\top\Gamma w$.
+\end{itemize}
+
+\section*{Chapitre 11 — Apprentissage automatique}
+\addcontentsline{toc}{section}{Chapitre 11 — Apprentissage automatique}
+\begin{itemize}[leftmargin=1.2em,itemsep=0.05em]
+\item \textbf{Variable :} calculable en $t$ ; \textbf{étiquette :} regarde vers $t+H$.
+\item \textbf{Chevauchement :} étiquettes à horizon $H$ partagent $H-1$ jours $\Rightarrow$ K-fold mélangé fuit.
+\item \textbf{Remède :} walk-forward, purge des dates qui chevauchent le test, embargo.
+\item \textbf{Test de base :} toujours comparer à une règle simple sur le même échantillon de test.
+\item \textbf{Sélection :} ACP (expositions) $\to$ OPTICS (groupes) $\to$ cointégration intra-groupe $+$ BH.
+\end{itemize}
+
+\section*{Chapitre 12 — Microstructure et coûts de transaction}
+\addcontentsline{toc}{section}{Chapitre 12 — Microstructure et coûts de transaction}
+\begin{itemize}[leftmargin=1.2em,itemsep=0.05em]
+\item \textbf{Fourchette :} ask $-$ bid ; mid $=$ (bid+ask)/2 ; taker paie la demi-fourchette, maker la reçoit mais subit la sélection adverse.
+\item \textbf{Roll :} $\Cov(\Delta p_t,\Delta p_{t-1}) = -s^2/4$ $\Rightarrow$ $s = 2\sqrt{-\Cov}$ (données de transaction seulement).
+\item \textbf{Aller-retour de paire :} $4c$ + emprunt.
+\item \textbf{Règle :} $\sigma_{eq}\ge$ coût d'un aller-retour.
+\item \textbf{Impact :} $Y\sigma_{\text{jour}}\sqrt{Q/V}$.
+\item \textbf{Backtest :} exécuter au plus tôt en $t+1$ ; payer la demi-fourchette.
+\end{itemize}
+
+\section*{Chapitre 13 — Arbitrage spatial et triangulaire}
+\addcontentsline{toc}{section}{Chapitre 13 — Arbitrage spatial et triangulaire}
+\begin{itemize}[leftmargin=1.2em,itemsep=0.05em]
+\item \textbf{Spatial :} opportunité si $b_B/a_A > (1+f_A)/(1-f_B)\approx1+f_A+f_B$.
+\item \textbf{Inventaire :} rééquilibrage rentable si $Q > 10^4K/e$ ($K$ coût de transfert, $e$ avantage en pb).
+\item \textbf{Écart persistant :} chercher la friction (contrôle des capitaux, transfert, contrepartie).
+\item \textbf{Latence :} le premier prend tout ; durée de vie en millisecondes $\Rightarrow$ inaccessible au particulier.
+\item \textbf{Triangulaire :} profitable si $z^{bid}(1-f)^3/(x^{ask}y^{ask}) > 1$ ; probabilité $2\Prob(Z > 3(h+f)/(\sigma_n\sqrt3))$.
+\item \textbf{Ligne rouge :} arbitrage de latence contre un courtier ou une \emph{prop firm} : interdit.
+\end{itemize}
+
+\section*{Chapitre 14 — Arbitrage de base, \emph{cash-and-carry} et \emph{funding}}
+\addcontentsline{toc}{section}{Chapitre 14 — Arbitrage de base, \emph{cash-and-carry} et \emph{funding}}
+\begin{itemize}[leftmargin=1.2em,itemsep=0.05em]
+\item \textbf{Portage :} $F = Se^{(r-q)T}$ ; base $F - S\to0$ à l'échéance.
+\item \textbf{Bande :} $Se^{(r_l-q)T} - c' \le F \le Se^{(r_b-q)T} + c$.
+\item \textbf{Cash-and-carry :} long comptant financé, court future ; gain final fixé, besoin de marge variable.
+\item \textbf{Funding :} longs paient les courts si perpétuel $>$ indice ; formule propre à chaque plateforme.
+\item \textbf{Liquidation :} hausse de $\approx 1/L - m$ sur la jambe courte.
+\item \textbf{atjte :} $s_t = P^{\text{plat}} - kP^{\text{MT5}}$ ; maker sur la plateforme, taker sur MT5 ; centre théorique $=$ référence $\times$ portage $\times$ jours$/365$.
+\end{itemize}
+
+\section*{Chapitre 15 — Exécution, couverture et architecture logicielle}
+\addcontentsline{toc}{section}{Chapitre 15 — Exécution, couverture et architecture logicielle}
+\begin{itemize}[leftmargin=1.2em,itemsep=0.05em]
+\item \textbf{Risque de jambe :} écart-type $\sigma\sqrt\Delta$ ; nul en espérance seulement si le délai est indépendant des prix.
+\item \textbf{Sélection adverse :} un ordre maker est exécuté quand le marché lui donne tort ; coût croissant avec le retard de recotation.
+\item \textbf{Où coter :} sur la plateforme suiveuse ; couvrir sur la meneuse.
+\item \textbf{Architecture :} passerelles, contrôle du ratio, lot minimal, réconciliation sur positions réelles, sommeil si flux périmé, un robot par contrat, mode simulation, journaux.
+\end{itemize}
+
+\section*{Chapitre 16 — \emph{Backtest} rigoureux}
+\addcontentsline{toc}{section}{Chapitre 16 — \emph{Backtest} rigoureux}
+\begin{itemize}[leftmargin=1.2em,itemsep=0.05em]
+\item \textbf{Sans anticipation :} $\text{gain}_{t+1} = q_t(S_{t+1}-S_t)$, $q_t$ fonction des seules données $\le t$ ; test automatique : modifier le futur ne change pas le passé.
+\item \textbf{Trois biais :} anticipation, survie (garder les radiés), sélection (compter les essais).
+\item \textbf{Erreur-type du Sharpe :} $\sqrt{(1+SR^2/2)/T}$ par période ; annualisé $\approx 1/\sqrt{\text{années}}$.
+\item \textbf{Maximum de $N$ Sharpe nuls :} $\approx\sqrt V\big((1-\gamma)\Phi^{-1}(1-\tfrac1N) + \gamma\Phi^{-1}(1-\tfrac{1}{Ne})\big)$, croît comme $\sqrt{2\ln N/T}$.
+\item \textbf{PSR :} $\Phi\big((\widehat{SR}-SR^\ast)\sqrt{T-1}/\sqrt{1-\gamma_3\widehat{SR}+\frac{\gamma_4-1}{4}\widehat{SR}^2}\big)$ ; \textbf{DSR :} PSR avec $SR^\ast = \E[\max]$.
+\item \textbf{PBO :} proportion des découpages CSCV où la meilleure variante en sélection finit sous la médiane en test.
+\item \textbf{Découpage :} formation, validation, test regardé une seule fois ; \emph{walk-forward} ; purge et embargo.
+\end{itemize}
+
+\section*{Chapitre 17 — Risque et limites de l'arbitrage}
+\addcontentsline{toc}{section}{Chapitre 17 — Risque et limites de l'arbitrage}
+\begin{itemize}[leftmargin=1.2em,itemsep=0.05em]
+\item \textbf{Kelly :} $g(f) \approx f\mu - \tfrac12 f^2\sigma^2$ ; $f^\star = \mu/\sigma^2$ ; $g(f^\star) = SR^2/2$ ; $g(2f^\star) = 0$ ; en pratique $0{,}1$ à $0{,}25\,f^\star$.
+\item \textbf{Ciblage de volatilité :} $w_t = \min(\sigma^\ast/\hat\sigma_t, L_{\max})$, $\hat\sigma_t$ estimée sur le passé.
+\item \textbf{Protections :} stop $|z|>4$ (quasi gratuit) ; durée $> 3$ demi-vies ; CUSUM $S^\pm_t = \max(0, S^\pm_{t-1} \pm z_t - k)$, alarme si $> h$.
+\item \textbf{Limites de l'arbitrage :} perte latente $\Rightarrow$ appel de marge $\Rightarrow$ liquidation au pire moment ; levier choisi sur le pire élargissement.
+\item \textbf{Diversification :} $\sigma_P = \sigma\sqrt{1/N + \rho(1-1/N)}$ ; $N_{\text{eff}} = N/(1+(N-1)\rho)$ ; $\rho$ monte en crise.
+\item \textbf{Hors statistique :} plateforme, contrepartie, courtier, emprunt de titres, opérations sur titres, réglementation, \emph{prop firms}, erreurs opérationnelles.
+\end{itemize}
+
+\section*{Chapitre 18 — Du papier au code avec Claude Code}
+\addcontentsline{toc}{section}{Chapitre 18 — Du papier au code avec Claude Code}
+\begin{itemize}[leftmargin=1.2em,itemsep=0.05em]
+\item \textbf{Cycle :} spécification $\to$ tests $\to$ code $\to$ recherche $\to$ critères $\to$ \emph{paper} $\to$ petite taille $\to$ taille cible $\to$ revue.
+\item \textbf{Parité :} version vectorisée = version événementielle, vérifiée par un test.
+\item \textbf{Grille :} G0 hypothèse ; G1 $p_{EG}<0{,}05$ ; G2 demi-vie $\in[1,30]$ ; G3 DSR $>0{,}95$ ; G4 test net $>0$ ; G5 rentabilité nulle $> 2\times$ coûts.
+\item \textbf{Retard :} un jour de retard coûte d'autant plus que la demi-vie est courte.
+\item \textbf{Suivi :} $Z_T = (\widehat{SR}_{\text{réel}} - SR_{\text{bt}})\sqrt{T-1}$ ; contrôles datés à l'avance, seuil de Bonferroni.
+\item \textbf{Journal :} coût d'implémentation = P\&L réel $-$ P\&L du \emph{backtest} rejoué.
+\end{itemize}

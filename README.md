@@ -4,37 +4,48 @@ Cours complet et laboratoire de recherche sur l'arbitrage statistique, le pairs 
 et l'arbitrage inter-plateformes, du tableau blanc jusqu'à des stratégies codées,
 testées et auditables avec Claude Code.
 
-## Avancement du cours
+## 📘 Le cours (un seul PDF)
 
-| # | Document | Statut |
-|---|----------|--------|
-| 00 | [Plan d'étude, revue de littérature, feuille de route](docs/00_plan/00_plan_du_cours.pdf) | ✅ |
-| 01 | [Arbitrage, stationnarité et retour à la moyenne](docs/01_fondations/01_chapitre_fondations.pdf) | ✅ |
-| 02 | Régression et estimation | ⏳ |
-| 03 | Tests de stationnarité | ⏳ |
-| 04 | Cointégration | ⏳ |
-| 05 | Processus d'Ornstein-Uhlenbeck | ⏳ |
-| 06–11 | Méthodes de pairs trading (distance, cointégration, Kalman, copules, multi-facteurs, ML) | ⏳ |
-| 12–15 | Arbitrage inter-plateformes (microstructure, spatial, base/funding, exécution) | ⏳ |
-| 16–18 | Backtest rigoureux, risque, mise en production | ⏳ |
+**[docs/cours/arbitrage_hub_cours_complet.pdf](docs/cours/arbitrage_hub_cours_complet.pdf)** — 19 chapitres, 4 parties, annexes.
+
+| Partie | Chapitres |
+|---|---|
+| Introduction | 0 — Cartographie de l'arbitrage, méthode, revue de littérature, analyse du moteur `atjte` |
+| I. Fondations statistiques | 1 Arbitrage, stationnarité, retour à la moyenne · 2 Régression et estimation · 3 Tests de stationnarité · 4 Cointégration · 5 Ornstein-Uhlenbeck |
+| II. Méthodes de pairs trading | 6 Distances · 7 Sélection par cointégration · 8 Kalman · 9 Copules · 10 Multi-actifs (ACP) · 11 Apprentissage automatique |
+| III. Arbitrage inter-plateformes | 12 Microstructure et coûts · 13 Spatial et triangulaire · 14 Base, cash-and-carry, funding · 15 Exécution et architecture |
+| IV. Validation, risque, production | 16 Backtest rigoureux · 17 Risque et limites de l'arbitrage · 18 Du papier au code avec Claude Code |
+| Annexes | A Formulaire · B Notations · C Glossaire · D Reproduire les résultats |
+
+Chaque chapitre suit la même structure : objectifs, intuition (image mentale), démonstrations,
+vérification en Python, limites, fiche « tableau blanc », exercices, lectures conseillées.
 
 ## Méthode
 
 1. Lire un chapitre, refaire les démonstrations au tableau blanc (photos dans `whiteboard/chXX/`).
-2. Relancer les scripts `code/chXX/` : chaque script teste une hypothèse énoncée dans le chapitre.
+2. Relancer `code/chXX/` : chaque chiffre du cours sort d'un script à graine fixée.
 3. Faire les exercices, dont ceux « à coder ».
 4. Passer au chapitre suivant seulement ensuite.
 
 ## Arborescence
 
 ```
-docs/        chapitres (.tex + .pdf), préambule et bibliographie communs dans docs/shared/
-code/chXX/   scripts pédagogiques, un fichier = une hypothèse testée, résultats dans results/
-src/arbhub/  paquet réutilisable (data, stats, models, signals, backtest, execution, risk)
-tests/       tests pytest, dont tests anti-anticipation
-papers/      liste des articles de référence + liens
-whiteboard/  photos datées du tableau blanc
-data/        données locales (non versionnées)
+docs/cours/          le cours : arbitrage_hub_cours_complet.tex/.pdf, chapitres/, figures/, references.bib
+docs/specs/          cahiers des charges des stratégies (modèle : TEMPLATE_strategie.md)
+code/chXX/           scripts de vérification de chaque chapitre + results.json
+code/common/         style des figures, univers d'actions simulé
+src/arbhub/          paquet réutilisable
+  data/              chargement des données (seul module qui lit le disque)
+  stats/             AR(1), demi-vie, z-score
+  signals/           stratégie de paire (version recherche + version production)
+  backtest/          moteur sans anticipation, Sharpe, PSR, DSR, PBO
+  risk/              Kelly, ciblage de volatilité, CUSUM
+  models/ execution/ à compléter (Kalman, OU, copules, simulateur d'exécution)
+tests/               tests pytest (anticipation, parité, coûts, métriques, risque)
+data/case_studies/   500 clôtures réelles GLD, GLDM, KO, PEP (Interactive Brokers)
+papers/              liste des articles de référence + liens
+whiteboard/          photos datées du tableau blanc
+CLAUDE.md            règles de travail pour Claude Code
 ```
 
 ## Installation
@@ -42,15 +53,14 @@ data/        données locales (non versionnées)
 ```bash
 python -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
-cd code/ch01 && for f in h*.py; do python "$f"; done
-pytest
+pytest -q                                   # 24 tests
+python code/ch16/ch16_backtest.py           # exemple : rejouer un chapitre
 ```
 
-## Recompiler les PDF
+## Recompiler le PDF
 
 ```bash
-cd docs/01_fondations
-pdflatex 01_chapitre_fondations && bibtex 01_chapitre_fondations && pdflatex 01_chapitre_fondations && pdflatex 01_chapitre_fondations
+cd docs/cours && sh build.sh
 ```
 
 ## Avertissement

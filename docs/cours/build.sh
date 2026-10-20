@@ -3,6 +3,7 @@
 set -e
 cd "$(dirname "$0")"
 N=arbitrage_hub_cours_complet
+python3 make_formulaire.py
 pdflatex -interaction=nonstopmode $N.tex > /dev/null || true
 bibtex $N > /dev/null || true
 pdflatex -interaction=nonstopmode $N.tex > /dev/null || true

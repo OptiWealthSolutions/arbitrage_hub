@@ -1,1 +1,130 @@
-\chapter{Formulaire}
+% =====================================================================
+%  Annexes
+% =====================================================================
+
+\input{chapitres/annexe_formulaire.tex}
+
+% =====================================================================
+\chapter{Notations}
+\label{ann:notations}
+% =====================================================================
+
+\begin{center}\small
+\begin{longtable}{>{\raggedright}p{3.2cm}>{\raggedright\arraybackslash}p{10.6cm}}
+\toprule
+Symbole & Signification \\
+\midrule
+\endhead
+$t$, $T$, $n$ & date (en périodes), nombre total de périodes, taille d'échantillon \\
+$X_t$, $Y_t$ ou $x_t$, $y_t$ & prix (ou log-prix) des deux jambes d'une paire \\
+$S_t$, $s_t$ & écart (\emph{spread}) : $S_t = Y_t - \beta X_t$ (ou en log-prix) \\
+$\beta$, $\hat\beta$ & ratio de couverture, et son estimation \\
+$\varepsilon_t$, $\eta_t$ & bruit blanc (chocs non corrélés, moyenne nulle) \\
+$\mu$, $\sigma$, $\sigma^2$ & moyenne, écart-type, variance \\
+$\rho$, $\rho(h)$ & corrélation ; autocorrélation au retard $h$ \\
+$\gamma(h)$ & autocovariance au retard $h$ \\
+$\varphi$ & coefficient autorégressif de l'AR(1) \\
+$h_{1/2}$ & demi-vie : $-\ln2/\ln\varphi$ (discret), $\ln2/\theta$ (continu) \\
+$\theta$, $\sigma_{eq}$ & vitesse de retour et écart-type d'équilibre d'un processus d'Ornstein-Uhlenbeck \\
+$W_t$ & mouvement brownien standard \\
+$I(d)$ & intégré d'ordre $d$ (stationnaire après $d$ différenciations) \\
+$\Delta x_t$ & différence première $x_t - x_{t-1}$ \\
+$z_t$ & \emph{z-score} : $(S_t - m)/d$ avec $m$, $d$ estimés sur le passé \\
+$q_t$ & position décidée à la clôture de $t$ (en unités d'écart), appliquée de $t$ à $t+1$ \\
+$c$, pb & coût par jambe ; point de base $=10^{-4}$ \\
+$\Phi$, $\Phi^{-1}$ & fonction de répartition et quantile de la loi normale centrée réduite \\
+$SR$, $\widehat{SR}$ & ratio de Sharpe (par période ou annualisé, précisé à chaque usage) \\
+PSR, DSR, PBO & Sharpe probabiliste, Sharpe déflaté, probabilité de surapprentissage \\
+$f^\star$ & levier de Kelly $\mu/\sigma^2$ \\
+$F$, $S$, $r$, $q$ & prix à terme, prix comptant, taux sans risque, rendement de détention (chapitre~14) \\
+$\N(\mu,\sigma^2)$, $\iid$ & loi normale ; indépendantes et identiquement distribuées \\
+\bottomrule
+\end{longtable}
+\end{center}
+
+% =====================================================================
+\chapter{Glossaire}
+\label{ann:glossaire}
+% =====================================================================
+
+\begin{description}[leftmargin=0pt,itemsep=0.3em]
+\item[Arbitrage pur.] Stratégie sans coût initial, sans possibilité de perte, avec une possibilité de gain (chapitre~1).
+\item[Arbitrage statistique.] Stratégie sans coût initial dont le gain espéré est positif et dont la probabilité de perte tend vers zéro à long terme (chapitre~1).
+\item[Base.] Écart entre le prix à terme et le prix comptant d'un même sous-jacent (chapitre~14).
+\item[\emph{Cash-and-carry}.] Achat du comptant financé et vente du contrat à terme, pour capter la base (chapitre~14).
+\item[Cointégration.] Relation entre séries $I(1)$ dont une combinaison linéaire est stationnaire (chapitre~4).
+\item[Copule.] Fonction qui décrit la dépendance entre variables indépendamment de leurs lois marginales (chapitre~9).
+\item[CUSUM.] Somme cumulée des écarts standardisés, utilisée pour détecter un changement de régime (chapitre~17).
+\item[Demi-vie.] Durée au bout de laquelle l'écart espéré à la moyenne est divisé par deux (chapitres~1 et~5).
+\item[\emph{Drawdown}.] Perte depuis le plus haut historique de la courbe de gains.
+\item[\emph{Funding}.] Paiement périodique entre acheteurs et vendeurs d'un contrat perpétuel, qui ramène son prix vers l'indice (chapitre~14).
+\item[Jambe.] Chacun des instruments d'une position d'arbitrage. \emph{Risque de jambe} : une jambe exécutée, l'autre non ou en retard (chapitre~15).
+\item[\emph{Maker}, \emph{taker}.] Ordre qui apporte de la liquidité au carnet (limite, en attente), ordre qui en prend (exécuté immédiatement) (chapitre~12).
+\item[\emph{Paper trading}.] Exécution simulée en temps réel, sans argent engagé (chapitre~18).
+\item[Parité.] Égalité des décisions entre la version de recherche et la version de production d'une stratégie (chapitre~18).
+\item[Point de base (pb).] Un centième de pourcent : $10^{-4}$.
+\item[\emph{Prop firm}.] Société qui finance des traders sous conditions ; ses règles interdisent en général l'arbitrage de latence et la couverture croisée entre comptes.
+\item[Régression fallacieuse.] Relation apparente entre séries non stationnaires indépendantes (chapitre~1).
+\item[Sélection adverse.] Tendance d'un ordre \emph{maker} à être exécuté précisément quand le marché lui donne tort (chapitre~15).
+\item[Stationnarité.] Moyenne, variance et autocovariances constantes dans le temps (chapitre~1).
+\item[Surapprentissage.] Choix de paramètres qui décrivent le bruit de l'échantillon plutôt qu'une régularité durable (chapitre~16).
+\item[\emph{Walk-forward}.] Validation glissante : estimer sur le passé, trader sur la période suivante, avancer (chapitre~16).
+\item[\emph{Z-score}.] Écart standardisé $(S_t - m)/d$ (chapitre~1).
+\end{description}
+
+% =====================================================================
+\chapter{Reproduire les résultats du cours}
+\label{ann:repro}
+% =====================================================================
+
+\section*{Installation}
+\begin{lstlisting}[language=bash]
+git clone https://github.com/OptiWealthSolutions/arbitrage_hub.git
+cd arbitrage_hub
+python -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt
+pytest -q                                   # 24 tests
+\end{lstlisting}
+
+\section*{Scripts par chapitre}
+
+Chaque chiffre du cours provient d'un script à graine fixée ; relancer le script redonne exactement les mêmes nombres. Les résultats sont écrits dans \texttt{code/chXX/results.json} (\texttt{code/ch01/results/} pour le chapitre~1) et les figures dans \texttt{docs/cours/figures/chXX/}.
+
+\begin{center}\small
+\begin{longtable}{>{\raggedright}p{1.1cm}>{\ttfamily\footnotesize}p{6.4cm}>{\raggedright\arraybackslash}p{6.0cm}}
+\toprule
+Ch. & \normalfont Script & Contenu \\
+\midrule
+\endhead
+1 & ch01/h1 à h5\_*.py & marche aléatoire, AR(1) et demi-vie, corrélation contre cointégration, régression fallacieuse, règle en \emph{z-score} \\
+2 & ch02/ch02\_regression.py & MCO, asymétrie, régression orthogonale, vraisemblance AR(1), biais \\
+3 & ch03/ch03\_stationarity\_tests.py & Dickey-Fuller, puissance, KPSS, ratio de variance, Hurst, cas réels \\
+4 & ch04/ch04\_cointegration.py & Engle-Granger, correction d'erreur, Johansen, cointégration partielle \\
+5 & ch05/ch05\_ornstein\_uhlenbeck.py & simulation exacte, estimation, temps de passage, seuils optimaux \\
+6 & ch06/ch06\_distance\_method.py & méthode des distances (Gatev et al.) \\
+7 & ch07/ch07\_cointegration\_selection.py & sélection de paires, faux positifs, Bonferroni, BH \\
+8 & ch08/ch08\_kalman.py & filtre de Kalman, ratio variable \\
+9 & ch09/ch09\_copulas.py & copules, fonction $h$, cas KO/PEP \\
+10 & ch10/ch10\_pca\_statarb.py & ACP, Marchenko-Pastur, \emph{s-score} \\
+11 & ch11/ch11\_machine\_learning.py & fuite d'information, validation purgée, sélection par \emph{clustering} \\
+12 & ch12/ch12\_microstructure.py & fourchette, Roll, impact, coûts d'un aller-retour \\
+13 & ch13/ch13\_spatial\_triangular.py & arbitrage spatial, triangulaire, course de latence \\
+14 & ch14/ch14\_basis\_funding.py & portage, \emph{cash-and-carry}, \emph{funding}, liquidation \\
+15 & ch15/ch15\_execution.py & risque de jambe, sélection adverse \\
+16 & ch16/ch16\_backtest.py & biais d'anticipation, Sharpe, DSR, PBO, survie \\
+17 & ch17/ch17\_risk.py & Kelly, protections contre la rupture, spirale de marge, diversification \\
+18 & ch18/ch18\_pipeline.py & parité, critères de passage, retard d'exécution, suivi du \emph{paper trading} \\
+\bottomrule
+\end{longtable}
+\end{center}
+
+\section*{Recompiler ce document}
+\begin{lstlisting}[language=bash]
+cd docs/cours && sh build.sh     # formulaire regénéré, 3 passes LaTeX + BibTeX
+\end{lstlisting}
+
+\section*{Données réelles}
+Les études de cas utilisent 500 clôtures quotidiennes de GLD, GLDM, KO et PEP (21 octobre 2024 au 19 octobre 2026) téléchargées via Interactive Brokers ; voir \texttt{data/case\_studies/README.md}. Prix non ajustés des dividendes.
+
+\section*{Avertissement}
+Ce cours est un support pédagogique et non un conseil en investissement. Les performances citées, qu'elles proviennent de la littérature ou des simulations, ne préjugent pas des performances futures. Vérifiez les conditions de vos courtiers et plateformes avant tout déploiement ; les stratégies d'arbitrage inter-plateformes ne doivent pas être utilisées sur des comptes de \emph{prop firms}.
