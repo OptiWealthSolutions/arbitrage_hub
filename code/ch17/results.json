@@ -1,0 +1,225 @@
+{
+  "E1": {
+    "kelly": [
+      {
+        "fraction_kelly": 0.1,
+        "levier": 1.0,
+        "croissance_annuelle_mediane_pct": 10.0,
+        "richesse_mediane": 2.6,
+        "proba_perte_sur_10_ans": 0.002,
+        "proba_drawdown_50pct": 0.0,
+        "drawdown_median_pct": 15.8
+      },
+      {
+        "fraction_kelly": 0.25,
+        "levier": 2.5,
+        "croissance_annuelle_mediane_pct": 24.6,
+        "richesse_mediane": 9.04,
+        "proba_perte_sur_10_ans": 0.003,
+        "proba_drawdown_50pct": 0.091,
+        "drawdown_median_pct": 36.1
+      },
+      {
+        "fraction_kelly": 0.5,
+        "levier": 5.0,
+        "croissance_annuelle_mediane_pct": 45.9,
+        "richesse_mediane": 43.84,
+        "proba_perte_sur_10_ans": 0.009,
+        "proba_drawdown_50pct": 0.865,
+        "drawdown_median_pct": 61.6
+      },
+      {
+        "fraction_kelly": 1.0,
+        "levier": 10.0,
+        "croissance_annuelle_mediane_pct": 66.0,
+        "richesse_mediane": 158.72,
+        "proba_perte_sur_10_ans": 0.054,
+        "proba_drawdown_50pct": 1.0,
+        "drawdown_median_pct": 89.6
+      },
+      {
+        "fraction_kelly": 1.5,
+        "levier": 15.0,
+        "croissance_annuelle_mediane_pct": 46.5,
+        "richesse_mediane": 45.61,
+        "proba_perte_sur_10_ans": 0.216,
+        "proba_drawdown_50pct": 1.0,
+        "drawdown_median_pct": 98.5
+      },
+      {
+        "fraction_kelly": 2.0,
+        "levier": 20.0,
+        "croissance_annuelle_mediane_pct": -0.8,
+        "richesse_mediane": 0.92,
+        "proba_perte_sur_10_ans": 0.504,
+        "proba_drawdown_50pct": 1.0,
+        "drawdown_median_pct": 99.9
+      }
+    ],
+    "estimation": {
+      "f_vrai": 10.0,
+      "f_estime_median": 10.03,
+      "f_estime_q10": 2.44,
+      "f_estime_q90": 17.47,
+      "part_f_estime_sup_2f": 0.042,
+      "part_f_estime_negatif": 0.047
+    }
+  },
+  "E2": {
+    "stable": {
+      "aucune": {
+        "pnl_moyen": 63.7,
+        "pnl_q05": 33.1,
+        "drawdown_moyen": 5.0
+      },
+      "stop_z_3": {
+        "pnl_moyen": 58.7,
+        "pnl_q05": 32.3,
+        "drawdown_moyen": 5.5
+      },
+      "stop_z_4": {
+        "pnl_moyen": 63.4,
+        "pnl_q05": 33.1,
+        "drawdown_moyen": 5.0
+      },
+      "stop_duree_3hl": {
+        "pnl_moyen": 54.6,
+        "pnl_q05": 26.6,
+        "drawdown_moyen": 5.6
+      },
+      "cusum": {
+        "pnl_moyen": 60.8,
+        "pnl_q05": 29.6,
+        "drawdown_moyen": 4.9
+      },
+      "phi_glissant": {
+        "pnl_moyen": 63.7,
+        "pnl_q05": 33.1,
+        "drawdown_moyen": 5.0
+      }
+    },
+    "rupture": {
+      "aucune": {
+        "pnl_moyen": -22.2,
+        "pnl_q05": -70.5,
+        "drawdown_moyen": 60.0
+      },
+      "stop_z_3": {
+        "pnl_moyen": 20.0,
+        "pnl_q05": 0.3,
+        "drawdown_moyen": 9.8
+      },
+      "stop_z_4": {
+        "pnl_moyen": 20.0,
+        "pnl_q05": -2.1,
+        "drawdown_moyen": 12.1
+      },
+      "stop_duree_3hl": {
+        "pnl_moyen": 19.3,
+        "pnl_q05": -0.0,
+        "drawdown_moyen": 8.9
+      },
+      "cusum": {
+        "pnl_moyen": 23.6,
+        "pnl_q05": 4.9,
+        "drawdown_moyen": 6.7
+      },
+      "phi_glissant": {
+        "pnl_moyen": -4.1,
+        "pnl_q05": -37.0,
+        "drawdown_moyen": 39.8
+      }
+    },
+    "cusum": {
+      "fausses_alarmes_monde_stable": 0.07,
+      "detection_apres_rupture": 0.967,
+      "alarme_avant_rupture": 0.033,
+      "delai_median_jours": 53.0
+    }
+  },
+  "E3": [
+    {
+      "levier": 0.05,
+      "gain_si_on_tient": 0.1,
+      "proba_liquidation": 0.0,
+      "proba_liquidation_si_crise": 0.0,
+      "gain_moyen": 0.1
+    },
+    {
+      "levier": 0.1,
+      "gain_si_on_tient": 0.2,
+      "proba_liquidation": 0.0,
+      "proba_liquidation_si_crise": 0.0,
+      "gain_moyen": 0.2
+    },
+    {
+      "levier": 0.15,
+      "gain_si_on_tient": 0.3,
+      "proba_liquidation": 0.013,
+      "proba_liquidation_si_crise": 0.026,
+      "gain_moyen": 0.286
+    },
+    {
+      "levier": 0.2,
+      "gain_si_on_tient": 0.4,
+      "proba_liquidation": 0.109,
+      "proba_liquidation_si_crise": 0.215,
+      "gain_moyen": 0.271
+    },
+    {
+      "levier": 0.3,
+      "gain_si_on_tient": 0.6,
+      "proba_liquidation": 0.351,
+      "proba_liquidation_si_crise": 0.661,
+      "gain_moyen": 0.11
+    },
+    {
+      "levier": 0.5,
+      "gain_si_on_tient": 1.0,
+      "proba_liquidation": 0.568,
+      "proba_liquidation_si_crise": 0.926,
+      "gain_moyen": -0.041
+    },
+    {
+      "levier": 1.0,
+      "gain_si_on_tient": 2.0,
+      "proba_liquidation": 0.746,
+      "proba_liquidation_si_crise": 0.987,
+      "gain_moyen": -0.175
+    }
+  ],
+  "E4": {
+    "analytique": [
+      {
+        "rho": 0.0,
+        "vol_portefeuille_relative": 0.224,
+        "N_effectif": 20.0
+      },
+      {
+        "rho": 0.05,
+        "vol_portefeuille_relative": 0.312,
+        "N_effectif": 10.3
+      },
+      {
+        "rho": 0.1,
+        "vol_portefeuille_relative": 0.381,
+        "N_effectif": 6.9
+      },
+      {
+        "rho": 0.3,
+        "vol_portefeuille_relative": 0.579,
+        "N_effectif": 3.0
+      },
+      {
+        "rho": 0.6,
+        "vol_portefeuille_relative": 0.787,
+        "N_effectif": 1.6
+      }
+    ],
+    "crise": {
+      "drawdown_max_en_ecarts_types_sans_crise": 9.2,
+      "drawdown_max_en_ecarts_types_avec_crise": 34.1,
+      "sharpe_annuel_par_paire": 1.59
+    }
+  }
+}
